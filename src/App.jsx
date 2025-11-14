@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import './index.css'
+import { AdminLayout } from './layouts/AdminLayout';
 
 function App() {
   return (
-    <div className="bg-black text-white flex ">
-      Halo, ini adalah TailwindCSS!
+    <div>
+      <AdminLayout/>
     </div>
   );
 }
