@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { BaseSidebar } from "@/components/sidebar";
 import { AdminSidebarContent } from "./AdminSidebarContent";
 import { AdminNavbar } from "./AdminNavbar";
-
+import { Outlet } from "react-router-dom";
 export function AdminLayout({ children }) {
   return (
     <SidebarProvider>
@@ -12,7 +12,9 @@ export function AdminLayout({ children }) {
 
       <SidebarInset className="bg-[#dce2ee]">
         <AdminNavbar />
-        <div className="p-6">{children}</div>
+        <div className="pl-18 py-8 pr-12 ">
+          <Outlet/>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

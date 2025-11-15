@@ -68,10 +68,10 @@ export function AdminSidebarContent() {
   const navigation = useMemo(
     () => [
       { title: "Dashboard", url: "/admin/dashboard", icon: House, hoverIcon: HouseIcon },
-      { title: "Dokumen", url: "/admin/surveys", icon: Folder, hoverIcon: FolderOpen },
-      { title: "SoA", url: "/admin/filetext", icon: FileText, hoverIcon: FileText },
-      { title: "Audit", url: "/admin/reports", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
-      { title: "NCR", url: "/admin/settings", icon: TriangleAlert, hoverIcon: TriangleAlert },
+      { title: "Dokumen", url: "/admin/dokumen", icon: Folder, hoverIcon: FolderOpen },
+      { title: "SoA", url: "/admin/SoA", icon: FileText, hoverIcon: FileText },
+      { title: "Audit", url: "/admin/Audit", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
+      { title: "NCR", url: "/admin/NCR", icon: TriangleAlert, hoverIcon: TriangleAlert },
       { title: "High Level Audit", url: "/admin/highlevelaudit", icon: FileChartLine, hoverIcon: FileChartLine },
     ],
     []

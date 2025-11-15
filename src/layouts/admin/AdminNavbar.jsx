@@ -13,7 +13,7 @@ export function AdminNavbar({
   user = {
     name: "Admin User",
     role: "Administrator",
-    urlDetail: '/userDetail'
+    urlDetail: '/admin/profile'
   },
 }) {
   const initials = user.initials ?? getInitials(user.name);
@@ -28,19 +28,19 @@ export function AdminNavbar({
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <Link className="flex items-center gap-3" to={user.urlDetail}>
           <div className="flex size-11 items-center justify-center rounded-full text-sm font-semibold text-[#1B2A49]">
             {initials}
           </div>
           <div className="flex flex-col text-right">
-            <Link className="text-[#1B2A49] body-medium" to={user.urlDetail}>
+            <span className="text-[#1B2A49] body-medium" >
               {user.name}
-            </Link>
+            </span>
             <span className="text-gray-dark small">
               {user.role}
             </span>
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   );
