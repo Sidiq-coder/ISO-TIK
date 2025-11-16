@@ -1,11 +1,15 @@
-import { useCallback, useMemo, useState } from "react"
-import { tableData } from "@/mocks/tableData.js"
-import { SearchIcon } from "lucide-react"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { OverlayForm } from "@/components/admin/soa/OverlayForm"
-import { PaginateControls } from "@/components/admin/soa/PaginateControls"
-import { SoATable } from "@/components/admin/soa/SoATable"
-import { StatusDropdown } from "@/components/admin/soa/StatusDropdown"
+import { useCallback, useMemo, useState } from "react";
+import { auditData } from "@/mocks/tableData.js";
+import { SearchIcon } from "lucide-react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { OverlayForm } from "@/components/admin/audit/OverlayForm";
+import { PaginateControls } from "@/components/admin/audit/PaginateControls";
+import { AuditTable } from "@/components/admin/audit/AuditTable";
+import { StatusDropdown } from "@/components/admin/audit/StatusDropdown";
 
 const FILTER_OPTIONS = [
   { value: "Semua Status" },
@@ -13,36 +17,36 @@ const FILTER_OPTIONS = [
   { value: "In Progress" },
   { value: "Reviewed" },
   { value: "Approved" },
-]
+];
 
-const PAGINATE_OPTIONS = [10, 20, 50, 100]
+const PAGINATE_OPTIONS = [10, 20, 50, 100];
 
-function useSoADocuments() {
-  const [statusFilter, setStatusFilter] = useState("Semua Status")
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
-  const [isModalDropdownOpen, setIsModalDropdownOpen] = useState(false)
-  const [modalStatus, setModalStatus] = useState("Draft")
-  const [perPage, setPerPage] = useState(10)
-  const [activePage, setActivePage] = useState(1)
+function useAuditDocuments() {
+  const [statusFilter, setStatusFilter] = useState("Semua Status");
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+  const [isModalDropdownOpen, setIsModalDropdownOpen] = useState(false);
+  const [modalStatus, setModalStatus] = useState("Draft");
+  const [perPage, setPerPage] = useState(10);
+  const [activePage, setActivePage] = useState(1);
 
   const filteredData = useMemo(() => {
     return statusFilter === "Semua Status"
-      ? tableData
-      : tableData.filter((item) => item.status === statusFilter)
-  }, [statusFilter])
+      ? auditData
+      : auditData.filter((item) => item.status === statusFilter);
+  }, [statusFilter]);
 
-  const totalData = filteredData.length
-  const totalPages = Math.max(1, Math.ceil(totalData / perPage))
-  const currentPage = Math.min(activePage, totalPages)
+  const totalData = filteredData.length;
+  const totalPages = Math.max(1, Math.ceil(totalData / perPage));
+  const currentPage = Math.min(activePage, totalPages);
 
   const pagedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * perPage
-    return filteredData.slice(startIndex, startIndex + perPage)
-  }, [filteredData, currentPage, perPage])
+    const startIndex = (currentPage - 1) * perPage;
+    return filteredData.slice(startIndex, startIndex + perPage);
+  }, [filteredData, currentPage, perPage]);
 
   const handlePaginateChange = useCallback((value) => {
-    setPerPage(Number(value))
-  }, [])
+    setPerPage(Number(value));
+  }, []);
 
   return {
     statusFilter,
@@ -60,10 +64,10 @@ function useSoADocuments() {
     totalData,
     totalPages,
     handlePaginateChange,
-  }
+  };
 }
 
-export default function DokumenSoA() {
+export default function DokumenAudit() {
   const {
     statusFilter,
     setStatusFilter,
@@ -80,7 +84,7 @@ export default function DokumenSoA() {
     totalData,
     totalPages,
     handlePaginateChange,
-  } = useSoADocuments()
+  } = useAuditDocuments();
 
   return (
     <div className="flex flex-wrap items-center gap-4">
@@ -111,7 +115,7 @@ export default function DokumenSoA() {
         onStatusChange={setModalStatus}
       />
 
-      <SoATable data={pagedData} />
+      <AuditTable data={pagedData} />
 
       <PaginateControls
         perPage={perPage}
@@ -124,5 +128,5 @@ export default function DokumenSoA() {
         totalData={totalData}
       />
     </div>
-  )
+  );
 }
