@@ -54,7 +54,8 @@ export function DeleteDialog({ row, className = "" }) {
               Peringatan!
             </p>
             <p className="text-sm text-red-700">
-              Tindakan ini tidak dapat dibatalkan. Dokumen akan dihapus secara permanen.
+              Tindakan ini tidak dapat dibatalkan. Dokumen akan dihapus secara
+              permanen.
             </p>
           </div>
 

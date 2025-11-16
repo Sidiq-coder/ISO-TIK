@@ -580,4 +580,67 @@ const auditData = [
   },
 ];
 
-export { tableData, auditData };
+const checklistData = [
+  {
+    id: 1,
+    title: "Pencapaian Target Uptime 99,995%",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+  },
+  {
+    id: 2,
+    title: "Fully Redundant Critical Systems (Tier IV)",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+  },
+  {
+    id: 3,
+    title: "Konfigurasi 2N untuk Sistem Kritikal",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+  },
+  {
+    id: 4,
+    title: "Jalur Distribusi Listrik & Pendingin Independen dan Aktif",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+  },
+  {
+    id: 5,
+    title: "Pemisahan Tanggung Jawab Keamanan Informasi",
+    description:
+      "To ensure that security responsibilities and duties are clearly defined and assigned to appropriate personnel within the organization.",
+  },
+  {
+    id: 6,
+    title: "Kebijakan Kontrol Akses",
+    description:
+      "To establish, document, and review access control policy based on business and information security requirements.",
+  },
+  {
+    id: 7,
+    title: "Manajemen Perubahan Sistem",
+    description:
+      "To ensure that security is maintained during changes to information processing facilities and systems.",
+  },
+  {
+    id: 8,
+    title: "Penilaian Risiko Keamanan Informasi",
+    description:
+      "To identify, analyze and evaluate information security risks in accordance with organizational requirements.",
+  },
+  {
+    id: 9,
+    title: "Kepatuhan terhadap Persyaratan Hukum dan Kontrak",
+    description:
+      "To avoid breaches of legal, statutory, regulatory or contractual obligations related to information security.",
+  },
+  {
+    id: 10,
+    title: "Peninjauan Hak Akses Pengguna",
+    description:
+      "To ensure authorized user access and prevent unauthorized access to systems and services through regular reviews.",
+  },
+];
+
+export { tableData, auditData, checklistData };

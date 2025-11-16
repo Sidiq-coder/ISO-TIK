@@ -52,21 +52,23 @@ export function AlertIconDialog({ type, row, className = "" }) {
           <DialogTitle className="heading-3 text-navy">
             {titleMap[type]}
           </DialogTitle>
-          <p className="text-gray-dark small mt-1">
-            {subtitleMap[type]}
-          </p>
+          <p className="text-gray-dark small mt-1">{subtitleMap[type]}</p>
         </DialogHeader>
 
         {readOnly ? (
           <div className="space-y-4 py-2">
             <div className="bg-state p-4 rounded-lg">
-              <p className="text-sm font-semibold text-navy mb-1">Checklist Audit</p>
+              <p className="text-sm font-semibold text-navy mb-1">
+                Checklist Audit
+              </p>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-gray-dark mb-1">Tanggal Audit</p>
-                <p className="text-sm text-navy font-medium">{row.tanggalAudit}</p>
+                <p className="text-sm text-navy font-medium">
+                  {row.tanggalAudit}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-gray-dark mb-1">Lokasi</p>
@@ -77,7 +79,9 @@ export function AlertIconDialog({ type, row, className = "" }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-gray-dark mb-1">Lead Auditor</p>
-                <p className="text-sm text-navy font-medium">{row.leadAuditor}</p>
+                <p className="text-sm text-navy font-medium">
+                  {row.leadAuditor}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-gray-dark mb-1">Auditor</p>
@@ -109,9 +113,9 @@ export function AlertIconDialog({ type, row, className = "" }) {
             </div>
 
             <DialogFooter>
-                <Button variant="outline" className="rounded-lg">
-                  Lihat Jawaban
-                </Button>
+              <Button variant="outline" className="rounded-lg">
+                Lihat Jawaban
+              </Button>
               <Button className="rounded-lg bg-navy hover:bg-navy-hover">
                 Isi Jawaban
               </Button>
@@ -205,7 +209,10 @@ export function AlertIconDialog({ type, row, className = "" }) {
                   Batal
                 </Button>
               </DialogClose>
-              <Button type="submit" className="rounded-lg bg-navy hover:bg-navy-hover">
+              <Button
+                type="submit"
+                className="rounded-lg bg-navy hover:bg-navy-hover"
+              >
                 Simpan Perubahan
               </Button>
             </DialogFooter>
