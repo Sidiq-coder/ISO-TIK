@@ -8,6 +8,8 @@ import DokumenSoA from "@/pages/Admin/SoA/DokumenSoA";
 import SoA from "@/pages/Admin/SoA";
 import KategoriSoA from "@/pages/Admin/SoA/KategoriSoA";
 import PertanyaanSoA from "@/pages/Admin/SoA/PertanyaanSoA";
+import NCR from "@/pages/Admin/NCR";
+import DetailNCR from "@/pages/Admin/NCR/DetailNCR";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -26,6 +28,8 @@ const router = createBrowserRouter([
         ],
       },
       { path: "dokumen", element: <DokumenPage /> },
+      { path: "ncr", element: <NCR /> },
+      { path: "ncr/:id/kasus", element: <DetailNCR /> },
 
     ],
   },
