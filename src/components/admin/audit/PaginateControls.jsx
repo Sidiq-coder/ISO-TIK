@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +26,11 @@ export function PaginateControls({
   setActivePage,
   className = "",
 }) {
+  const [targetPage, setTargetPage] = useState(activePage);
+  useEffect(() => {
+    setTargetPage(activePage);
+  }, [activePage, totalPages]);
+
   const canGoPrev = activePage > 1;
   const canGoNext = activePage < totalPages;
 
@@ -156,15 +162,34 @@ export function PaginateControls({
             type="number"
             min={1}
             max={totalPages}
-            value={activePage}
+            value={targetPage}
             onChange={(event) => {
-              const next = Number(event.target.value);
-              if (next >= 1 && next <= totalPages) {
-                setActivePage(next);
+              const value = event.target.value;
+              if (value === "") {
+                setTargetPage("");
+                return;
+              }
+              const next = Number(value);
+              if (!Number.isNaN(next)) {
+                setTargetPage(next);
               }
             }}
             className="w-16 rounded border px-2 body text-navy border-0"
           />
+          <Button
+            type="button"
+            className="h-10 px-4 body-medium"
+            onClick={() => {
+              const next =
+                typeof targetPage === "number" ? targetPage : Number(targetPage);
+              if (Number.isNaN(next)) return;
+              const clamped = Math.min(Math.max(next, 1), totalPages);
+              setActivePage(clamped);
+              setTargetPage(clamped);
+            }}
+          >
+            Go
+          </Button>
         </div>
       </div>
     </div>

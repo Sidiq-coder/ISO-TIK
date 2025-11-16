@@ -17,6 +17,7 @@ import ChecklistAudit from "@/pages/Admin/Audit/ChekclistAudit";
 import ChecklistExcel from "@/pages/Admin/Audit/ChecklistExcel";
 import KategoriPertanyaan from "@/pages/Admin/Audit/KategoriPertanyaan";
 
+import ReviewJawabanSoA from "@/pages/Admin/SoA/ReviewJawabanSoA";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
           { path: "dokumen", element: <DokumenSoA /> },
           { path: "kategori", element: <KategoriSoA /> },
           { path: "pertanyaan", element: <PertanyaanSoA /> },
+            { path: "review", element: <ReviewJawabanSoA /> },
         ],
       },
       {
@@ -58,3 +60,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+
