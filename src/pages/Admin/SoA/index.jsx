@@ -1,14 +1,21 @@
 
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import { Outlet } from "react-router-dom";
 export default function SoA(){
     const {setHeader} = useAdminLayout();
+    const location = useLocation();
     const baseTab = "body-medium p-4 rounded-t-[4px] transition-all duration-200";
     const inactive = "text-navy hover:bg-state";
     const active = "bg-state text-navy shadow border-b-[3px] border-navy";
+    const tabConfigs = [
+        {label: "Dokumen SoA", path: "/admin/soa/dokumen"},
+        {label: "Kategori SoA", path: "/admin/soa/kategori"},
+        {label: "Pertanyaan SoA", path: "/admin/soa/pertanyaan"},
+    ];
+    const hideTabs = location.pathname.includes("/admin/soa/review");
 
     useEffect(() => {
         setHeader({
@@ -23,11 +30,19 @@ export default function SoA(){
     }, [])
     return(
         <div>
-            <div className="flex gap-4" id="soa-sub-navbar">
-                <NavLink to="/admin/soa/dokumen" className={({ isActive }) => clsx(baseTab, isActive ? active : inactive)}> Dokumen SoA </NavLink>
-                <NavLink to="/admin/soa/kategori" className={({ isActive }) => clsx(baseTab, isActive ? active : inactive)}> Kategori SoA </NavLink>
-                <NavLink to="/admin/soa/pertanyaan" className={({ isActive }) => clsx(baseTab, isActive ? active : inactive)}> Pertanyaan SoA `</NavLink>
-            </div>
+            {!hideTabs && (
+                <div className="flex gap-4" id="soa-sub-navbar">
+                    {tabConfigs.map((tab) => (
+                        <NavLink
+                            key={tab.path}
+                            to={tab.path}
+                            className={({ isActive }) => clsx(baseTab, isActive ? active : inactive)}
+                        >
+                            {tab.label}
+                        </NavLink>
+                    ))}
+                </div>
+            )}
         
         <div className="mt-6">
             <Outlet />

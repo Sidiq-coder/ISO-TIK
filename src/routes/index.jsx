@@ -8,6 +8,7 @@ import DokumenSoA from "@/pages/Admin/SoA/DokumenSoA";
 import SoA from "@/pages/Admin/SoA";
 import KategoriSoA from "@/pages/Admin/SoA/KategoriSoA";
 import PertanyaanSoA from "@/pages/Admin/SoA/PertanyaanSoA";
+import ReviewJawabanSoA from "@/pages/Admin/SoA/ReviewJawabanSoA";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
             { path: "dokumen", element: <DokumenSoA /> },
             { path: "kategori", element: <KategoriSoA /> },
             { path: "pertanyaan", element: <PertanyaanSoA /> },
+            { path: "review", element: <ReviewJawabanSoA /> },
         ],
       },
       { path: "dokumen", element: <DokumenPage /> },
