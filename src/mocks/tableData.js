@@ -643,4 +643,166 @@ const checklistData = [
   },
 ];
 
-export { tableData, auditData, checklistData };
+const aspekAuditData = [
+  {
+    id: 1,
+    name: "Availability & Reliability",
+    description:
+      "Has management defined and approved a set of policies for information security?",
+    checklistId: 1,
+  },
+  {
+    id: 2,
+    name: "Availability & Reliability",
+    description:
+      "Has management defined and approved a set of policies for information security?",
+    checklistId: 1,
+  },
+  {
+    id: 3,
+    name: "Availability & Reliability",
+    description:
+      "Has management defined and approved a set of policies for information security?",
+    checklistId: 1,
+  },
+  {
+    id: 4,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    checklistId: 2,
+  },
+  {
+    id: 5,
+    name: "Organisasi Keamanan Informasi",
+    description:
+      "To establish a management framework to initiate and control the implementation and operation of information security within the organization.",
+    checklistId: 2,
+  },
+  {
+    id: 6,
+    name: "Keamanan Sumber Daya Manusia",
+    description:
+      "To ensure that employees and contractors understand their responsibilities and are suitable for the roles for which they are considered.",
+    checklistId: 2,
+  },
+  {
+    id: 7,
+    name: "Manajemen Aset",
+    description:
+      "To identify organizational assets and define appropriate protection responsibilities.",
+    checklistId: 2,
+  },
+  {
+    id: 8,
+    name: "Kontrol Akses",
+    description:
+      "To limit access to information and information processing facilities in accordance with business and security requirements.",
+    checklistId: 3,
+  },
+  {
+    id: 9,
+    name: "Kriptografi",
+    description:
+      "To ensure proper and effective use of cryptography to protect the confidentiality, authenticity and integrity of information.",
+    checklistId: 3,
+  },
+  {
+    id: 10,
+    name: "Keamanan Fisik dan Lingkungan",
+    description:
+      "To prevent unauthorized physical access, damage and interference to the organization's information and information processing facilities.",
+    checklistId: 3,
+  },
+];
+
+const kategoriPertanyaanData = [
+  {
+    id: 1,
+    aspekId: 1,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    pertanyaanCount: 5,
+  },
+  {
+    id: 2,
+    aspekId: 1,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    pertanyaanCount: 3,
+  },
+  {
+    id: 3,
+    aspekId: 1,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    pertanyaanCount: 7,
+  },
+  {
+    id: 4,
+    aspekId: 2,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    pertanyaanCount: 4,
+  },
+  {
+    id: 5,
+    aspekId: 2,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    pertanyaanCount: 6,
+  },
+  {
+    id: 6,
+    aspekId: 3,
+    name: "Kebijakan & Perencanaan",
+    description:
+      "To provide management direction and support for information security in accordance with business requirements and relevant laws and regulations.",
+    pertanyaanCount: 8,
+  },
+  {
+    id: 7,
+    aspekId: 4,
+    name: "Organisasi Keamanan",
+    description:
+      "To establish a management framework to initiate and control the implementation of information security.",
+    pertanyaanCount: 5,
+  },
+  {
+    id: 8,
+    aspekId: 5,
+    name: "Keamanan SDM",
+    description:
+      "To ensure employees understand their responsibilities and are suitable for their roles.",
+    pertanyaanCount: 4,
+  },
+  {
+    id: 9,
+    aspekId: 6,
+    name: "Manajemen Aset",
+    description:
+      "To identify organizational assets and define appropriate protection responsibilities.",
+    pertanyaanCount: 6,
+  },
+  {
+    id: 10,
+    aspekId: 7,
+    name: "Kontrol Akses",
+    description:
+      "To limit access to information and information processing facilities.",
+    pertanyaanCount: 9,
+  },
+];
+
+export {
+  tableData,
+  auditData,
+  checklistData,
+  aspekAuditData,
+  kategoriPertanyaanData,
+};
