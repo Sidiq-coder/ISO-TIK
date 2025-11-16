@@ -6,8 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Download, FileText, Trash2 } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { AlertIconDialog } from "./AlertIconDialog";
+import { DeleteDialog } from "./DeleteDialog";
 
 export function AuditTable({ data, className = "" }) {
   const rows = data && data.length ? data : [];
@@ -92,7 +93,7 @@ export function AuditTable({ data, className = "" }) {
                   <AlertIconDialog type="edit" row={row} />
                   <FileText className="text-[#00C950] w-5 h-5 cursor-pointer" />
                   <Download className="text-[#F1C441] w-5 h-5 cursor-pointer" />
-                  <Trash2 className="text-[#FB2C36] w-5 h-5 cursor-pointer" />
+                  <DeleteDialog row={row} />
                 </TableCell>
               </TableRow>
             ))
