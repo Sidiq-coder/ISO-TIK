@@ -1,6 +1,6 @@
 import { useState } from "react"
 import {tableData} from "@/mocks/tableData.js"; 
-import { SearchIcon, ChevronDown, Funnel, Plus, Eye, FilePen, Download, Trash2, FileText } from "lucide-react"
+import { SearchIcon, ChevronDown, Funnel, Plus, Eye, FilePen, Download, Trash2, FileText, ChevronLeft, ChevronRight} from "lucide-react"
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -34,12 +34,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+} from "@/components/ui/pagination"
 
 export default function DokumenSoA() {
   const [statusFilter, setStatusFilter] = useState("Semua Status")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDropdownClicked, setIsDropdownClicked] = useState(false)
   const [DropdownstatusFilter, setIsDropdownStatusFilter] = useState("Draft")
+  const [perPage, setPerpage] = useState(10)
+  const [activePage, setActivePage] = useState(1)
+
+  const filteredData =
+    statusFilter === "Semua Status"
+      ? tableData
+      : tableData.filter((item) => item.status === statusFilter)
+  const totalData = filteredData.length;
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / perPage))
+  const currentPage = Math.min(activePage, totalPages)
+  const startIndex = (currentPage - 1) * perPage
+  const pagedData = filteredData.slice(startIndex, startIndex + perPage)
   const filterOptions = [ 
     {value: "Semua Status"},
     {value: "Draft"},
@@ -47,9 +65,10 @@ export default function DokumenSoA() {
     {value: "Reviewed"},
     {value: "Approved"}
   ]
+  const paginateValue = [10, 20, 50, 100];
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <InputGroup className="h-14 max-w-[1093px]">
+      <InputGroup className="h-14 max-w-[1080px]">
         <InputGroupInput
           placeholder="Cari dokumen berdasarkan nama"
           className="bg-state text-navy placeholder:text-gray-dark"
@@ -63,10 +82,169 @@ export default function DokumenSoA() {
 
     <OverlayForm isDropdownClicked={isDropdownClicked} setIsDropdownClicked={setIsDropdownClicked} DropdownstatusFilter={DropdownstatusFilter} setIsDropdownStatusFilter={setIsDropdownStatusFilter}/>
 
-    <TableData/>
+    <TableData data={pagedData}/>
+    <Paginate
+      perPage={perPage}
+      onPaginateChange={(value) => {
+        setPerpage(Number(value))
+      }}
+      paginateValue={paginateValue}
+      setActivePage={setActivePage}
+      activePage={currentPage}
+      onPageChange={setActivePage}
+      totalPages={totalPages}
+      totalData={totalData}
+    />
     </div>
   )
 }
+
+function Paginate({
+  perPage,
+  onPaginateChange,
+  setActivePage,
+  paginateValue,
+  activePage,
+  onPageChange,
+  totalPages,
+  totalData
+}) {
+  const canGoPrev = activePage > 1
+  const canGoNext = activePage < totalPages
+
+  const buildButtons = () => {
+    if (totalPages <= 3) {
+      return Array.from({ length: totalPages }, (_, idx) => ({
+        type: "page",
+        value: idx + 1,
+      }))
+    }
+
+    const buttons = [{ type: "page", value: activePage }]
+    const nextPage = Math.min(activePage + 1, totalPages)
+
+    if (!buttons.find((btn) => btn.value === nextPage)) {
+      buttons.push({ type: "page", value: nextPage })
+    }
+
+    if (nextPage + 1 < totalPages) {
+      buttons.push({ type: "ellipsis" })
+    }
+
+    if (!buttons.find((btn) => btn.value === totalPages)) {
+      buttons.push({ type: "page", value: totalPages })
+    }
+
+    return buttons
+  }
+      
+    return(
+        <div className="flex items-center justify-between w-full  mt-6">
+            <DropdownMenu>
+            <div className="w-1/5">
+            <div className="flex w-full">
+                <span className="body text-gray-dark">Baris per halaman</span>
+            <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="text-navy body! w-[73px] h-[40px] flex items-center justify-between px-3 mx-2">
+                  {perPage}
+                  <ChevronDown className="size-4" />
+                </Button>
+            </DropdownMenuTrigger>
+              </div>
+            <div className="w-full body text-gray-dark mt-2">
+                Menampilkan 1 - {totalPages} dari {totalData} data
+            </div>
+            </div>
+            <DropdownMenuContent className="text-navy">
+                <DropdownMenuRadioGroup value={String(perPage)} onValueChange={onPaginateChange}>
+                {paginateValue.map((value) => (
+                <DropdownMenuRadioItem key={value} value={String(value)} className={`text-navy bg-gray-light focus:bg-gray-dark2`}>
+                {value}
+                </DropdownMenuRadioItem>
+                ))}
+                </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Pagination>
+            <PaginationContent>
+                <PaginationItem>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-[38px] h-[36px] p-0"
+                    onClick={() => canGoPrev && onPageChange(activePage - 1)}
+                    disabled={!canGoPrev}
+                  >
+                    <ChevronLeft className="size-4" />
+                  </Button>
+                </PaginationItem>
+                {buildButtons().map((item, idx) =>
+                  item.type === "ellipsis" ? (
+                    <PaginationItem key={`ellipsis-${idx}`}>
+                      <PaginationLink
+                        href="#"
+                        className="w-[38px]! h-[36px]! body!"
+                        onClick={(event) => event.preventDefault()}
+                      >
+                        ...
+                      </PaginationLink>
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={item.value}>
+                      <PaginationLink
+                        href="#"
+                        className={`w-[38px]! h-[36px]! body!`}
+                        isActive={item.value === activePage}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          onPageChange(item.value)
+                        }}
+                      >
+                        {item.value}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
+                <PaginationItem>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-[38px] h-[36px] p-0"
+                    onClick={() => canGoNext && onPageChange(activePage + 1)}
+                    disabled={!canGoNext}
+                  >
+                    <ChevronRight className="size-4" />
+                  </Button>
+                </PaginationItem>
+            </PaginationContent>
+            </Pagination>
+
+            <div className="flex items-center gap-2">
+            <span className="body text-gray-dark">
+                Halaman
+            </span>
+            <div className="flex items-center gap-2">
+                <input
+                id="goto-page"
+                type="number"
+                min={1}
+                max={totalPages}
+                value={activePage}
+                onChange={(event) => {
+                    const next = Number(event.target.value)
+                    if (next >= 1 && next <= totalPages) {
+                    setActivePage(next)
+                    }
+                }}
+                className="w-16 rounded border px-2 body text-navy border-0"
+                />
+            </div>
+            </div>
+        </div>
+    )
+}
+
 
 function Dropdown({isMenuOpen, setIsMenuOpen, statusFilter, setStatusFilter, filterOptions, classNameButton, classNameDropdown}){
     return(
@@ -176,8 +354,8 @@ function OverlayForm({isDropdownClicked, setIsDropdownClicked, DropdownstatusFil
     )
 }
 
-function TableData(){
-    
+function TableData({ data = tableData }){
+    const rows = data && data.length ? data : []
     return(
     <div className="border-2 rounded-t-xl relative w-full overflow-x-auto">
     <Table>
@@ -194,8 +372,15 @@ function TableData(){
         </TableRow>
     </TableHeader>
     <TableBody>
-      {tableData.map((row) => (
-            <TableRow key={row.revisi}>
+      {rows.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={8} className="text-center body text-gray-dark py-6">
+            Tidak ada data
+          </TableCell>
+        </TableRow>
+      ) : (
+        rows.map((row) => (
+            <TableRow key={`${row.noDoc}-${row.revisi}`}>
               <TableCell className="body text-navy text-left">{row.noDoc}</TableCell>
               <TableCell className={`body text-left`}>{row.judul}</TableCell>
               <TableCell className="body text-center">{row.tanggalTerbit}</TableCell>
@@ -207,9 +392,18 @@ function TableData(){
                 <Eye className="text-[#121A2E] w-5 h-5 cursor-pointer"/> <FilePen className="text-[#2B7FFF] w-5 h-5 cursor-pointer"/> <FileText className="text-[#00C950] w-5 h-5 cursor-pointer"/> <Download className="text-[#F1C441] w-5 h-5 cursor-pointer"/> <Trash2 className="text-[#FB2C36] w-5 h-5 cursor-pointer"/>
               </TableCell>
             </TableRow>
-          ))}
+          ))
+      )}1
     </TableBody>
     </Table>
     </div>
     )
+}
+
+function AlertIcon({noDoc, judul, tanggalTerbit, penyusun, ketuaIso, direktur, status}){
+  return(
+    <div>
+      alert icon
+    </div>
+  )
 }

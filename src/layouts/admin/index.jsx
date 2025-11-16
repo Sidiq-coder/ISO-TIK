@@ -12,7 +12,7 @@ export function AdminLayout({ children }) {
         <AdminSidebarContent />
       </BaseSidebar>
 
-      <SidebarInset className="bg-gray-light">
+    <SidebarInset className="bg-gray-light">
         <AdminNavbar />
         <div className="pl-16 py-6 pr-8">
           <Outlet/>
