@@ -9,110 +9,40 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Eye, ChevronDown } from "lucide-react"
-
-const documentMeta = {
-  title: "SOA ISO 27001:2022 - Q1 2025",
-  category: { code: "A.5", name: "Information Security Policies" },
-}
-
-const controlQuestion = {
-  id: "A.5.1",
-  title: "Kebijakan untuk keamanan informasi",
-  description:
-    "Apakah kebijakan keamanan informasi dan kebijakan-kebijakan topik khusus telah ditentukan, disetujui oleh manajemen, diterbitkan, dikomunikasikan kepada dan diketahui oleh personil yang relevan serta para pihak berkepentingan yang relevan, dan ditinjau pada selang waktu terencana serta pada saat terjadi-nya perubahan yang signifikan?",
-  justification:
-    "Kebijakan keamanan informasi telah diterapkan di seluruh unit kerja dan dikomunikasikan minimal 2 kali dalam setahun. Pengecualian diberikan untuk unit yang sedang melakukan migrasi sistem.",
-  summary: [
-    "Kebijakan penerapan SMKI telah didokumentasikan dan diterapkan di seluruh unit.",
-    "Peninjauan dokumen SMKI dilakukan minimal 1 kali setiap tahun.",
-  ],
-}
-
-const controlMatrix = [
-  {
-    code: "PL",
-    label: "Persyaratan Legal",
-    value: { yes: true, no: false, partial: false },
-  },
-  {
-    code: "KK",
-    label: "Kewajiban Kontrak",
-    value: { yes: false, no: true, partial: false },
-  },
-  {
-    code: "PK/PB",
-    label: "Persyaratan Kerja / Praktek yang Baik",
-    value: { yes: false, no: false, partial: true },
-  },
-  {
-    code: "HPR",
-    label: "Hasil Penilaian Risiko (Keamanan Informasi)",
-    value: { yes: true, no: false, partial: false },
-  },
-]
-
-const relatedDocuments = [
-  {
-    id: "MN-MG-01",
-    title: "Manual Keamanan Informasi",
-    description: "Kebijakan umum keamanan informasi organisasi",
-  },
-  {
-    id: "MN-MG-02",
-    title: "Manual Prosedur Keamanan",
-    description: "Rincian prosedur keamanan pada lingkungan produksi",
-  },
-  {
-    id: "MN-MG-03",
-    title: "Pedoman Audit Internal",
-    description: "Checklist audit tahunan SMKI",
-  },
-]
-
-const navigatorConfig = [
-  {
-    code: "A.5",
-    label: "Information Security Policies",
-    questions: [
-      { id: "A5-1", label: "Information Security Policies", status: "complete" },
-      { id: "A5-2", label: "Information Security Policies", status: "in-progress" },
-      { id: "A5-3", label: "Information Security Policies", status: "active" },
-    ],
-  },
-  {
-    code: "A.6",
-    label: "Organization of Information Security",
-    questions: [{ id: "A6-1", label: "Information Security Policies", status: "pending" }],
-  },
-  {
-    code: "A.7",
-    label: "Human Resource Security",
-    questions: [],
-  },
-  {
-    code: "A.8",
-    label: "Asset Management",
-    questions: [],
-  },
-  {
-    code: "A.9",
-    label: "Access Control",
-    questions: [],
-  },
-]
-
+import { useReviewSoA } from "./hooks/useReviewSoA"
+import {
+  getReviewMetaByTitle,
+  reviewControlQuestion,
+  reviewControlMatrix,
+  reviewRelatedDocuments,
+  reviewNavigatorConfig,
+} from "@/mocks/reviewSoAData"
 export default function ReviewJawabanSoA() {
-  const controls = useMemo(() => controlMatrix, [])
-  const [controlState, setControlState] = useState("no")
-  const [comment, setComment] = useState("")
-  const [toolbarShow, setToolbarShow] = useState(true)
-  const [activeSection, setActiveSection] = useState(navigatorConfig[0].code)
-  const [activeQuestion, setActiveQuestion] = useState("A5-3")
-  const [viewMode, setViewMode] = useState("pengisian")
+  const controls = useMemo(() => reviewControlMatrix, [])
+  const documentMeta = useMemo(() => getReviewMetaByTitle("SOA ISO 27001:2022 - Q1 2025"), [])
+  const {
+    controlState,
+    setControlState,
+    comment,
+    setComment,
+    toolbarShow,
+    setToolbarShow,
+    viewMode,
+    setViewMode,
+    activeSection,
+    setActiveSection,
+    activeQuestion,
+    setActiveQuestion,
+  } = useReviewSoA({
+    defaultControlState: "no",
+    defaultViewMode: "pengisian",
+    defaultSection: reviewNavigatorConfig[0].code,
+    defaultQuestion: "A5-3",
+  })
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader />
+      <PageHeader documentMeta={documentMeta} />
 
       <section className="flex gap-6">
         <div className="flex-1 space-y-6">
@@ -121,7 +51,7 @@ export default function ReviewJawabanSoA() {
             controlState={controlState}
             setControlState={setControlState}
           />
-          <RelatedDocs docs={relatedDocuments} />
+          <RelatedDocs docs={reviewRelatedDocuments} />
           <CommentCard comment={comment} setComment={setComment} />
           <QuestionPagination />
         </div>
@@ -135,7 +65,7 @@ export default function ReviewJawabanSoA() {
           />
           <LegendCard />
           <Navigator
-            sections={navigatorConfig}
+            sections={reviewNavigatorConfig}
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             activeQuestion={activeQuestion}
@@ -147,7 +77,7 @@ export default function ReviewJawabanSoA() {
   )
 }
 
-function PageHeader() {
+function PageHeader({ documentMeta }) {
   return (
     <header className="space-y-4">
       <Breadcrumb>
@@ -186,11 +116,11 @@ function QuestionCard({ controls, controlState, setControlState }) {
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center rounded bg-[#E7EEFF] text-[#233876] px-3 py-1 text-xs font-semibold">
-            {controlQuestion.id}
+            {reviewControlQuestion.id}
           </span>
-          <h2 className="heading-4 text-navy">{controlQuestion.title}</h2>
+          <h2 className="heading-4 text-navy">{reviewControlQuestion.title}</h2>
         </div>
-        <p className="text-gray-dark leading-relaxed">{controlQuestion.description}</p>
+        <p className="text-gray-dark leading-relaxed">{reviewControlQuestion.description}</p>
       </div>
 
       <div className="space-y-3">
@@ -228,11 +158,14 @@ function QuestionCard({ controls, controlState, setControlState }) {
             key={control.code}
             className={`grid grid-cols-4 text-sm border-t ${index % 2 === 1 ? "bg-[#FBFCFF]" : "bg-white"}`}
           >
-            <div className="text-left px-4 py-3 flex items-center gap-2 text-gray-dark">
-              <span className="text-xs font-semibold text-navy px-2 py-0.5 rounded-full bg-[#E7EEFF]">
-                {control.code}
-              </span>
-              {control.label}
+            <div className="text-left px-4 py-3 flex flex-col gap-1 text-gray-dark">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-navy px-2 py-0.5 rounded-full bg-[#E7EEFF]">
+                  {control.code}
+                </span>
+                <span className="font-medium text-navy">{control.label}</span>
+              </div>
+              <p className="text-xs text-gray-500">{control.description}</p>
             </div>
             {["yes", "no", "partial"].map((type) => (
               <div key={type} className="py-3 border-l flex items-center justify-center">
@@ -249,14 +182,14 @@ function QuestionCard({ controls, controlState, setControlState }) {
       <div className="space-y-2">
         <p className="text-sm font-medium text-gray-dark">Pembenaran (Justifikasi) terhadap Pengecualian</p>
         <div className="rounded-md bg-[#F6F7FB] p-4 text-sm text-gray-700 min-h-[110px]">
-          {controlQuestion.justification}
+          {reviewControlQuestion.justification}
         </div>
       </div>
 
       <div className="space-y-2">
         <p className="text-sm font-medium text-gray-dark">Ringkasan Penerapan / Pelaksanaan</p>
         <div className="rounded-md bg-[#F6F7FB] p-4 text-sm text-gray-700 min-h-[110px] space-y-2">
-          {controlQuestion.summary.map((item, index) => (
+          {reviewControlQuestion.summary.map((item, index) => (
             <p key={item}>
               {index + 1}). {item}
             </p>

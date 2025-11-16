@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-} from "@/components/ui/pagination"
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
+} from "@/components/ui/pagination";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 export function PaginateControls({
   perPage,
@@ -26,39 +26,39 @@ export function PaginateControls({
   setActivePage,
   className = "",
 }) {
-  const [targetPage, setTargetPage] = useState(activePage)
+  const [targetPage, setTargetPage] = useState(activePage);
   useEffect(() => {
-    setTargetPage(activePage)
-  }, [activePage])
+    setTargetPage(activePage);
+  }, [activePage, totalPages]);
 
-  const canGoPrev = activePage > 1
-  const canGoNext = activePage < totalPages
+  const canGoPrev = activePage > 1;
+  const canGoNext = activePage < totalPages;
 
   const buildButtons = () => {
     if (totalPages <= 3) {
       return Array.from({ length: totalPages }, (_, idx) => ({
         type: "page",
         value: idx + 1,
-      }))
+      }));
     }
 
-    const buttons = [{ type: "page", value: activePage }]
-    const nextPage = Math.min(activePage + 1, totalPages)
+    const buttons = [{ type: "page", value: activePage }];
+    const nextPage = Math.min(activePage + 1, totalPages);
 
     if (!buttons.find((btn) => btn.value === nextPage)) {
-      buttons.push({ type: "page", value: nextPage })
+      buttons.push({ type: "page", value: nextPage });
     }
 
     if (nextPage + 1 < totalPages) {
-      buttons.push({ type: "ellipsis" })
+      buttons.push({ type: "ellipsis" });
     }
 
     if (!buttons.find((btn) => btn.value === totalPages)) {
-      buttons.push({ type: "page", value: totalPages })
+      buttons.push({ type: "page", value: totalPages });
     }
 
-    return buttons
-  }
+    return buttons;
+  };
 
   return (
     <div
@@ -131,8 +131,8 @@ export function PaginateControls({
                   className="w-[38px]! h-[36px]! body!"
                   isActive={item.value === activePage}
                   onClick={(event) => {
-                    event.preventDefault()
-                    onPageChange(item.value)
+                    event.preventDefault();
+                    onPageChange(item.value);
                   }}
                 >
                   {item.value}
@@ -164,14 +164,14 @@ export function PaginateControls({
             max={totalPages}
             value={targetPage}
             onChange={(event) => {
-              const value = event.target.value
+              const value = event.target.value;
               if (value === "") {
-                setTargetPage("")
-                return
+                setTargetPage("");
+                return;
               }
-              const next = Number(value)
+              const next = Number(value);
               if (!Number.isNaN(next)) {
-                setTargetPage(next)
+                setTargetPage(next);
               }
             }}
             className="w-16 rounded border px-2 body text-navy border-0"
@@ -181,10 +181,11 @@ export function PaginateControls({
             className="h-10 px-4 body-medium"
             onClick={() => {
               const next =
-                typeof targetPage === "number" ? targetPage : Number(targetPage)
-              const clamped = Math.min(Math.max(next || 1, 1), totalPages)
-              setActivePage(clamped)
-              setTargetPage(clamped)
+                typeof targetPage === "number" ? targetPage : Number(targetPage);
+              if (Number.isNaN(next)) return;
+              const clamped = Math.min(Math.max(next, 1), totalPages);
+              setActivePage(clamped);
+              setTargetPage(clamped);
             }}
           >
             Go
@@ -192,5 +193,5 @@ export function PaginateControls({
         </div>
       </div>
     </div>
-  )
+  );
 }
