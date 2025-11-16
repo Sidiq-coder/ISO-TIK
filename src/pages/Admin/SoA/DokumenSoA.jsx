@@ -2,10 +2,10 @@ import { useCallback, useMemo, useState } from "react"
 import { tableData } from "@/mocks/tableData.js"
 import { SearchIcon } from "lucide-react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { OverlayForm } from "./components/OverlayForm"
-import { PaginateControls } from "./components/PaginateControls"
-import { SoATable } from "./components/SoATable"
-import { StatusDropdown } from "./components/StatusDropdown"
+import { OverlayForm } from "@/components/admin/soa/OverlayForm"
+import { PaginateControls } from "@/components/admin/soa/PaginateControls"
+import { SoATable } from "@/components/admin/soa/SoATable"
+import { StatusDropdown } from "@/components/admin/soa/StatusDropdown"
 
 const FILTER_OPTIONS = [
   { value: "Semua Status" },
