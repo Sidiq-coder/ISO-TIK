@@ -20,7 +20,7 @@ export default function Audit() {
         urlDetail: "/admin/profile",
       },
     });
-  }, []);
+  }, [setHeader]);
   return (
     <div>
       <div className="flex gap-4" id="audit-sub-navbar">
@@ -58,7 +58,7 @@ export default function Audit() {
           }
         >
           {" "}
-          Aspek Excel{" "}
+          Checklist Excel{" "}
         </NavLink>
       </div>
 
