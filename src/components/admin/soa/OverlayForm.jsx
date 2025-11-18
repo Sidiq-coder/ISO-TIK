@@ -69,8 +69,8 @@ export function OverlayForm({
                 <Input
                   id="tanggalTerbit"
                   name="tanggalTerbit"
+                  type={`date`}
                   className="rounded-[4px]! transform transition-all duration-50 cursor-pointer bg-state placeholder:text-gray-dark focus:bg-gray-light focus:border-2 focus:border-navy h-12!"
-                  placeholder="10/09/2005"
                 />
               </div>
             </div>

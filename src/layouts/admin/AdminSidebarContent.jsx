@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
+import usersIcon from "../../assets/users.png"
 import {
   SidebarGroup,
   SidebarMenu,
@@ -37,7 +38,10 @@ function SidebarNavItem({
 
   const iconClasses = showHoverIcon
     ? `h-4 w-4 ${isActive ? "text-gray-light" : "text-navy scale-110"} transition-all duration-200`
-    : "h-4 w-4 text-sidebar-foreground/70 transition-all duration-200";
+    : "h-4 w-4 text-gray-dark transition-all duration-200";
+  const resolvedIconClasses = showHoverIcon
+    ? item.hoverIconClassName ?? iconClasses
+    : item.iconClassName ?? iconClasses;
 
   const textClasses = `${
     isActive
@@ -56,11 +60,37 @@ function SidebarNavItem({
         className={`${buttonClasses} ${isActive ? activeClasses : inactiveClasses}`}
       >
         <NavLink to={item.url} className="flex items-center gap-3 p-6">
-          <IconComponent className={iconClasses} />
+          <IconComponent className={resolvedIconClasses} />
           <span className={textClasses}>{item.title}</span>
         </NavLink>
       </SidebarMenuButton>
     </SidebarMenuItem>
+  );
+}
+
+function UserIcon({ className = "h-4 w-4 text-gray-dark", style, ...props }) {
+  const combinedClassName = `inline-block ${className}`.trim();
+
+  return (
+    <span
+      role="img"
+      aria-label="User icon"
+      className={combinedClassName}
+      style={{
+        WebkitMaskImage: `url(${usersIcon})`,
+        maskImage: `url(${usersIcon})`,
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        backgroundColor: "currentColor",
+        display: "inline-block",
+        ...style,
+      }}
+      {...props}
+    />
   );
 }
 
@@ -72,7 +102,8 @@ export function AdminSidebarContent() {
       { title: "SoA", url: "/admin/SoA", icon: FileText, hoverIcon: FileText },
       { title: "Audit", url: "/admin/Audit", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
       { title: "NCR", url: "/admin/NCR", icon: TriangleAlert, hoverIcon: TriangleAlert },
-      { title: "High Level Audit", url: "/admin/highlevelaudit", icon: FileChartLine, hoverIcon: FileChartLine },
+      { title: "Manual", url: "/admin/manual", icon: FileChartLine, hoverIcon: FileChartLine },
+      { title: "Manajemen Pengguna", url: "/admin/manajemen-pengguna", icon: UserIcon, hoverIcon: UserIcon, iconClassName: "!h-6 !w-6 text-gray-dark", hoverIconClassName: "!h-6 !w-6 text-navy", },
     ],
     []
   );
@@ -97,9 +128,10 @@ export function AdminSidebarContent() {
     <>
       <SidebarGroup>
         <SidebarMenu>
-          {navigation.map((item) => (
+          {navigation.map((item, index) => (
+            <React.Fragment>
             <SidebarNavItem
-              key={item.title}
+              key={index}
               item={item}
               isActive={activeItem === item.title}
               isHovered={hoveredItem === item.title && activeItem !== item.title}
@@ -111,6 +143,19 @@ export function AdminSidebarContent() {
               }}
               onMouseLeave={() => setHoveredItem(null)}
             />
+            {index === 1 && (
+              <div className="flex flex-col justify-center p-6 gap-3 text-gray-dark">
+                <hr className="border border-b"/>
+                <p className="small">Modul Audit</p>
+            </div>
+          )}
+            {index === 5 && (
+              <div className="flex flex-col justify-center p-6 gap-3 text-gray-dark">
+                <hr className="border border-b"/>
+                <p className="small">Administrasi</p>
+            </div>
+          )}
+            </React.Fragment>
           ))}
         </SidebarMenu>
       </SidebarGroup>
