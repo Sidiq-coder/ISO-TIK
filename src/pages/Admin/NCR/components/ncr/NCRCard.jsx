@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Eye, FilePen, Trash2 } from "lucide-react";
 
-export function NCRCard({ ncr, onViewDetail }) {
+export function NCRCard({ ncr, onViewDetail, onEdit, onDelete }) {
   return (
     <div className="bg-white rounded-lg border border-gray-300 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
@@ -23,6 +23,7 @@ export function NCRCard({ ncr, onViewDetail }) {
           <Button
             variant="ghost"
             size="icon"
+            onClick={() => onEdit(ncr)}
             className="text-navy hover:text-navy-hover hover:bg-gray-100"
           >
             <FilePen className="h-5 w-5" />
@@ -30,7 +31,8 @@ export function NCRCard({ ncr, onViewDetail }) {
           <Button
             variant="ghost"
             size="icon"
-            className="text-red hover:text-red-700 hover:bg-red-50"
+            onClick={() => onDelete(ncr)}
+            className="text-red-500 hover:text-red-700 hover:bg-red-50"
           >
             <Trash2 className="h-5 w-5" />
           </Button>
