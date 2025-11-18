@@ -16,6 +16,7 @@ import AspekAudit from "@/pages/Admin/Audit/AspekAudit";
 import ChecklistAudit from "@/pages/Admin/Audit/ChekclistAudit";
 import ChecklistExcel from "@/pages/Admin/Audit/ChecklistExcel";
 import KategoriPertanyaan from "@/pages/Admin/Audit/KategoriPertanyaan";
+import PertanyaanAudit from "@/pages/Admin/Audit/PertanyaanAudit";
 
 import ReviewJawabanSoA from "@/pages/Admin/SoA/ReviewJawabanSoA";
 const router = createBrowserRouter([
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
           { path: "dokumen", element: <DokumenSoA /> },
           { path: "kategori", element: <KategoriSoA /> },
           { path: "pertanyaan", element: <PertanyaanSoA /> },
-            { path: "review", element: <ReviewJawabanSoA /> },
+          { path: "review", element: <ReviewJawabanSoA /> },
         ],
       },
       {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       { path: "ncr", element: <NCR /> },
       { path: "ncr/:id/kasus", element: <DetailNCR /> },
       { path: "audit/aspek/kategori/:id", element: <KategoriPertanyaan /> },
+      {
+        path: "audit/aspek/kategori/:aspekId/pertanyaan/:id",
+        element: <PertanyaanAudit />,
+      },
     ],
   },
   {
@@ -60,4 +65,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-
