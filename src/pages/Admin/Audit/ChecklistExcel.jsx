@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { SearchIcon, Eye, FilePen, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   InputGroup,
   InputGroupAddon,
@@ -65,6 +66,7 @@ function ChecklistExcelCard({ checklist, onView, onEdit, onDelete }) {
 }
 
 function useChecklistManagement() {
+  const navigate = useNavigate();
   const [checklistList, setChecklistList] = useState(checklistData);
   const [searchQuery, setSearchQuery] = useState("");
   const [perPage, setPerPage] = useState(10);
@@ -148,10 +150,17 @@ function useChecklistManagement() {
     setSelectedChecklist(null);
   }, [selectedChecklist]);
 
-  const handleView = useCallback((checklist) => {
-    console.log("View checklist:", checklist);
-    // Navigate to detail page
-  }, []);
+  const handleView = useCallback(
+    (checklist) => {
+      navigate(`/admin/audit/checklist-excel/${checklist.id}/item`, {
+        state: {
+          checklistAuditName: checklist.title,
+          checklistExcelName: checklist.title,
+        },
+      });
+    },
+    [navigate]
+  );
 
   const openEditDialog = useCallback((checklist) => {
     setSelectedChecklist(checklist);

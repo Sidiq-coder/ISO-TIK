@@ -857,6 +857,88 @@ const pertanyaanAuditData = [
   },
 ];
 
+const itemAuditData = [
+  {
+    id: 1,
+    checklistExcelId: 1,
+    aspekId: 1,
+    aspekName: "Arsitektur",
+    itemAudit:
+      "Apakah desain arsitektur mendukung fault tolerance (tanpa SPOF)?",
+  },
+  {
+    id: 2,
+    checklistExcelId: 1,
+    aspekId: 1,
+    aspekName: "Arsitektur",
+    itemAudit:
+      "Apakah desain arsitektur mendukung fault tolerance (tanpa SPOF)?",
+  },
+  {
+    id: 3,
+    checklistExcelId: 1,
+    aspekId: 1,
+    aspekName: "Arsitektur",
+    itemAudit:
+      "Apakah desain arsitektur mendukung fault tolerance (tanpa SPOF)?",
+  },
+  {
+    id: 4,
+    checklistExcelId: 2,
+    aspekId: 2,
+    aspekName: "Availability & Reliability",
+    itemAudit: "Apakah sistem memiliki redundansi untuk komponen kritikal?",
+  },
+  {
+    id: 5,
+    checklistExcelId: 2,
+    aspekId: 3,
+    aspekName: "Kebijakan & Perencanaan",
+    itemAudit:
+      "Apakah kebijakan keamanan informasi telah didokumentasikan dan disetujui?",
+  },
+  {
+    id: 6,
+    checklistExcelId: 3,
+    aspekId: 4,
+    aspekName: "Organisasi Keamanan",
+    itemAudit:
+      "Apakah struktur organisasi keamanan telah ditetapkan dengan jelas?",
+  },
+  {
+    id: 7,
+    checklistExcelId: 3,
+    aspekId: 5,
+    aspekName: "Keamanan SDM",
+    itemAudit:
+      "Apakah semua karyawan telah menjalani background check sebelum dipekerjakan?",
+  },
+  {
+    id: 8,
+    checklistExcelId: 4,
+    aspekId: 6,
+    aspekName: "Manajemen Aset",
+    itemAudit:
+      "Apakah semua aset informasi telah diidentifikasi dan didokumentasikan?",
+  },
+  {
+    id: 9,
+    checklistExcelId: 5,
+    aspekId: 7,
+    aspekName: "Kontrol Akses",
+    itemAudit:
+      "Apakah kebijakan kontrol akses telah ditetapkan dan dikomunikasikan?",
+  },
+  {
+    id: 10,
+    checklistExcelId: 5,
+    aspekId: 8,
+    aspekName: "Kriptografi",
+    itemAudit:
+      "Apakah penggunaan kriptografi telah sesuai dengan standar yang ditetapkan?",
+  },
+];
+
 export {
   tableData,
   auditData,
@@ -864,4 +946,5 @@ export {
   aspekAuditData,
   kategoriPertanyaanData,
   pertanyaanAuditData,
+  itemAuditData,
 };
