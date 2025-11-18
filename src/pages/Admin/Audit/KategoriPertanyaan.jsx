@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { useLocation, useParams, Link } from "react-router-dom";
+import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronRight, SearchIcon } from "lucide-react";
 import {
   InputGroup,
@@ -36,6 +36,7 @@ export default function KategoriPertanyaan() {
   const { setHeader } = useAdminLayout();
   const location = useLocation();
   const { id: aspekId } = useParams();
+  const navigate = useNavigate();
 
   const { checklistName, aspekName } = location.state || {
     checklistName: "Pencapaian Target Uptime 99,995%",
@@ -132,10 +133,18 @@ export default function KategoriPertanyaan() {
     setIsDeleteDialogOpen(false);
     setSelectedKategori(null);
   };
-
   const handleAddPertanyaan = (kategori) => {
-    console.log("Add pertanyaan to kategori:", kategori);
-    // Navigate to pertanyaan page or open dialog
+    navigate(
+      `/admin/audit/aspek/kategori/${aspekId}/pertanyaan/${kategori.id}`,
+      {
+        state: {
+          kategoriName: kategori.name,
+          checklistName,
+          aspekName,
+          aspekId,
+        },
+      }
+    );
   };
 
   const handleViewPertanyaan = (kategori) => {

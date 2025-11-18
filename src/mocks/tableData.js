@@ -799,10 +799,69 @@ const kategoriPertanyaanData = [
   },
 ];
 
+const pertanyaanAuditData = [
+  {
+    id: 1,
+    kategoriId: 1,
+    pertanyaan:
+      "Apakah terdapat dokumen SLA (Service Level Agreement) yang mendefinisikan target uptime 99,995%?",
+  },
+  {
+    id: 2,
+    kategoriId: 1,
+    pertanyaan:
+      "Apakah manajemen telah melakukan risk assessment terkait downtime dan kegagalan sistem?",
+  },
+  {
+    id: 3,
+    kategoriId: 1,
+    pertanyaan:
+      "Apakah ada rencana kapasitas (capacity planning) untuk mendukung ketersediaan layanan?",
+  },
+  {
+    id: 4,
+    kategoriId: 2,
+    pertanyaan:
+      "Apakah sistem backup telah diuji secara berkala untuk memastikan pemulihan data?",
+  },
+  {
+    id: 5,
+    kategoriId: 2,
+    pertanyaan: "Apakah terdapat dokumentasi prosedur disaster recovery?",
+  },
+  {
+    id: 6,
+    kategoriId: 3,
+    pertanyaan:
+      "Apakah monitoring sistem berjalan 24/7 untuk mendeteksi anomali?",
+  },
+  {
+    id: 7,
+    kategoriId: 3,
+    pertanyaan: "Apakah terdapat sistem alert otomatis untuk insiden kritis?",
+  },
+  {
+    id: 8,
+    kategoriId: 4,
+    pertanyaan: "Apakah kebijakan keamanan informasi telah didokumentasikan?",
+  },
+  {
+    id: 9,
+    kategoriId: 5,
+    pertanyaan: "Apakah ada program pelatihan keamanan untuk karyawan?",
+  },
+  {
+    id: 10,
+    kategoriId: 6,
+    pertanyaan: "Apakah inventaris aset IT telah dibuat dan diperbarui?",
+  },
+];
+
 export {
   tableData,
   auditData,
   checklistData,
   aspekAuditData,
   kategoriPertanyaanData,
+  pertanyaanAuditData,
 };
