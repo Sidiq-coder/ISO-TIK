@@ -65,7 +65,7 @@ export function OverlayForm({
                 />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="tanggalTerbit">Username</Label>
+                <Label htmlFor="tanggalTerbit">Tanggal Terbit</Label>
                 <Input
                   id="tanggalTerbit"
                   name="tanggalTerbit"

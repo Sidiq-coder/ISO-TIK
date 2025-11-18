@@ -11,8 +11,8 @@ import {
   AspekDialog,
   DeleteAspekDialog,
 } from "@/components/admin/audit/AspekDialog";
-import { PaginateControls } from "@/components/admin/audit/PaginateControls";
-import { StatusDropdown } from "@/components/admin/audit/StatusDropdown";
+import { PaginateControls } from "@/components/admin/table/PaginateControls";
+import { StatusDropdown } from "@/components/admin/table/StatusDropdown";
 
 const PAGINATE_OPTIONS = [10, 20, 50, 100];
 

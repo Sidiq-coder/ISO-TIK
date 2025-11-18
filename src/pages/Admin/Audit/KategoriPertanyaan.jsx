@@ -11,7 +11,7 @@ import {
   KategoriDialog,
   DeleteKategoriDialog,
 } from "@/components/admin/audit/KategoriDialog";
-import { PaginateControls } from "@/components/admin/audit/PaginateControls";
+import { PaginateControls } from "@/components/admin/table/PaginateControls";
 import { kategoriPertanyaanData } from "@/mocks/tableData";
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 

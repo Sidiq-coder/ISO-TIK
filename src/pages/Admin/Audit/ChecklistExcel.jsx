@@ -5,8 +5,8 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { PaginateControls } from "@/components/admin/audit/PaginateControls";
-import { StatusDropdown } from "@/components/admin/audit/StatusDropdown";
+import { PaginateControls } from "@/components/admin/table/PaginateControls";
+import { StatusDropdown } from "@/components/admin/table/StatusDropdown";
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 import {
   ChecklistExcelDialog,
