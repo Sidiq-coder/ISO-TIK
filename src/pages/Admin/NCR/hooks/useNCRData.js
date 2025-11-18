@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
+import { DEFAULT_PER_PAGE, DEFAULT_PAGE } from "../constants";
 
 export function useNCRDocuments(data) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [perPage, setPerPage] = useState(10);
-  const [activePage, setActivePage] = useState(1);
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const [activePage, setActivePage] = useState(DEFAULT_PAGE);
 
   const filteredData = useMemo(() => {
     if (!searchQuery.trim()) return data;
@@ -43,8 +44,8 @@ export function useNCRDocuments(data) {
 
 export function useCaseDocuments(data) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [perPage, setPerPage] = useState(10);
-  const [activePage, setActivePage] = useState(1);
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const [activePage, setActivePage] = useState(DEFAULT_PAGE);
 
   const filteredData = useMemo(() => {
     if (!searchQuery.trim()) return data;

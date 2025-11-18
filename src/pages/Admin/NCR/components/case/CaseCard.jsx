@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Eye, FilePen, Trash2 } from "lucide-react";
 
-export function CaseCard({ kasus }) {
+export function CaseCard({ kasus, onViewDetail, onEdit, onDelete }) {
   return (
     <div className="bg-white rounded-lg border border-gray-300 p-4 hover:shadow-md transition-shadow">
       <div className="mb-3">
@@ -51,6 +51,7 @@ export function CaseCard({ kasus }) {
               <Button
                 variant="ghost"
                 size="icon-sm"
+                onClick={() => onViewDetail(kasus)}
                 className="h-8 w-8 p-0 text-navy hover:text-navy-hover hover:bg-gray-100"
               >
                 <Eye className="h-5 w-5" />
@@ -58,6 +59,7 @@ export function CaseCard({ kasus }) {
               <Button
                 variant="ghost"
                 size="icon-sm"
+                onClick={() => onEdit(kasus)}
                 className="h-8 w-8 p-0 text-navy hover:text-navy-hover hover:bg-gray-100"
               >
                 <FilePen className="h-5 w-5" />
@@ -65,7 +67,8 @@ export function CaseCard({ kasus }) {
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="h-8 w-8 p-0 text-red hover:text-red-700 hover:bg-red-50"
+                onClick={() => onDelete(kasus)}
+                className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
               >
                 <Trash2 className="h-5 w-5" />
               </Button>
