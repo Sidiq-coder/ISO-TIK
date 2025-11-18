@@ -1,17 +1,11 @@
 import { useState, useMemo, useCallback } from "react";
 import { checklistData } from "@/mocks/tableData";
-import { SearchIcon } from "lucide-react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { SearchBar, PaginateControls } from "@/components/admin/table";
 import { ChecklistCard } from "@/components/admin/audit/ChecklistCard";
 import {
   ChecklistDialog,
   DeleteChecklistDialog,
 } from "@/components/admin/audit/ChecklistDialog";
-import { PaginateControls } from "@/components/admin/audit/PaginateControls";
 
 const PAGINATE_OPTIONS = [10, 20, 50, 100];
 
@@ -136,17 +130,11 @@ export default function ChecklistAudit() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-4">
-        <InputGroup className="h-14 max-w-[1080px]">
-          <InputGroupInput
-            placeholder="Cari checklist berdasarkan nama"
-            className="bg-state text-navy placeholder:text-gray-dark"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <InputGroupAddon>
-            <SearchIcon className="text-navy" />
-          </InputGroupAddon>
-        </InputGroup>
+        <SearchBar
+          placeholder="Cari checklist berdasarkan nama"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+        />
 
         <ChecklistDialog mode="add" onSave={handleAddChecklist} />
       </div>

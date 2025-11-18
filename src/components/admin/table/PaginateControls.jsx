@@ -15,24 +15,37 @@ import {
 } from "@/components/ui/pagination";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
+const defaultRangeFormatter = (start, end, total) =>
+  `Menampilkan ${start} - ${end} dari ${total} data`;
+
 export function PaginateControls({
   perPage,
   onPaginateChange,
-  paginateValue,
+  paginateValue = [],
   activePage,
   onPageChange,
   totalPages,
   totalData,
   setActivePage,
   className = "",
+  rowsLabel = "Baris per halaman",
+  rangeFormatter = defaultRangeFormatter,
+  goToLabel = "Halaman",
+  goToButtonLabel = "Go",
+  showGoTo = true,
 }) {
   const [targetPage, setTargetPage] = useState(activePage);
+  const updateActivePage = setActivePage ?? onPageChange;
+
   useEffect(() => {
     setTargetPage(activePage);
   }, [activePage, totalPages]);
 
   const canGoPrev = activePage > 1;
   const canGoNext = activePage < totalPages;
+  const rangeStart = totalData === 0 ? 0 : (activePage - 1) * perPage + 1;
+  const rangeEnd = totalData === 0 ? 0 : Math.min(activePage * perPage, totalData);
+  const rangeText = rangeFormatter(rangeStart, rangeEnd, totalData);
 
   const buildButtons = () => {
     if (totalPages <= 3) {
@@ -43,8 +56,12 @@ export function PaginateControls({
     }
 
     const buttons = [{ type: "page", value: activePage }];
-    const nextPage = Math.min(activePage + 1, totalPages);
+    const previousPage = Math.max(activePage - 1, 1);
+    if (!buttons.find((btn) => btn.value === previousPage)) {
+      buttons.unshift({ type: "page", value: previousPage });
+    }
 
+    const nextPage = Math.min(activePage + 1, totalPages);
     if (!buttons.find((btn) => btn.value === nextPage)) {
       buttons.push({ type: "page", value: nextPage });
     }
@@ -61,13 +78,11 @@ export function PaginateControls({
   };
 
   return (
-    <div
-      className={`flex items-center justify-between w-full mt-6 ${className}`}
-    >
+    <div className={`flex items-center justify-between w-full mt-6 ${className}`}>
       <DropdownMenu>
         <div className="w-1/5">
-          <div className="flex w-full">
-            <span className="body text-gray-dark">Baris per halaman</span>
+          <div className="flex w-full items-center">
+            <span className="body text-gray-dark">{rowsLabel}</span>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
@@ -78,9 +93,7 @@ export function PaginateControls({
               </Button>
             </DropdownMenuTrigger>
           </div>
-          <div className="w-full body text-gray-dark mt-2">
-            Menampilkan 1 - {totalPages} dari {totalData} data
-          </div>
+          <div className="w-full body text-gray-dark mt-2">{rangeText}</div>
         </div>
         <DropdownMenuContent className="text-navy">
           <DropdownMenuRadioGroup
@@ -154,44 +167,48 @@ export function PaginateControls({
         </PaginationContent>
       </Pagination>
 
-      <div className="flex items-center gap-2">
-        <span className="body text-gray-dark">Halaman</span>
+      {showGoTo && (
         <div className="flex items-center gap-2">
-          <input
-            id="goto-page"
-            type="number"
-            min={1}
-            max={totalPages}
-            value={targetPage}
-            onChange={(event) => {
-              const value = event.target.value;
-              if (value === "") {
-                setTargetPage("");
-                return;
-              }
-              const next = Number(value);
-              if (!Number.isNaN(next)) {
-                setTargetPage(next);
-              }
-            }}
-            className="w-16 rounded border px-2 body text-navy border-0"
-          />
-          <Button
-            type="button"
-            className="h-10 px-4 body-medium"
-            onClick={() => {
-              const next =
-                typeof targetPage === "number" ? targetPage : Number(targetPage);
-              if (Number.isNaN(next)) return;
-              const clamped = Math.min(Math.max(next, 1), totalPages);
-              setActivePage(clamped);
-              setTargetPage(clamped);
-            }}
-          >
-            Go
-          </Button>
+          <span className="body text-gray-dark">{goToLabel}</span>
+          <div className="flex items-center gap-2">
+            <input
+              id="goto-page"
+              type="number"
+              min={1}
+              max={totalPages}
+              value={targetPage}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (value === "") {
+                  setTargetPage("");
+                  return;
+                }
+                const next = Number(value);
+                if (!Number.isNaN(next)) {
+                  setTargetPage(next);
+                }
+              }}
+              className="w-16 rounded border px-2 body text-navy border-0"
+            />
+            <Button
+              type="button"
+              className="h-10 px-4 body-medium"
+              onClick={() => {
+                const next =
+                  typeof targetPage === "number"
+                    ? targetPage
+                    : Number(targetPage);
+                if (Number.isNaN(next)) return;
+                const clamped = Math.min(Math.max(next, 1), totalPages);
+                updateActivePage?.(clamped);
+                setTargetPage(clamped);
+              }}
+            >
+              {goToButtonLabel}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

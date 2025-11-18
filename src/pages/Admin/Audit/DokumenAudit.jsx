@@ -1,15 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { auditData } from "@/mocks/tableData.js";
-import { SearchIcon } from "lucide-react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { Download, FileText } from "lucide-react";
+import { PaginateControls, SearchBar, StatusDropdown, Table as AdminTable } from "@/components/admin/table";
 import { OverlayForm } from "@/components/admin/audit/OverlayForm";
-import { PaginateControls } from "@/components/admin/audit/PaginateControls";
-import { AuditTable } from "@/components/admin/audit/AuditTable";
-import { StatusDropdown } from "@/components/admin/audit/StatusDropdown";
+import { AlertIconDialog } from "@/components/admin/audit/AlertIconDialog";
+import { DeleteDialog } from "@/components/admin/audit/DeleteDialog";
 
 const FILTER_OPTIONS = [
   { value: "Semua Status" },
@@ -20,6 +15,87 @@ const FILTER_OPTIONS = [
 ];
 
 const PAGINATE_OPTIONS = [10, 20, 50, 100];
+
+const AUDIT_COLUMNS = [
+  {
+    key: "judul",
+    header: "Judul",
+    headerClassName: "text-left text-navy",
+    cellClassName: "text-navy text-left",
+    accessor: "judul",
+  },
+  {
+    key: "lokasi",
+    header: "Lokasi",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    accessor: "lokasi",
+  },
+  {
+    key: "tanggalAudit",
+    header: "Tanggal Audit",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    accessor: "tanggalAudit",
+  },
+  {
+    key: "leadAuditor",
+    header: "Lead Auditor",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    accessor: "leadAuditor",
+  },
+  {
+    key: "auditor",
+    header: "Auditor",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    accessor: "auditor",
+  },
+  {
+    key: "revisi",
+    header: "Revisi",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    accessor: "revisi",
+  },
+  {
+    key: "status",
+    header: "Status",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    render: (row) => (
+      <span
+        className={`px-2 py-1 rounded text-xs ${
+          row.status === "In Progress"
+            ? "bg-yellow-100 text-yellow-700"
+            : row.status === "Reviewed"
+            ? "bg-blue-100 text-blue-700"
+            : row.status === "Approved"
+            ? "bg-green-100 text-green-700"
+            : "bg-gray-100 text-gray-700"
+        }`}
+      >
+        {row.status}
+      </span>
+    ),
+  },
+  {
+    key: "aksi",
+    header: "Aksi",
+    headerClassName: "text-center",
+    cellClassName: "flex justify-center gap-4",
+    render: (row) => (
+      <>
+        <AlertIconDialog type="view" row={row} />
+        <AlertIconDialog type="edit" row={row} />
+        <FileText className="text-[#00C950] w-5 h-5 cursor-pointer" />
+        <Download className="text-[#F1C441] w-5 h-5 cursor-pointer" />
+        <DeleteDialog row={row} />
+      </>
+    ),
+  },
+];
 
 function useAuditDocuments() {
   const [statusFilter, setStatusFilter] = useState("Semua Status");
@@ -88,15 +164,7 @@ export default function DokumenAudit() {
 
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <InputGroup className="h-14 max-w-[1080px]">
-        <InputGroupInput
-          placeholder="Cari dokumen berdasarkan nama"
-          className="bg-state text-navy placeholder:text-gray-dark"
-        />
-        <InputGroupAddon>
-          <SearchIcon className="text-navy" />
-        </InputGroupAddon>
-      </InputGroup>
+      <SearchBar />
 
       <StatusDropdown
         isMenuOpen={isFilterDropdownOpen}
@@ -115,7 +183,11 @@ export default function DokumenAudit() {
         onStatusChange={setModalStatus}
       />
 
-      <AuditTable data={pagedData} />
+      <AdminTable
+        columns={AUDIT_COLUMNS}
+        data={pagedData}
+        getRowKey={(row, index) => `${row.judul}-${index}`}
+      />
 
       <PaginateControls
         perPage={perPage}

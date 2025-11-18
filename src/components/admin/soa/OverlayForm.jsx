@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { StatusDropdown } from "./StatusDropdown"
+import { StatusDropdown } from "@/components/admin/table"
 
 const statusOptions = [
   { value: "Draft" },
