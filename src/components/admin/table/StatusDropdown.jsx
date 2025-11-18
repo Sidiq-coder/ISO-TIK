@@ -13,7 +13,7 @@ export function StatusDropdown({
   setIsMenuOpen,
   value,
   onChange,
-  options,
+  options = [],
   className = "",
   classNameButton = "",
   classNameDropdown = "",
