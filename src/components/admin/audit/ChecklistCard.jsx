@@ -1,34 +1,70 @@
-import { FilePen, Trash2 } from "lucide-react";
+import { Eye, FilePen, Trash2 } from "lucide-react";
 
-export function ChecklistCard({ checklist, onEdit, onDelete }) {
+export function ChecklistCard({
+  checklist,
+  title,
+  description,
+  badge,
+  meta,
+  onView,
+  onEdit,
+  onDelete,
+  className = "",
+}) {
+  const effectiveTitle = title ?? checklist?.title ?? "Checklist Item";
+  const effectiveDescription = description ?? checklist?.description ?? "";
+  const effectiveBadge = badge ?? checklist?.badge;
+  const metaContent = meta ?? checklist?.meta;
+  const payload = checklist ?? { title: effectiveTitle, description: effectiveDescription };
+
   return (
-    <div className="border-l-4 border-navy bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start gap-4">
-        <div className="flex-1">
-          <h3 className="text-navy font-semibold text-base mb-2">
-            {checklist.title}
-          </h3>
-          <p className="text-gray-dark text-sm leading-relaxed">
-            {checklist.description}
-          </p>
+    <div
+      className={`border-l-4 border-navy bg-white p-6 shadow-sm transition-shadow hover:shadow-md ${className}`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center gap-3">
+            {effectiveBadge && (
+              <span className="rounded bg-[#0B1446] px-3 py-1 text-xs font-semibold text-white">
+                {effectiveBadge}
+              </span>
+            )}
+            <h3 className="text-base font-semibold text-navy">{effectiveTitle}</h3>
+          </div>
+          <p className="text-sm leading-relaxed text-gray-dark">{effectiveDescription}</p>
+          {metaContent && <div className="text-xs text-gray-dark">{metaContent}</div>}
         </div>
-        <div className="flex gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => onEdit(checklist)}
-            className="hover:bg-blue-50 p-2 rounded transition-colors"
-            title="Edit checklist"
-          >
-            <FilePen className="text-[#2B7FFF] w-5 h-5 cursor-pointer" />
-          </button>
-          <button
-            type="button"
-            onClick={() => onDelete(checklist)}
-            className="hover:bg-red-50 p-2 rounded transition-colors"
-            title="Hapus checklist"
-          >
-            <Trash2 className="text-[#FB2C36] w-5 h-5 cursor-pointer" />
-          </button>
+        <div className="flex shrink-0 items-center gap-2">
+          {onView && (
+            <button
+              type="button"
+              onClick={() => onView(payload)}
+              className="rounded p-2 transition-colors hover:bg-blue-50"
+              title="Lihat"
+            >
+              <Eye className="h-5 w-5 text-[#2B7FFF]" />
+            </button>
+          )}
+          {onEdit && (
+            <button
+              type="button"
+              onClick={() => onEdit(payload)}
+              className="rounded p-2 transition-colors hover:bg-blue-50"
+              title="Edit"
+            >
+              <FilePen className="h-5 w-5 text-[#2B7FFF]" />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              type="button"
+              onClick={() => onDelete(payload)}
+              className="rounded p-2 transition-colors hover:bg-red-50"
+              title="Hapus"
+            >
+              <Trash2 className="h-5 w-5 text-[#FB2C36]" />
+            </button>
+          )}
         </div>
       </div>
     </div>

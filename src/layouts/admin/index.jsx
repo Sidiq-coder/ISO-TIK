@@ -14,8 +14,10 @@ export function AdminLayout({ children }) {
 
     <SidebarInset className="bg-gray-light">
         <AdminNavbar />
-        <div className="pl-16 py-6 pr-8">
-          <Outlet/>
+        <div className="flex w-full justify-center p-14" >
+          <div className="w-full ">
+            <Outlet/>
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
