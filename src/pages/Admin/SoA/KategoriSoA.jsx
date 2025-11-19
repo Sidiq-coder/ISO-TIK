@@ -87,29 +87,7 @@ export default function KategoriSoA() {
           </InputGroupAddon>
         </InputGroup>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-12 min-w-[160px] justify-between gap-2">
-              {categoryOptions.find((option) => option.value === selectedCategory)?.label}
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Pilih Kategori</DropdownMenuLabel>
-            {categoryOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => {
-                  setSelectedCategory(option.value)
-                  setActivePage(1)
-                }}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
+        
         <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover">
           <Plus className="h-5 w-5" /> Tambah Pertanyaan
         </Button>

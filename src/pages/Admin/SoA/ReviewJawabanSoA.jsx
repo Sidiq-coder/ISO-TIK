@@ -420,12 +420,11 @@ function Navigator({ sections, activeSection, setActiveSection, activeQuestion, 
                       <span
                         className={`size-2.5 rounded-full ${
                           question.status === "complete"
-                            ? "bg-gray-400"
+                            ? "bg-gray-200"
                             : question.status === "active"
                               ? "bg-green-500"
                               : question.status === "in-progress"
-                                ? "bg-blue-400"
-                                : "bg-gray-200"
+                                ? "bg-gray-200" : ""
                         }`}
                       />
                       {question.label}
