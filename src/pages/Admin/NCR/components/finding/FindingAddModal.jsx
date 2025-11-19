@@ -123,7 +123,7 @@ export function FindingAddModal({ isOpen, onClose, onSave }) {
                 value={formData.deskripsi}
                 onChange={(e) => setFormData({ ...formData, deskripsi: e.target.value })}
                 onFocus={() => handleInputFocus("deskripsi")}
-                className="min-h-[120px] resize-none border-gray-300 focus:border-navy"
+                className="min-h-[120px] resize-none border-gray-300 focus-visible:border-black! focus-visible:border-2! focus-visible:ring-0!"
               />
             </div>
           </div>

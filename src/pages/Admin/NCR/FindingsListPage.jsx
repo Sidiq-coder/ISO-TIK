@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { FindingAddModal, FindingEditModal, FindingDeleteModal } from "./components/finding";
+import { ListCard } from "./components/common";
 
 export default function FindingsListPage() {
   const { setHeader } = useAdminLayout();
@@ -24,6 +25,21 @@ export default function FindingsListPage() {
     },
     {
       id: 2,
+      kategori: "Kategori Temuan Audit - Minor",
+      deskripsi: "Organisasi PT. ABC belum adanya SDM IT khususnya pada bidang artefaktif IT, organisasi hanya memiliki SDM IT Support",
+    },
+    {
+      id: 3,
+      kategori: "Kategori Temuan Audit - Minor",
+      deskripsi: "Organisasi PT. ABC belum adanya SDM IT khususnya pada bidang artefaktif IT, organisasi hanya memiliki SDM IT Support",
+    },
+    {
+      id: 4,
+      kategori: "Kategori Temuan Audit - Minor",
+      deskripsi: "Organisasi PT. ABC belum adanya SDM IT khususnya pada bidang artefaktif IT, organisasi hanya memiliki SDM IT Support",
+    },
+    {
+      id: 5,
       kategori: "Kategori Temuan Audit - Minor",
       deskripsi: "Organisasi PT. ABC belum adanya SDM IT khususnya pada bidang artefaktif IT, organisasi hanya memiliki SDM IT Support",
     },
@@ -127,71 +143,42 @@ export default function FindingsListPage() {
         </div>
       </div>
 
-      {/* Section Title and Actions */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-navy">Daftar Temuan</h2>
-        <Button
-          onClick={handleAddFinding}
-          className="h-12 px-6 bg-green-600 text-white hover:bg-green-700 gap-2"
-        >
-          <Plus className="h-5 w-5" />
-          Tambah Temuan
-        </Button>
-      </div>
-
-      {/* Findings List */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <div className="space-y-4">
-          <h3 className="text-base font-semibold text-navy mb-4">
-            Uraian Ketidaksesuaian :
-          </h3>
-          
-          <div className="bg-gray-100 rounded-md px-3 py-2 inline-block">
+      {/* Findings List Card */}
+      <ListCard
+        title="Uraian Ketidaksesuaian :"
+        bgColor="bg-blue-50"
+        borderColor="border-blue-200"
+        badge={
+          <div className="bg-white border border-gray-300 rounded px-3 py-1 inline-block">
             <p className="text-sm text-gray-700">Kategori Temuan Audit - Minor</p>
           </div>
+        }
+        items={findings}
+        onDelete={handleDeleteFinding}
+        showDelete={true}
+        actions={[
+          {
+            icon: Pencil,
+            label: "Edit Kategori Temuan",
+            onClick: handleEditCategory,
+            className: "bg-blue-600 text-white hover:bg-blue-700"
+          },
+          {
+            icon: Plus,
+            label: "Tambah Temuan",
+            onClick: handleAddFinding,
+            className: "bg-green-600 text-white hover:bg-green-700"
+          }
+        ]}
+      />
 
-          <div className="space-y-3">
-            {findings.map((finding, index) => (
-              <div
-                key={finding.id}
-                className="flex items-start gap-3 bg-white rounded-lg p-4 border border-gray-300"
-              >
-                <span className="text-navy font-medium">{index + 1}.</span>
-                <p className="flex-1 text-navy">{finding.deskripsi}</p>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDeleteFinding(finding)}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50 shrink-0"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-3 mt-6">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            className="h-12 px-6 border-gray-300"
-          >
-            Kembali
-          </Button>
-          <Button
-            onClick={handleEditCategory}
-            className="h-12 px-6 bg-blue-600 text-white hover:bg-blue-700"
-          >
-            ✏️ Edit Kategori Temuan
-          </Button>
-        </div>
-      </div>
-
-      {/* Penanganan Terkait Temuan Button */}
-      <div className="flex justify-center">
-        <Button className="h-12 px-8 bg-navy text-white hover:bg-navy-hover">
-          Penanganan Terkait Temuan
+      {/* Penanganan button at bottom right */}
+      <div className="flex justify-end">
+        <Button 
+          onClick={() => navigate(`/admin/ncr/${id}/kasus/${caseId}/tanggapan`)}
+          className="h-12 px-6 bg-navy text-white hover:bg-navy/90"
+        >
+          Tanggapan Terkait Temuan
         </Button>
       </div>
 
