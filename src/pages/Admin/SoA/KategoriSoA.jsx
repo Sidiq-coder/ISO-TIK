@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { NavLink } from "react-router-dom"
-import { SearchIcon, Plus, ChevronDown } from "lucide-react"
+import { SearchIcon, Plus, ChevronDown, FilePen, Trash2 } from "lucide-react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button"
 import { ChecklistCard } from "@/components/admin/audit/ChecklistCard"
@@ -14,6 +14,7 @@ import {
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext"
 import { reviewNavigatorConfig } from "@/mocks/reviewSoAData"
 import { PaginateControls } from "@/components/admin/table"
+import { OverlayForm } from "@/components/admin/soa/OverlayForm"
 
 const PAGINATE_OPTIONS = [10, 20, 50]
 
@@ -70,7 +71,6 @@ export default function KategoriSoA() {
 
   return (
     <div className="space-y-6">
-    
       <div className="flex flex-wrap items-center gap-4 rounded-2xl p-4">
         <InputGroup className="h-12 flex-1">
           <InputGroupInput
@@ -88,9 +88,15 @@ export default function KategoriSoA() {
         </InputGroup>
 
         
-        <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover">
-          <Plus className="h-5 w-5" /> Tambah Pertanyaan
-        </Button>
+        <OverlayForm
+          variant="question"
+          trigger={
+            <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover">
+              <Plus className="h-5 w-5" /> Tambah Pertanyaan
+            </Button>
+          }
+          categoryOptions={categoryOptions}
+        />
       </div>
 
       <div className="space-y-4">
@@ -100,9 +106,39 @@ export default function KategoriSoA() {
             badge={item.code}
             title={item.title}
             description={item.description}
-            
-            onView={() => console.log("Lihat", item)}
-            onDelete={() => console.log("Hapus", item)}
+           
+            actions={
+              <div className="flex items-center gap-2">
+                <OverlayForm
+                  variant="question"
+                  mode="edit"
+                  defaultValues={{
+                    category: `${item.sectionCode} - ${item.sectionLabel}`,
+                    code: item.code,
+                    name: item.title,
+                    question: item.description,
+                  }}
+                  categoryOptions={categoryOptions}
+                  trigger={
+                    <button
+                      type="button"
+                      className="rounded p-2 transition-colors hover:bg-blue-50"
+                      title="Edit"
+                    >
+                      <FilePen className="h-5 w-5 text-[#2B7FFF]" />
+                    </button>
+                  }
+                />
+                <button
+                  type="button"
+                  className="rounded p-2 transition-colors hover:bg-red-50"
+                  title="Hapus"
+                  onClick={() => console.log("Hapus", item)}
+                >
+                  <Trash2 className="h-5 w-5 text-red-500" />
+                </button>
+              </div>
+            }
           />
         ))}
         {pagedItems.length === 0 && (

@@ -110,32 +110,9 @@ export default function NCR() {
           </InputGroupAddon>
         </InputGroup>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-14 min-w-[180px] justify-between gap-2">
-              {statusFilter === "all" ? "Semua Status" : statusFilter}
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-48">
-            <DropdownMenuLabel>Pilih Status</DropdownMenuLabel>
-            {["all", ...Object.values(NCR_STATUS)].map((value) => (
-              <DropdownMenuItem
-                key={value}
-                onClick={() => {
-                  setStatusFilter(value)
-                  setActivePage(1)
-                }}
-              >
-                {value === "all" ? "Semua Status" : value}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
         <Button
           onClick={handleAddNCR}
-          className="h-14 gap-2 bg-navy px-6 text-white hover:bg-navy-hover"
+          className="body-medium p-[16px]  w-[160px] gap-2 bg-navy roundeed-[4px] h-14 text-white hover:bg-navy-hover"
         >
           <Plus className="h-5 w-5" /> Tambah NCR
         </Button>

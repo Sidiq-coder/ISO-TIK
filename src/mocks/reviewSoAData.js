@@ -75,9 +75,9 @@ export const reviewNavigatorConfig = [
     code: "A.5",
     label: "Information Security Policies",
     questions: [
-      { id: "A5-1", label: "Information Security Policies", status: "complete" },
-      { id: "A5-2", label: "Information Security Policies", status: "in-progress" },
-      { id: "A5-3", label: "Information Security Policies", status: "active" },
+      { id: "A.5.1", label: "Information Security Policies", status: "complete" },
+      { id: "A.5.2", label: "Information Security Policies", status: "in-progress" },
+      { id: "A.5.3", label: "Information Security Policies", status: "active" },
     ],
   },
   {
