@@ -129,9 +129,8 @@ export function AdminSidebarContent() {
       <SidebarGroup>
         <SidebarMenu>
           {navigation.map((item, index) => (
-            <React.Fragment>
+            <React.Fragment key={item.title}>
             <SidebarNavItem
-              key={index}
               item={item}
               isActive={activeItem === item.title}
               isHovered={hoveredItem === item.title && activeItem !== item.title}
@@ -145,13 +144,13 @@ export function AdminSidebarContent() {
             />
             {index === 1 && (
               <div className="flex flex-col justify-center p-6 gap-3 text-gray-dark">
-                <hr className="border border-b"/>
+                <hr className="border-navy"/>
                 <p className="small">Modul Audit</p>
             </div>
           )}
             {index === 5 && (
               <div className="flex flex-col justify-center p-6 gap-3 text-gray-dark">
-                <hr className="border border-b"/>
+                <hr className="border-navy"/>
                 <p className="small">Administrasi</p>
             </div>
           )}

@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
-import { SearchIcon, Plus, ChevronDown } from "lucide-react"
+import { SearchIcon, Plus, ChevronDown, Funnel, FilePen, Trash2 } from "lucide-react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,6 +14,7 @@ import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext"
 import { PaginateControls } from "@/components/admin/table"
 import { ChecklistCard } from "@/components/admin/audit/ChecklistCard"
 import { reviewNavigatorConfig } from "@/mocks/reviewSoAData"
+import { OverlayForm } from "@/components/admin/soa/OverlayForm"
 
 const PAGINATE_OPTIONS = [10, 20, 50]
 
@@ -38,6 +39,7 @@ export default function PertanyaanSoA() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [perPage, setPerPage] = useState(10)
   const [activePage, setActivePage] = useState(1)
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     setHeader({
@@ -70,6 +72,7 @@ export default function PertanyaanSoA() {
     setActivePage(1)
   }
 
+
   const categoryOptions = [
     { label: "Semua Kategori", value: "all" },
     ...reviewNavigatorConfig.map((section) => ({
@@ -97,14 +100,24 @@ export default function PertanyaanSoA() {
           </InputGroupAddon>
         </InputGroup>
 
-        <DropdownMenu>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-12 min-w-[160px] justify-between gap-2">
-              {categoryOptions.find((option) => option.value === selectedCategory)?.label}
-              <ChevronDown className="h-4 w-4" />
+            <Button
+              variant="outline"
+              className="h-12 min-w-[160px] justify-between gap-2"
+            >
+              <span className="flex items-center gap-2">
+                <Funnel className="h-4 w-4" />
+                {categoryOptions.find((option) => option.value === selectedCategory)?.label}
+              </span>
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
+          <DropdownMenuContent className="w-[180px]">
             <DropdownMenuLabel>Pilih Kategori</DropdownMenuLabel>
             {categoryOptions.map((option) => (
               <DropdownMenuItem
@@ -112,6 +125,7 @@ export default function PertanyaanSoA() {
                 onClick={() => {
                   setSelectedCategory(option.value)
                   setActivePage(1)
+                  setIsCategoryMenuOpen(false)
                 }}
               >
                 {option.label}
@@ -120,9 +134,15 @@ export default function PertanyaanSoA() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover">
-          <Plus className="h-5 w-5" /> Tambah Pertanyaan
-        </Button>
+        <OverlayForm
+          variant="question"
+          trigger={
+            <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover p-4">
+              <Plus className="h-5 w-5" /> Tambah Pertanyaan
+            </Button>
+          }
+          categoryOptions={categoryOptions}
+        />
       </div>
 
       <div className="space-y-4">
@@ -133,12 +153,42 @@ export default function PertanyaanSoA() {
             title={item.title}
             description={item.description}
             meta={
-              <span className="inline-flex items-center rounded-full bg-[#EEF2FF] px-3 py-1 text-xs font-semibold text-navy">
+              <span className="inline-flex items-center bg-state px-3 py-1 small rounded-[4px] text-navy">
                 Kategori: {item.sectionCode} - {item.sectionLabel}
               </span>
             }
-            onView={() => console.log("Lihat", item)}
-            onDelete={() => console.log("Hapus", item)}
+            actions={
+              <div className="flex items-center gap-2">
+                <OverlayForm
+                  variant="question"
+                  mode="edit"
+                  defaultValues={{
+                    category: `${item.sectionCode} - ${item.sectionLabel}`,
+                    code: item.id,
+                    name: item.title,
+                    question: item.description,
+                  }}
+                  categoryOptions={categoryOptions}
+                  trigger={
+                    <button
+                      type="button"
+                      className="rounded p-2 transition-colors hover:bg-blue-50"
+                      title="Edit"
+                    >
+                      <FilePen className="h-5 w-5 text-[#2B7FFF]" />
+                    </button>
+                  }
+                />
+                <button
+                  type="button"
+                  className="rounded p-2 transition-colors hover:bg-red-50"
+                  title="Hapus"
+                  onClick={() => console.log("Hapus", item)}
+                >
+                  <Trash2 className="h-5 w-5 text-red-500" />
+                </button>
+              </div>
+            }
           />
         ))}
         {pagedItems.length === 0 && (

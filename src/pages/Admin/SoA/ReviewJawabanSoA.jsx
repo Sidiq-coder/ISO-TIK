@@ -96,69 +96,22 @@ function PageHeader({ documentMeta, selectedCategory, onCategoryChange }) {
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="space-y-2 lg:col-span-2">
-            <h1 className="heading-2 text-navy">Pengisian Jawaban SoA</h1>
+            <h1 className="heading-2 text-navy">Pengisian Jawaban SOA</h1>
             <div className="space-y-1 grid grid-cols-2">
               <div>
-                <p className="small text-gray-dark">Judul Dokumen</p>
+                <p className="small text-gray-dark mb-3">Judul Dokumen</p>
               <p className="heading-4 text-blue-dark">{documentMeta.title}</p>
               </div>
               <div>
-                <p className="small text-gray-dark">Kategori SoA</p>
-              <p className="heading-4 text-blue-dark"><span className="text-white bg-blue-dark px-[14.5px] py-[6px] rounded-[4px] body-medium mr-[16px]">{documentMeta.category.code}</span>{documentMeta.category.name}</p>
+                <p className="small text-gray-dark mb-3">Kategori SoA</p>
+              <p className="heading-4 text-blue-dark"><span className="text-white bg-blue-dark px-[14.5px] p-2 rounded-[4px] body-medium mr-2">{documentMeta.category.code}</span>{documentMeta.category.name}</p>
               </div>
             </div>
           </div>
-          <div className="space-y-4 rounded-2xl border border-[#D8E2FF] p-4">
-            <div className="flex items-center gap-3">
-              <span className="rounded bg-[#E8EEFF] px-3 py-1 text-sm font-semibold text-navy">
-                {documentMeta.category.code}
-              </span>
-              <div>
-                <p className="small text-gray-dark">Kode SoA</p>
-                <p className="text-navy font-semibold">{documentMeta.section}</p>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </section>
-  )
-}
-
-function CategoryDropdown({ options, value, onChange }) {
-  const [open, setOpen] = useState(false)
-  const selected = options.find((option) => option.value === value) ?? options[0]
-
-  return (
-    <div className="relative min-w-[240px]">
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full items-center justify-between rounded-xl border border-[#CBD6F5] bg-[#F7F9FF] px-4 py-3 text-left text-sm font-semibold text-navy shadow-inner"
-      >
-        <span>{selected?.label}</span>
-        <ChevronDown className={`h-4 w-4 text-navy transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <div className="absolute right-0 z-10 mt-2 w-full rounded-xl border border-[#E1E6F4] bg-white shadow">
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => {
-                onChange(option.value)
-                setOpen(false)
-              }}
-              className={`w-full px-4 py-2 text-left text-sm ${
-                option.value === value ? "bg-[#EEF2FF] text-navy font-semibold" : "text-gray-dark"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   )
 }
 
@@ -167,17 +120,18 @@ function QuestionCard({ controls, controlState, setControlState }) {
     <section className="rounded-2xl border border-[#DDE3F5] bg-white p-6 shadow-sm space-y-8">
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="rounded bg-[#233876] px-3 py-1 text-xs font-semibold text-white">
+          <span className="rounded-[4px] bg-blue-dark px-3 py-1 small-medium text-white">
             {reviewControlQuestion.id}
           </span>
-          <p className="heading-4 text-navy">{reviewControlQuestion.title}</p>
+          <p className="body-bold text-navy">{reviewControlQuestion.title}</p>
         </div>
-        <p className="text-gray-dark leading-relaxed">{reviewControlQuestion.description}</p>
+        <p className="text-navy-hover leading-relaxed body">{reviewControlQuestion.description}</p>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-[120px_566px] gap-[128px] w-[811px]">
+        <div className="space-y-3 flex flex-col">
         <p className="body-medium text-navy">Kendali Saat Ini</p>
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex flex-col gap-4 body">
           {[
             { label: "Ya", value: "yes" },
             { label: "Tidak", value: "no" },
@@ -185,9 +139,9 @@ function QuestionCard({ controls, controlState, setControlState }) {
           ].map((option) => (
             <label
               key={option.value}
-              className={`flex items-center gap-2 rounded-full border px-4 py-2 font-semibold transition-colors ${
+              className={`flex items-center gap-2 ${
                 controlState === option.value
-                  ? "border-navy bg-[#EAF0FF] text-navy"
+                  ? "border-navy text-navy"
                   : "border-gray-300 text-gray-dark"
               }`}
             >
@@ -205,37 +159,40 @@ function QuestionCard({ controls, controlState, setControlState }) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-[#E3E9FF]">
-        <div className="grid min-w-[680px] grid-cols-4 bg-[#F6F7FB] text-sm font-semibold text-gray-dark">
-          <div className="border-r px-4 py-3 text-left">
-            Kendali yang Dipilih &amp; Alasan Pemilihan
-          </div>
-          <div className="border-r px-4 py-3 text-center">Ya</div>
-          <div className="border-r px-4 py-3 text-center">Tidak</div>
-          <div className="px-4 py-3 text-center">Sebagian</div>
-        </div>
-        {controls.map((control, index) => (
-          <div
-            key={control.code}
-            className={`grid min-w-[680px] grid-cols-4 text-sm ${
-              index % 2 === 0 ? "bg-white" : "bg-[#FBFCFF]"
-            }`}
-          >
-            <div className="flex flex-col gap-1 border-t px-4 py-3 text-left text-gray-dark">
-              <p className="font-semibold text-navy">{control.label}</p>
-              <p className="text-xs text-gray-500">{control.description}</p>
-            </div>
-            {["yes", "no", "partial"].map((type) => (
-              <div key={type} className="flex items-center justify-center border-t border-l px-4 py-3">
-                <span
-                  className={`size-4 rounded-full border ${
-                    control.value[type] ? "border-navy bg-navy" : "border-gray-300"
-                  }`}
-                />
+          {/* Table */}
+      <div className="rounded-[4px] bg-white shadow-sm w-[566px]">
+            <div className="grid grid-cols-[360px_43px_67px_96px] border border-blue-dark bg-blue-light text-blue-dark rounded-t-[4px]">
+              <div className="body border-r border-blue-dark p-3 text-left rounded-tl-[4px]">
+                Kendali yang Dipilih &amp; Alasan Pemilihan
               </div>
-            ))}
-          </div>
-        ))}
+              <div className="body border-r border-blue-dark p-3 text-center">Ya</div>
+              <div className="body border-r border-blue-dark p-3 text-center">Tidak</div>
+              <div className="body p-3 mx-auto text-center">Sebagian</div>
+            </div>
+            <div>
+              {controls.map((control, index) => (
+                <div
+                  key={control.code}
+                  className={`grid grid-cols-[360px_43px_67px_96px] body ${
+                    index % 2 === 0 ? "bg-white" : "bg-[#FBFCFF]"
+                  }`}
+                >
+                  <div className="px-4 py-3 text-left text-gray-dark border border-navy">
+                    <p className="body text-navy">{control.label}</p>
+                  </div>
+                  {["yes", "no", "partial"].map((type) => (
+                    <div key={type} className="flex items-center justify-center border border-navy">
+                      <span
+                        className={`inline-block size-4 rounded-full border ${
+                          control.value[type] ? "border-navy bg-navy" : "border-gray-300"
+                        }`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+        </div>
+      </div>
       </div>
 
       <FormField label="Pembenaran (Justifikasi) terhadap Pengecualian" placeholder="Placeholder" />

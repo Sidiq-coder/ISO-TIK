@@ -22,6 +22,10 @@ import PertanyaanAudit from "@/pages/Admin/Audit/PertanyaanAudit";
 import ItemAudit from "@/pages/Admin/Audit/ItemAudit";
 
 import ReviewJawabanSoA from "@/pages/Admin/SoA/ReviewJawabanSoA";
+import Manual from "@/pages/Admin/Manual";
+import ManualDocuments from "@/pages/Admin/Manual/ManualDocuments";
+import ManualChecklist from "@/pages/Admin/Manual/ManualChecklist";
+import ManajemenPengguna from "@/pages/Admin/ManajemenPengguna";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -51,11 +55,21 @@ const router = createBrowserRouter([
           { path: "checklist-excel", element: <ChecklistExcel /> },
         ],
       },
+      {
+        path: "manual",
+        element: <Manual />,
+        children: [
+          { index: true, element: <ManualDocuments /> },
+          { path: "dokumen", element: <ManualDocuments /> },
+          { path: "klausa", element: <ManualChecklist /> },
+        ],
+      },
       { path: "dokumen", element: <DokumenPage /> },
       { path: "ncr", element: <NCR /> },
       { path: "ncr/:id/kasus", element: <CaseListPage /> },
       { path: "ncr/:id/kasus/:caseId/temuan", element: <FindingsListPage /> },
       { path: "ncr/:id/kasus/:caseId/tanggapan", element: <ResponsePage /> },
+      { path: "manajemen-pengguna", element: <ManajemenPengguna /> },
       { path: "audit/aspek/kategori/:id", element: <KategoriPertanyaan /> },
       {
         path: "audit/aspek/kategori/:aspekId/pertanyaan/:id",
