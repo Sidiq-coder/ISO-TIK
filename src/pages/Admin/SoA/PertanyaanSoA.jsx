@@ -133,7 +133,7 @@ export default function PertanyaanSoA() {
             title={item.title}
             description={item.description}
             meta={
-              <span className="inline-flex items-center rounded-full bg-[#EEF2FF] px-3 py-1 text-xs font-semibold text-navy">
+              <span className="inline-flex items-center  bg-state px-3 py-1 small rounded-[4px] font-semibold text-navy px-[8px] ppy-[4px]">
                 Kategori: {item.sectionCode} - {item.sectionLabel}
               </span>
             }
