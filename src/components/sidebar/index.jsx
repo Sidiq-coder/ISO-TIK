@@ -14,7 +14,7 @@ function SidebarHeader({ title, subtitle, titleClassName, subtitleClassName }) {
       {title && (
         <SidebarGroupLabel
           disableDefaultTypography
-          className={titleClassName ?? "heading-4 text-navy"}
+          className={titleClassName ?? "heading-3 text-navy"}
         >
           {title}
         </SidebarGroupLabel>
@@ -40,12 +40,12 @@ export function BaseSidebar({
   className = "",
   titleClassName,
   subtitleClassName,
-  dividerClassName = "h-[.5px] bg-navy-hover border-0",
+  dividerClassName = "border-navy-hover",
   headerSpacing = true,
 }) {
   return (
     <SidebarRoot
-      className={`bg-gray-light border-r border-navy w-[294px] ${className}`}
+      className={`bg-gray-light border-r-[1px]! border-navy w-[294px] ${className}`}
     >
       <SidebarContent>
         <SidebarHeader

@@ -117,7 +117,7 @@ export default function PertanyaanSoA() {
               />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
+          <DropdownMenuContent className="w-[180px]">
             <DropdownMenuLabel>Pilih Kategori</DropdownMenuLabel>
             {categoryOptions.map((option) => (
               <DropdownMenuItem
@@ -137,7 +137,7 @@ export default function PertanyaanSoA() {
         <OverlayForm
           variant="question"
           trigger={
-            <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover">
+            <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover p-4">
               <Plus className="h-5 w-5" /> Tambah Pertanyaan
             </Button>
           }

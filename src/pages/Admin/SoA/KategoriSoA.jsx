@@ -4,13 +4,6 @@ import { SearchIcon, Plus, ChevronDown, FilePen, Trash2 } from "lucide-react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button"
 import { ChecklistCard } from "@/components/admin/audit/ChecklistCard"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext"
 import { reviewNavigatorConfig } from "@/mocks/reviewSoAData"
 import { PaginateControls } from "@/components/admin/table"
@@ -89,10 +82,10 @@ export default function KategoriSoA() {
 
         
         <OverlayForm
-          variant="question"
+          variant="category"
           trigger={
-            <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover">
-              <Plus className="h-5 w-5" /> Tambah Pertanyaan
+            <Button className="h-12 gap-2 bg-navy text-white hover:bg-navy-hover w-[191px] p-[16px]">
+              <Plus className="h-5 w-5" /> Tambah Kategori
             </Button>
           }
           categoryOptions={categoryOptions}
@@ -110,7 +103,7 @@ export default function KategoriSoA() {
             actions={
               <div className="flex items-center gap-2">
                 <OverlayForm
-                  variant="question"
+                  variant="category"
                   mode="edit"
                   defaultValues={{
                     category: `${item.sectionCode} - ${item.sectionLabel}`,

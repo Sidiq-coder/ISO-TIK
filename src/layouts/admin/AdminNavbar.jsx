@@ -14,10 +14,10 @@ export function AdminNavbar() {
   const initials = user.initials ?? getInitials(user.name);
 
   return (
-    <header className="border-b  border-l border-navy-hover bg-white ml-8">
+    <header className="border-b border-l border-navy-hover bg-white ml-8">
       <div className="flex items-center justify-between px-8 py-4">
         <div className="flex flex-col">
-          <h1 className="heading-4 text-navy">{title}</h1>
+          <h1 className="heading-3 text-navy">{title}</h1>
           {subtitle && (
             <p className="text-gray-dark text-sm">{subtitle}</p>
           )}

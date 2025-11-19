@@ -49,24 +49,37 @@ export function OverlayForm({
   const [internalCategory, setInternalCategory] = useState(initialCategory)
 
   const isQuestionVariant = variant === "question"
+  const isCategoryVariant = variant === "category"
   const isEditMode = mode === "edit"
 
   const heading = isQuestionVariant
     ? isEditMode
       ? "Edit Pertanyaan"
       : "Tambah Pertanyaan"
+    : isCategoryVariant
+    ? isEditMode
+      ? "Edit Kategori"
+      : "Tambah Kategori"
     : "Tambahkan Dokumen SoA"
 
   const description = isQuestionVariant
     ? isEditMode
       ? "Ubah informasi pertanyaan sesuai kebutuhan"
       : "Lengkapi form di bawah ini untuk menambah pertanyaan baru"
+    : isCategoryVariant
+    ? isEditMode
+      ? "Ubah informasi kategori sesuai kebutuhan"
+      : "Lengkapi form di bawah ini untuk menambah kategori baru"
     : "Lengkapi form di bawah ini untuk menambah dokumen SoA baru"
 
   const submitLabel = isQuestionVariant
     ? isEditMode
       ? "Simpan Perubahan"
       : "Simpan Pertanyaan"
+    : isCategoryVariant
+    ? isEditMode
+      ? "Simpan Perubahan"
+      : "Simpan Kategori"
     : "Simpan Dokumen"
 
   const handleCategoryClick = (option) => {
@@ -79,8 +92,10 @@ export function OverlayForm({
       type="button"
       className={
         isQuestionVariant
-          ? "h-12 gap-2 bg-navy px-6 text-white hover:bg-navy-hover"
-          : "bg-navy text-gray-light hover:bg-navy-hover"
+          ? "h-14 gap-2 bg-navy px-6 text-white hover:bg-navy-hover"
+          : isCategoryVariant
+          ? "h-14 gap-2 bg-navy px-6 text-white hover:bg-navy-hover"
+          : "bg-navy text-gray-light hover:bg-navy-hover h-14 w-[223px]"
       }
     >
       <Plus className="h-5 w-5" /> {triggerLabel ?? (isQuestionVariant ? "Tambah Pertanyaan" : "Tambah Dokumen SoA")}
@@ -107,7 +122,7 @@ export function OverlayForm({
                     <DropdownMenuTrigger asChild>
                       <button
                         type="button"
-                        className="flex w-full items-center justify-between rounded-lg bg-[#F6F7FB] px-4 py-3 text-left text-sm font-semibold text-navy"
+                        className="flex w-full items-center justify-between rounded-[4px] bg-state px-4 py-3 text-left body font-semibold text-gray-dark"
                       >
                         {internalCategory}
                         <ChevronDown
@@ -117,9 +132,10 @@ export function OverlayForm({
                         />
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-full">
+                    <DropdownMenuContent className="w-[464px] bg-state space-y-1">
                       {categoryOptions.map((option) => (
                         <DropdownMenuItem
+                         className={`w-full body`}
                           key={option.value ?? option.label}
                           onClick={() => handleCategoryClick(option)}
                         >
@@ -130,30 +146,60 @@ export function OverlayForm({
                   </DropdownMenu>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="kodePertanyaan">Kode Pertanyaan</Label>
+                  <Label htmlFor="kodePertanyaan" className={`body-medium text-gray-dark`}>Kode Pertanyaan</Label>
                   <Input
                     id="kodePertanyaan"
                     defaultValue={defaultValues.code}
                     placeholder="Contoh A.5.1"
-                    className="bg-[#F6F7FB]"
+                    className="h-12 border border-transparent bg-state text-navy px-4 py-3 text-sm rounded-[4px] focus:border-navy focus:outline-none"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="namaPertanyaan">Nama Pertanyaan</Label>
+                  <Label htmlFor="namaPertanyaan" className={`body-medium text-gray-dark`}>Nama Pertanyaan</Label>
                   <Input
                     id="namaPertanyaan"
                     defaultValue={defaultValues.name}
                     placeholder="Masukkan Nama Pertanyaan"
-                    className="bg-[#F6F7FB]"
+                    className="h-12 border border-transparent bg-state text-navy px-4 py-3 text-sm rounded-[4px] focus:border-navy focus:outline-none"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="isiPertanyaan">Pertanyaan</Label>
+                <div className="space-y-2" >
+                  <Label htmlFor="isiPertanyaan" className={`body-medium text-gray-dark`}>Pertanyaan</Label>
                   <textarea
                     id="isiPertanyaan"
                     defaultValue={defaultValues.question}
                     placeholder="Masukkan Pertanyaan"
-                    className="min-h-[120px] w-full rounded-lg border border-transparent bg-[#F6F7FB] px-4 py-3 text-sm text-gray-dark focus:border-navy focus:outline-none"
+                    className="min-h-[120px] w-full border border-transparent bg-state text-navy px-4 py-3 text-sm rounded-[4px] focus:border-navy focus:outline-none"
+                  />
+                </div>
+              </div>
+            ) : isCategoryVariant ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="kodeKategori" className={`body-medium text-gray-dark`}>Kategori</Label>
+                  <Input
+                    id="kodeKategori"
+                    defaultValue={defaultValues.code}
+                    placeholder="Contoh A.5"
+                    className="bg-state body text-navy h-12 px-4 py-3 rounded-[4px]"                  
+                    />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="namaKategori" className={`body-medium text-gray-dark`}>Nama Kategori</Label>
+                  <Input
+                    id="namaKategori"
+                    defaultValue={defaultValues.name}
+                    placeholder="Masukkan Nama Kategori"
+                    className="bg-state body text-navy h-12 px-4 py-3 rounded-[4px]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="deskripsiKategori" className={`body-medium text-gray-dark`}>Deskripsi</Label>
+                  <textarea
+                    id="deskripsiKategori"
+                    defaultValue={defaultValues.description}
+                    placeholder="Masukkan Deskripsi"
+                    className="min-h-[120px] w-full rounded-[4px] border bg-state body text-navy h-12 px-4 py-3 border-transparenttext-sm focus:border-navy focus:outline-none"
                   />
                 </div>
               </div>
