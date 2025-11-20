@@ -117,8 +117,10 @@ export default function CaseListPage() {
 
   const handleDetailKasus = () => {
     handleCloseDetailModal();
-    // Navigate to detail or perform action
-    console.log("Detail Kasus clicked");
+    // Navigate to case detail page
+    if (selectedCase) {
+      navigate(`/admin/ncr/${id}/kasus/${selectedCase.id}`);
+    }
   };
 
   const handleDaftarTemuan = () => {
