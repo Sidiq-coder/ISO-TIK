@@ -73,31 +73,57 @@ export const reviewRelatedDocuments = [
 export const reviewNavigatorConfig = [
   {
     code: "A.5",
+    title: "Information Security Policies",
     label: "Information Security Policies",
     questions: [
-      { id: "A.5.1", label: "Information Security Policies", status: "complete" },
-      { id: "A.5.2", label: "Information Security Policies", status: "in-progress" },
-      { id: "A.5.3", label: "Information Security Policies", status: "active" },
+      { 
+        id: "A.5.1", 
+        label: "Kebijakan untuk keamanan informasi", 
+        description: "Apakah kebijakan keamanan informasi dan kebijakan-kebijakan topik khusus telah ditentukan, disetujui oleh manajemen, diterbitkan, dikomunikasikan kepada dan diketahui oleh personil yang relevan serta para pihak berkepentingan yang relevan, dan ditinjau pada selang waktu terencana serta pada saat terjadi-nya perubahan yang signifikan?",
+        status: "complete" 
+      },
+      { 
+        id: "A.5.2", 
+        label: "Informasi tentang keamanan informasi dalam perjanjian dengan pihak lain", 
+        description: "Apakah persyaratan keamanan informasi, termasuk kebutuhan untuk menangani aset keamanan informasi, telah diidentifikasi dan disesuaikan untuk setiap hubungan dengan pemangku kepentingan eksternal?",
+        status: "in-progress" 
+      },
+      { 
+        id: "A.5.3", 
+        label: "Perlakuan informasi keamanan dalam manajemen proyek", 
+        description: "Apakah persyaratan keamanan informasi telah ditangani dalam manajemen proyek, terlepas dari jenis proyek?",
+        status: "active" 
+      },
     ],
   },
   {
     code: "A.6",
+    title: "Organization of Information Security",
     label: "Organization of Information Security",
-    questions: [{ id: "A6-1", label: "Information Security Policies", status: "pending" }],
+    questions: [
+      { 
+        id: "A.6.1", 
+        label: "Organisasi tanggung jawab keamanan informasi", 
+        description: "Apakah tanggung jawab dan kewajiban keamanan informasi telah ditugaskan kepada peran organisasi?",
+        status: "pending" 
+      }
+    ],
   },
   {
     code: "A.7",
+    title: "Human Resource Security",
     label: "Human Resource Security",
     questions: [],
   },
   {
     code: "A.8",
+    title: "Asset Management",
     label: "Asset Management",
     questions: [],
   },
   {
     code: "A.9",
-    label: "Access Control",
+    title: "Access Control",
     questions: [],
   },
 ]
