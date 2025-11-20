@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, FilePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,12 +26,26 @@ const subtitleMap = {
 
 export function AlertIconDialog({ type, row, className = "" }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const readOnly = type === "view";
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
     console.log("Form submitted");
+    setOpen(false);
+  };
+
+  const handleNavigate = (mode) => {
+    navigate(`/admin/audit/dokumen/${row.id}`, {
+      state: {
+        dokumenTitle: row.judul,
+        lokasi: row.lokasi,
+        tanggalAudit: row.tanggalAudit,
+        revisi: row.revisi,
+        mode: mode, // "view" or "fill"
+      },
+    });
     setOpen(false);
   };
 
@@ -113,10 +128,17 @@ export function AlertIconDialog({ type, row, className = "" }) {
             </div>
 
             <DialogFooter>
-              <Button variant="outline" className="rounded-lg">
+              <Button
+                variant="outline"
+                className="rounded-lg"
+                onClick={() => handleNavigate("view")}
+              >
                 Lihat Jawaban
               </Button>
-              <Button className="rounded-lg bg-navy hover:bg-navy-hover">
+              <Button
+                className="rounded-lg bg-navy hover:bg-navy-hover"
+                onClick={() => handleNavigate("fill")}
+              >
                 Isi Jawaban
               </Button>
             </DialogFooter>
