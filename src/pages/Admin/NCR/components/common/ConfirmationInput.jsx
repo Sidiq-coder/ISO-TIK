@@ -49,7 +49,7 @@ export function ConfirmationInput({
         onChange={handleChange}
         onFocus={handleFocus}
         placeholder={placeholder}
-        className="w-full min-h-10 bg-gray-light border-gray-300 resize-none focus:border-black! focus:border-2! focus-visible:ring-0"
+        className="w-full min-h-10 bg-gray-light border-gray-300 resize-none focus-visible:border-black! focus-visible:border-2! focus-visible:ring-0!"
       />
     </div>
   );

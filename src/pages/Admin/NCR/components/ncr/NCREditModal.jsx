@@ -107,7 +107,7 @@ export function NCREditModal({ isOpen, onClose, ncrData, onSave }) {
                     setFormData({ ...formData, description: "" });
                   }
                 }}
-                className="w-full min-h-[120px] bg-gray-light border-gray-300 resize-none focus:border-black! focus:border-2! focus-visible:ring-0"
+                className="w-full min-h-[120px] bg-gray-light border-gray-300 resize-none focus:border-black focus:border-2 focus-visible:ring-0"
                 placeholder="Masukkan deskripsi dokumen NCR"
                 required
               />

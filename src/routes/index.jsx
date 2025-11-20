@@ -11,6 +11,7 @@ import PertanyaanSoA from "@/pages/Admin/SoA/PertanyaanSoA";
 import NCR from "@/pages/Admin/NCR";
 import CaseListPage from "@/pages/Admin/NCR/CaseListPage";
 import FindingsListPage from "@/pages/Admin/NCR/FindingsListPage";
+import ResponsePage from "@/pages/Admin/NCR/ResponsePage";
 import Audit from "@/pages/Admin/Audit";
 import DokumenAudit from "@/pages/Admin/Audit/DokumenAudit";
 import AspekAudit from "@/pages/Admin/Audit/AspekAudit";
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
       { path: "ncr", element: <NCR /> },
       { path: "ncr/:id/kasus", element: <CaseListPage /> },
       { path: "ncr/:id/kasus/:caseId/temuan", element: <FindingsListPage /> },
+      { path: "ncr/:id/kasus/:caseId/tanggapan", element: <ResponsePage /> },
       { path: "manajemen-pengguna", element: <ManajemenPengguna /> },
       { path: "audit/aspek/kategori/:id", element: <KategoriPertanyaan /> },
       {
