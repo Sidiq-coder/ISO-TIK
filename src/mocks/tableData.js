@@ -363,6 +363,7 @@ const tableData = [
 
 const auditData = [
   {
+    id: 1,
     judul: "Audit Checklist",
     lokasi: "Lampung",
     tanggalAudit: "15/12/2025",
@@ -372,6 +373,7 @@ const auditData = [
     status: "In Progress",
   },
   {
+    id: 2,
     judul: "Audit Checklist",
     lokasi: "Lampung",
     tanggalAudit: "15/12/2025",
@@ -381,6 +383,7 @@ const auditData = [
     status: "Reviewed",
   },
   {
+    id: 3,
     judul: "Audit Checklist",
     lokasi: "Lampung",
     tanggalAudit: "15/12/2025",
@@ -390,6 +393,7 @@ const auditData = [
     status: "Approved",
   },
   {
+    id: 4,
     judul: "Audit Checklist",
     lokasi: "Lampung",
     tanggalAudit: "15/12/2025",
@@ -399,6 +403,7 @@ const auditData = [
     status: "In Progress",
   },
   {
+    id: 5,
     judul: "Audit ISO 27001 - Q4 2024",
     lokasi: "Jakarta",
     tanggalAudit: "20/10/2024",
@@ -408,6 +413,7 @@ const auditData = [
     status: "Approved",
   },
   {
+    id: 6,
     judul: "Audit Keamanan Informasi",
     lokasi: "Bandung",
     tanggalAudit: "05/11/2024",
@@ -417,6 +423,7 @@ const auditData = [
     status: "Reviewed",
   },
   {
+    id: 7,
     judul: "Audit Infrastruktur TI",
     lokasi: "Surabaya",
     tanggalAudit: "12/11/2024",
@@ -426,6 +433,7 @@ const auditData = [
     status: "In Progress",
   },
   {
+    id: 8,
     judul: "Audit Layanan Cloud",
     lokasi: "Yogyakarta",
     tanggalAudit: "18/11/2024",
@@ -435,6 +443,7 @@ const auditData = [
     status: "Draft",
   },
   {
+    id: 9,
     judul: "Audit Kepatuhan GDPR",
     lokasi: "Medan",
     tanggalAudit: "25/11/2024",
@@ -444,6 +453,7 @@ const auditData = [
     status: "Approved",
   },
   {
+    id: 10,
     judul: "Audit Pengelolaan Akses",
     lokasi: "Semarang",
     tanggalAudit: "02/12/2024",
@@ -453,6 +463,7 @@ const auditData = [
     status: "Reviewed",
   },
   {
+    id: 11,
     judul: "Audit Disaster Recovery",
     lokasi: "Bali",
     tanggalAudit: "10/12/2024",
@@ -462,6 +473,7 @@ const auditData = [
     status: "In Progress",
   },
   {
+    id: 12,
     judul: "Audit Vendor Management",
     lokasi: "Makassar",
     tanggalAudit: "15/12/2024",

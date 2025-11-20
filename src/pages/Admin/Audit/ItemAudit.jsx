@@ -53,15 +53,15 @@ function ItemAuditCard({ item, onEdit, onDelete }) {
 
 function Breadcrumb() {
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600">
+    <nav className="flex items-center gap-2 body text-gray-dark">
       <Link
         to="/admin/audit/checklist-excel"
-        className="hover:text-navy transition-colors"
+        className="text-[#2B7FFF] hover:underline"
       >
         Checklist Excel
       </Link>
-      <ChevronRight className="w-4 h-4" />
-      <span className="text-navy font-medium">Item Audit</span>
+      <ChevronRight className="w-4 h-4 text-gray-dark" />
+      <span className="text-[#2B7FFF] font-medium">Item Audit</span>
     </nav>
   );
 }

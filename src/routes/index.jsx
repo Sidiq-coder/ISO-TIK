@@ -20,6 +20,9 @@ import ChecklistExcel from "@/pages/Admin/Audit/ChecklistExcel";
 import KategoriPertanyaan from "@/pages/Admin/Audit/KategoriPertanyaan";
 import PertanyaanAudit from "@/pages/Admin/Audit/PertanyaanAudit";
 import ItemAudit from "@/pages/Admin/Audit/ItemAudit";
+import DaftarChecklist from "@/pages/Admin/Audit/DaftarChecklist";
+import AspekPertanyaan from "@/pages/Admin/Audit/AspekPertanyaan";
+import ReviewAspekPertanyaan from "@/pages/Admin/Audit/ReviewAspekPertanyaan";
 
 import ReviewJawabanSoA from "@/pages/Admin/SoA/ReviewJawabanSoA";
 import Manual from "@/pages/Admin/Manual";
@@ -78,6 +81,18 @@ const router = createBrowserRouter([
       {
         path: "audit/checklist-excel/:id/item",
         element: <ItemAudit />,
+      },
+      {
+        path: "audit/dokumen/:id",
+        element: <DaftarChecklist />,
+      },
+      {
+        path: "audit/dokumen/:id/aspek/:aspekId",
+        element: <AspekPertanyaan />,
+      },
+      {
+        path: "audit/dokumen/:id/review/:checklistId",
+        element: <ReviewAspekPertanyaan />,
       },
     ],
   },
