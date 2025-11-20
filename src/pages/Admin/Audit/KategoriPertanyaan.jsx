@@ -19,15 +19,12 @@ const PAGINATE_OPTIONS = [10, 20, 50, 100];
 
 function Breadcrumb() {
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600">
-      <Link
-        to="/admin/audit/aspek"
-        className="hover:text-navy transition-colors"
-      >
+    <nav className="flex items-center gap-2 body text-gray-dark">
+      <Link to="/admin/audit/aspek" className="text-[#2B7FFF] hover:underline">
         Aspek Audit
       </Link>
-      <ChevronRight className="w-4 h-4" />
-      <span className="text-navy font-medium">Kategori Pertanyaan</span>
+      <ChevronRight className="w-4 h-4 text-gray-dark" />
+      <span className="text-[#2B7FFF] font-medium">Kategori Pertanyaan</span>
     </nav>
   );
 }

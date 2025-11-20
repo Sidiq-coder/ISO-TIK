@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,17 +26,12 @@ const FINDING_CATEGORIES = [
 export function FindingEditModal({ isOpen, onClose, findingData, onSave }) {
   const [formData, setFormData] = useState({
     kategori: "",
-    deskripsi: "",
-  });
-  const [hasInteracted, setHasInteracted] = useState({
-    deskripsi: false,
   });
 
   useEffect(() => {
     if (findingData) {
       setFormData({
         kategori: findingData.kategori || "",
-        deskripsi: findingData.deskripsi || "",
       });
     }
   }, [findingData]);
@@ -47,22 +41,11 @@ export function FindingEditModal({ isOpen, onClose, findingData, onSave }) {
     if (onSave) {
       onSave({ ...findingData, ...formData });
     }
-    // Reset interaction state
-    setHasInteracted({
-      deskripsi: false,
-    });
     onClose();
   };
 
   const handleCancel = () => {
-    setHasInteracted({
-      deskripsi: false,
-    });
     onClose();
-  };
-
-  const handleInputFocus = (field) => {
-    setHasInteracted({ ...hasInteracted, [field]: true });
   };
 
   return (
@@ -108,21 +91,6 @@ export function FindingEditModal({ isOpen, onClose, findingData, onSave }) {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
-
-            {/* Temuan Ketidaksesuaian */}
-            <div className="space-y-2">
-              <Label htmlFor="deskripsi" className="text-sm font-medium text-gray-dark">
-                Temuan Ketidaksesuaian
-              </Label>
-              <Textarea
-                id="deskripsi"
-                placeholder="Masukkan Temuan Ketidaksesuaian"
-                value={formData.deskripsi}
-                onChange={(e) => setFormData({ ...formData, deskripsi: e.target.value })}
-                onFocus={() => handleInputFocus("deskripsi")}
-                className="min-h-[120px] resize-none border-gray-300 focus-visible:border-black! focus-visible:border-2! focus-visible:ring-0!"
-              />
             </div>
           </div>
 

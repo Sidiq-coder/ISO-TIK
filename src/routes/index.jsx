@@ -10,6 +10,7 @@ import KategoriSoA from "@/pages/Admin/SoA/KategoriSoA";
 import PertanyaanSoA from "@/pages/Admin/SoA/PertanyaanSoA";
 import NCR from "@/pages/Admin/NCR";
 import CaseListPage from "@/pages/Admin/NCR/CaseListPage";
+import CaseDetailPage from "@/pages/Admin/NCR/CaseDetailPage";
 import FindingsListPage from "@/pages/Admin/NCR/FindingsListPage";
 import ResponsePage from "@/pages/Admin/NCR/ResponsePage";
 import Audit from "@/pages/Admin/Audit";
@@ -20,6 +21,9 @@ import ChecklistExcel from "@/pages/Admin/Audit/ChecklistExcel";
 import KategoriPertanyaan from "@/pages/Admin/Audit/KategoriPertanyaan";
 import PertanyaanAudit from "@/pages/Admin/Audit/PertanyaanAudit";
 import ItemAudit from "@/pages/Admin/Audit/ItemAudit";
+import DaftarChecklist from "@/pages/Admin/Audit/DaftarChecklist";
+import AspekPertanyaan from "@/pages/Admin/Audit/AspekPertanyaan";
+import ReviewAspekPertanyaan from "@/pages/Admin/Audit/ReviewAspekPertanyaan";
 
 import ReviewJawabanSoA from "@/pages/Admin/SoA/ReviewJawabanSoA";
 import Manual from "@/pages/Admin/Manual";
@@ -67,6 +71,7 @@ const router = createBrowserRouter([
       { path: "dokumen", element: <DokumenPage /> },
       { path: "ncr", element: <NCR /> },
       { path: "ncr/:id/kasus", element: <CaseListPage /> },
+      { path: "ncr/:id/kasus/:caseId", element: <CaseDetailPage /> },
       { path: "ncr/:id/kasus/:caseId/temuan", element: <FindingsListPage /> },
       { path: "ncr/:id/kasus/:caseId/tanggapan", element: <ResponsePage /> },
       { path: "manajemen-pengguna", element: <ManajemenPengguna /> },
@@ -78,6 +83,18 @@ const router = createBrowserRouter([
       {
         path: "audit/checklist-excel/:id/item",
         element: <ItemAudit />,
+      },
+      {
+        path: "audit/dokumen/:id",
+        element: <DaftarChecklist />,
+      },
+      {
+        path: "audit/dokumen/:id/aspek/:aspekId",
+        element: <AspekPertanyaan />,
+      },
+      {
+        path: "audit/dokumen/:id/review/:checklistId",
+        element: <ReviewAspekPertanyaan />,
       },
     ],
   },
