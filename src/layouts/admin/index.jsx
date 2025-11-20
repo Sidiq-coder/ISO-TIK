@@ -7,20 +7,29 @@ import { AdminLayoutProvider } from "./AdminLayoutContext";
 export function AdminLayout({ children }) {
   return (
     <AdminLayoutProvider>
-    <SidebarProvider>
-      <BaseSidebar title="Sistem TIK" subtitle="Admin Panel">
-        <AdminSidebarContent />
-      </BaseSidebar>
+      <SidebarProvider>
+        {/* Sidebar - Fixed di kiri */}
+        <BaseSidebar title="Sistem TIK" subtitle="Admin Panel" className="z-10">
+          <AdminSidebarContent />
+        </BaseSidebar>
 
-    <SidebarInset className="bg-gray-light">
-        <AdminNavbar />
-        <div className="flex w-full justify-center px-14 py-8" >
-          <div className="w-full ">
-            <Outlet/>
+        {/* Main Content Area */}
+        <SidebarInset className="bg-gray-light flex flex-col min-h-screen">
+          {/* Navbar - Sticky di atas, allow overlap with content */}
+          <div className="sticky top-0 bg-white border-b border-navy-hover w-full">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+              <AdminNavbar />
+            </div>
           </div>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+
+          {/* Main Content - Scrollable dengan responsive padding, tidak tertimpa navbar */}
+          <main className="flex-1 overflow-y-auto">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6">
+              <Outlet />
+            </div>
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
     </AdminLayoutProvider>
   );
 }

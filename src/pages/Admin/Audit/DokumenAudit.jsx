@@ -164,7 +164,7 @@ export default function DokumenAudit() {
 
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <SearchBar />
+      <SearchBar className="w-[1082px]"/>
 
       <StatusDropdown
         isMenuOpen={isFilterDropdownOpen}

@@ -27,7 +27,7 @@ export function Table({
       ? getRowKey
       : (_, index) => `row-${index}`;
   const baseHeaderCellClass = "text-center text-navy-hover py-3 body-medium";
-  const baseCellClass = "body";
+  const baseCellClass = "body-medium text-navy-hover";
 
   return (
     <div className={`border-2 rounded-t-xl relative w-full ${className}`}>

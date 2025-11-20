@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Eye, Plus, Check, X, ChevronDown } from "lucide-react"
+import { Eye, Plus, Check, X, ChevronDown, ChevronRight } from "lucide-react"
 import { useReviewSoA } from "./hooks/useReviewSoA"
 import {
   getReviewMetaByTitle,
@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom"
 
 const CATEGORY_OPTIONS = reviewNavigatorConfig.map((section) => ({
-  label: `${section.code} ${section.title}`,
+  label: `${section.title}`,
   value: section.code,
 }))
 
@@ -24,22 +24,37 @@ export default function ReviewJawabanSoA() {
   )
 
   const [selectedCategory, setSelectedCategory] = useState(
-    CATEGORY_OPTIONS[0]?.value ?? "",
+    reviewNavigatorConfig[0]?.code ?? "",
+  )
+
+  const selectedCategoryData = useMemo(
+    () => reviewNavigatorConfig.find((cat) => cat.code === selectedCategory),
+    [selectedCategory],
+  )
+
+  const [selectedQuestion, setSelectedQuestion] = useState(
+    selectedCategoryData?.questions[0]?.id ?? "",
+  )
+
+  // Update selected question when category changes
+  useMemo(() => {
+    setSelectedQuestion(selectedCategoryData?.questions[0]?.id ?? "")
+  }, [selectedCategory, selectedCategoryData])
+
+  const currentQuestion = useMemo(
+    () =>
+      selectedCategoryData?.questions.find((q) => q.id === selectedQuestion) ??
+      selectedCategoryData?.questions[0],
+    [selectedQuestion, selectedCategoryData],
   )
 
   const {
     controlState,
     setControlState,
-    activeSection,
-    setActiveSection,
-    activeQuestion,
-    setActiveQuestion,
     comment,
     setComment,
   } = useReviewSoA({
     defaultControlState: "no",
-    defaultSection: reviewNavigatorConfig[0].code,
-    defaultQuestion: reviewNavigatorConfig[0].questions[0]?.id ?? "",
   })
 
   return (
@@ -49,11 +64,14 @@ export default function ReviewJawabanSoA() {
           documentMeta={documentMeta}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
+          categoryOptions={CATEGORY_OPTIONS}
         />
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <main className="space-y-6">
             <QuestionCard
+              question={currentQuestion}
+              categoryCode={selectedCategory}
               controls={controls}
               controlState={controlState}
               setControlState={setControlState}
@@ -67,10 +85,10 @@ export default function ReviewJawabanSoA() {
             <LegendCard documentMeta={documentMeta} />
             <Navigator
               sections={reviewNavigatorConfig}
-              activeSection={activeSection}
-              setActiveSection={setActiveSection}
-              activeQuestion={activeQuestion}
-              setActiveQuestion={setActiveQuestion}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              selectedQuestion={selectedQuestion}
+              onQuestionChange={setSelectedQuestion}
             />
           </aside>
         </div>
@@ -79,13 +97,15 @@ export default function ReviewJawabanSoA() {
   )
 }
 
-function PageHeader({ documentMeta, selectedCategory, onCategoryChange }) {
+function PageHeader({ documentMeta, selectedCategory, onCategoryChange, categoryOptions }) {
+  const categoryLabel = categoryOptions.find((opt) => opt.value === selectedCategory)?.label || ""
+
   return (
     <section>
       <div className="space-y-5 py-6">
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link
-          to={`/admin/soa/dokumen`}
+            to={`/admin/soa/dokumen`}
             className="small text-gray-dark hover:text-blue-dark"
           >
             Dokumen SOA
@@ -100,36 +120,55 @@ function PageHeader({ documentMeta, selectedCategory, onCategoryChange }) {
             <div className="space-y-1 grid grid-cols-2">
               <div>
                 <p className="small text-gray-dark mb-3">Judul Dokumen</p>
-              <p className="heading-4 text-blue-dark">{documentMeta.title}</p>
+                <p className="heading-4 text-blue-dark">{documentMeta.title}</p>
               </div>
               <div>
                 <p className="small text-gray-dark mb-3">Kategori SoA</p>
-              <p className="heading-4 text-blue-dark"><span className="text-white bg-blue-dark px-[14.5px] p-2 rounded-[4px] body-medium mr-2">{documentMeta.category.code}</span>{documentMeta.category.name}</p>
+                <p className="heading-4 text-blue-dark">
+                  <span className="text-gray-light bg-blue-dark px-[8px] py-[4px] rounded-[4px] body-medium mr-4">
+                    {selectedCategory}
+                  </span>
+                  {categoryLabel}
+                </p>
               </div>
             </div>
           </div>
-         
         </div>
       </div>
     </section>
   )
 }
 
-function QuestionCard({ controls, controlState, setControlState }) {
+function QuestionCard({ question, categoryCode, controls, controlState, setControlState }) {
+  const [formData, setFormData] = useState({
+    justification: "",
+    summary: "",
+  })
+
+  if (!question) {
+    return (
+      <section className="rounded-2xl border border-[#DDE3F5] bg-white p-6 shadow-sm">
+        <p className="text-center text-gray-500">Pilih pertanyaan untuk menampilkan detail</p>
+      </section>
+    )
+  }
+
   return (
-    <section className="rounded-2xl border border-[#DDE3F5] bg-white p-6 shadow-sm space-y-8">
+    <section className="rounded-2xl p-6 space-y-8">
+      {/* Question Header */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="rounded-[4px] bg-blue-dark px-3 py-1 small-medium text-white">
-            {reviewControlQuestion.id}
+          <span className="rounded-[4px] bg-blue-dark px-[8px] py-[4px] small-medium text-gray-light">
+            {question.id}
           </span>
-          <p className="body-bold text-navy">{reviewControlQuestion.title}</p>
+          <p className="body-bold text-navy">{question.label}</p>
         </div>
-        <p className="text-navy-hover leading-relaxed body">{reviewControlQuestion.description}</p>
+        <p className="text-navy-hover leading-relaxed body">{question.description}</p>
       </div>
 
-      <div className="grid grid-cols-[120px_566px] gap-[128px] w-[811px]">
-        <div className="space-y-3 flex flex-col">
+     <div className="w-[811px] grid grid-cols-[117px_566px]">
+       {/* Radio Options */}
+      <div className="space-y-3">
         <p className="body-medium text-navy">Kendali Saat Ini</p>
         <div className="flex flex-col gap-4 body">
           {[
@@ -139,11 +178,7 @@ function QuestionCard({ controls, controlState, setControlState }) {
           ].map((option) => (
             <label
               key={option.value}
-              className={`flex items-center gap-2 ${
-                controlState === option.value
-                  ? "border-navy text-navy"
-                  : "border-gray-300 text-gray-dark"
-              }`}
+              className="flex items-center gap-2 cursor-pointer"
             >
               <input
                 type="radio"
@@ -153,62 +188,95 @@ function QuestionCard({ controls, controlState, setControlState }) {
                 checked={controlState === option.value}
                 onChange={(event) => setControlState(event.target.value)}
               />
-              {option.label}
+              <span className={controlState === option.value ? "text-navy font-medium" : "text-gray-dark"}>
+                {option.label}
+              </span>
             </label>
           ))}
         </div>
       </div>
 
-          {/* Table */}
-      <div className="rounded-[4px] bg-white shadow-sm w-[566px]">
-            <div className="grid grid-cols-[360px_43px_67px_96px] border border-blue-dark bg-blue-light text-blue-dark rounded-t-[4px]">
-              <div className="body border-r border-blue-dark p-3 text-left rounded-tl-[4px]">
-                Kendali yang Dipilih &amp; Alasan Pemilihan
-              </div>
-              <div className="body border-r border-blue-dark p-3 text-center">Ya</div>
-              <div className="body border-r border-blue-dark p-3 text-center">Tidak</div>
-              <div className="body p-3 mx-auto text-center">Sebagian</div>
+      {/* Aspek Kendali Table */}
+      <div className="space-y-3">
+        <h3 className="body-medium text-navy">Aspek Kendali / Alasan Pemilihan</h3>
+        <div className="rounded-lg bg-white shadow-sm border border-[#DDE3F5] overflow-hidden">
+          <div className="grid grid-cols-[1fr_60px_60px_80px] bg-blue-light text-blue-dark border-b border-[#DDE3F5]">
+            <div className="body-medium border-r border-[#DDE3F5] p-3 text-left">
+              Aspek Kendali
             </div>
-            <div>
-              {controls.map((control, index) => (
-                <div
-                  key={control.code}
-                  className={`grid grid-cols-[360px_43px_67px_96px] body ${
-                    index % 2 === 0 ? "bg-white" : "bg-[#FBFCFF]"
-                  }`}
-                >
-                  <div className="px-4 py-3 text-left text-gray-dark border border-navy">
-                    <p className="body text-navy">{control.label}</p>
-                  </div>
-                  {["yes", "no", "partial"].map((type) => (
-                    <div key={type} className="flex items-center justify-center border border-navy">
-                      <span
-                        className={`inline-block size-4 rounded-full border ${
-                          control.value[type] ? "border-navy bg-navy" : "border-gray-300"
-                        }`}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ))}
+            <div className="body-medium border-r border-[#DDE3F5] p-3 text-center text-sm">
+              Dip &amp; Alasan
+            </div>
+            <div className="body-medium border-r border-[#DDE3F5] p-3 text-center text-sm">
+              Ya
+            </div>
+            <div className="body-medium p-3 text-center text-sm">Tidak</div>
+          </div>
+          {controls.map((control, index) => (
+            <div
+              key={control.code}
+              className={`grid grid-cols-[1fr_60px_60px_80px] border-b border-[#DDE3F5] last:border-b-0 ${
+                index % 2 === 0 ? "bg-white" : "bg-[#F9FAFC]"
+              }`}
+            >
+              <div className="border-r border-[#DDE3F5] p-3 text-left">
+                <p className="body-bold text-navy text-xs">{control.code}</p>
+                <p className="text-xs text-gray-dark">{control.label}</p>
+              </div>
+              <div className="border-r border-[#DDE3F5] p-3 flex justify-center">
+                <input
+                  type="radio"
+                  name={`control-${control.code}`}
+                  className="accent-navy"
+                  defaultChecked={control.value.yes}
+                />
+              </div>
+              <div className="border-r border-[#DDE3F5] p-3 flex justify-center">
+                <input
+                  type="radio"
+                  name={`control-${control.code}`}
+                  className="accent-navy"
+                  defaultChecked={control.value.no}
+                />
+              </div>
+              <div className="p-3 flex justify-center">
+                <input
+                  type="radio"
+                  name={`control-${control.code}`}
+                  className="accent-navy"
+                  defaultChecked={control.value.partial}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      </div>
+     </div>
 
-      <FormField label="Pembenaran (Justifikasi) terhadap Pengecualian" placeholder="Placeholder" />
-      <FormField label="Ringkasan Penerapan / Pelaksanaan" placeholder="Placeholder" />
+      {/* Form Fields */}
+      <FormField
+        label="Pembenaran (Justifikasi) terhadap Pengecualian"
+        placeholder="Jelaskan alasan pemilihan dan pengecualian jika ada"
+        value={formData.justification}
+        onChange={(value) => setFormData({ ...formData, justification: value })}
+      />
+      <FormField
+        label="Ringkasan Penerapan / Pelaksanaan"
+        placeholder="Ringkasan implementasi kontrol keamanan informasi"
+        value={formData.summary}
+        onChange={(value) => setFormData({ ...formData, summary: value })}
+      />
     </section>
   )
 }
 
-function FormField({ label, placeholder }) {
-  const [value, setValue] = useState("")
+function FormField({ label, placeholder, value, onChange }) {
   return (
     <div className="space-y-2">
-      <p className="text-sm font-semibold text-gray-dark">{label}</p>
+      <p className="body-medium text-navy">{label}</p>
       <textarea
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         className="min-h-[110px] w-full rounded-2xl border border-[#E3E9FF] bg-[#F6F7FB] px-4 py-3 text-sm text-gray-700 focus-visible:border-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9BB2FF]"
       />
@@ -333,60 +401,92 @@ function LegendCard({ documentMeta }) {
   )
 }
 
-function Navigator({ sections, activeSection, setActiveSection, activeQuestion, setActiveQuestion }) {
-  const handleToggle = (code) => {
-    setActiveSection((prev) => (prev === code ? "" : code))
+function Navigator({ sections, selectedCategory, onCategoryChange, selectedQuestion, onQuestionChange }) {
+  const [expandedCategory, setExpandedCategory] = useState(selectedCategory)
+
+  // Auto expand when category changes
+  useMemo(() => {
+    setExpandedCategory(selectedCategory)
+  }, [selectedCategory])
+
+  const getQuestionStatus = (status) => {
+    const statusStyles = {
+      complete: "bg-green-light text-green",
+      "in-progress": "bg-yellow-light text-yellow",
+      active: "bg-blue-light text-blue",
+      pending: "bg-gray-light text-gray",
+    }
+    return statusStyles[status] || "bg-gray-light text-gray"
   }
 
   return (
     <section className="space-y-4 rounded-2xl border border-[#D8E2FF] bg-white p-5 text-sm shadow-sm">
       <p className="text-sm font-semibold text-navy">Navigator Pertanyaan</p>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {sections.map((section) => {
-          const expanded = section.code === activeSection || section.code === "A.5"
+          const isExpanded = expandedCategory === section.code
+
           return (
-            <div key={section.code} className="rounded-2xl border border-[#E3E9FF] bg-[#F9FBFF]">
+            <div key={section.code} className="rounded-lg border border-[#E3E9FF] overflow-hidden">
               <button
                 type="button"
-                className="flex w-full items-center justify-between px-4 py-3 text-left font-semibold text-navy"
-                onClick={() => handleToggle(section.code)}
+                onClick={() => {
+                  setExpandedCategory(isExpanded ? "" : section.code)
+                  onCategoryChange(section.code)
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2 font-medium transition-colors ${
+                  selectedCategory === section.code
+                    ? "bg-blue-light text-blue"
+                    : "bg-[#F9FBFF] text-navy hover:bg-blue-50"
+                }`}
               >
-                <span>
-                  {section.code}
-                  <span className="ml-2 text-sm font-normal text-gray-500">{section.title}</span>
+                <span className="text-xs">
+                  <span className="font-bold">{section.code}</span>
+                  <span className="ml-1 text-gray-600 text-xs font-normal">
+                    {section.label || section.title}
+                  </span>
                 </span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                <ChevronRight
+                  className={`h-4 w-4 transition-transform ${
+                    isExpanded ? "rotate-90" : ""
+                  }`}
+                />
               </button>
-              {expanded && (
-                <div className="space-y-2 border-t border-[#E3E9FF] bg-white px-4 py-3">
-                  {section.questions.length === 0 && (
-                    <p className="text-xs text-gray-400">Belum ada pertanyaan</p>
-                  )}
+
+              {isExpanded && section.questions.length > 0 && (
+                <div className="bg-white border-t border-[#E3E9FF]">
                   {section.questions.map((question) => (
                     <button
                       key={question.id}
                       type="button"
-                      className={`flex w-full items-center gap-3 rounded-lg px-2 py-1 text-left text-sm ${
-                        question.id === activeQuestion ? "text-navy font-semibold" : "text-gray-400"
+                      onClick={() => onQuestionChange(question.id)}
+                      className={`w-full px-4 py-2 text-left text-xs border-b border-[#E3E9FF] last:border-b-0 transition-colors ${
+                        selectedQuestion === question.id
+                          ? "bg-blue-50 font-semibold text-blue"
+                          : "text-gray-600 hover:bg-gray-50"
                       }`}
-                      onClick={() => {
-                        setActiveSection(section.code)
-                        setActiveQuestion(question.id)
-                      }}
                     >
-                      <span
-                        className={`size-2.5 rounded-full ${
-                          question.status === "complete"
-                            ? "bg-gray-200"
-                            : question.status === "active"
-                              ? "bg-green-500"
-                              : question.status === "in-progress"
-                                ? "bg-gray-200" : ""
-                        }`}
-                      />
-                      {question.label}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-mono font-bold">{question.id}</span>
+                        <span
+                          className={`inline-block px-2 py-1 rounded text-xs font-semibold ${getQuestionStatus(
+                            question.status,
+                          )}`}
+                        >
+                          {question.status === "complete" && "✓"}
+                          {question.status === "in-progress" && "◐"}
+                          {question.status === "active" && "●"}
+                          {question.status === "pending" && "○"}
+                        </span>
+                      </div>
                     </button>
                   ))}
+                </div>
+              )}
+
+              {isExpanded && section.questions.length === 0 && (
+                <div className="bg-white border-t border-[#E3E9FF] px-3 py-2 text-center text-gray-400 text-xs">
+                  Belum ada pertanyaan
                 </div>
               )}
             </div>
