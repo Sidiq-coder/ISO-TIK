@@ -9,7 +9,7 @@ export default function Dashboard(){
                 user: {
                     name: "Admin User",
                     role: "Administrator",
-                    urlDetail: '/admin/profile'
+                    urlDetail: '/admin/profil'
                 }
             })
         }, [])

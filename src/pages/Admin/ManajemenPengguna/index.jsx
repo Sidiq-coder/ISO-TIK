@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext"
 import { Button } from "@/components/ui/button"
 import {
@@ -8,164 +9,52 @@ import {
   Table as AdminTable,
 } from "@/components/admin/table"
 import { Download, Eye, FilePen, FileText, Plus, Trash2 } from "lucide-react"
+import {
+  ViewUserModal,
+  AddUserModal,
+  EditUserModal,
+  ResetPasswordModal,
+  DeleteUserModal,
+} from "./components"
+import { FILTER_OPTIONS, PAGINATE_OPTIONS, STATUS_STYLES } from "./constants"
+import { USERS, USER_COLUMNS as BASE_USER_COLUMNS } from "./data/index.jsx"
 
-const FILTER_OPTIONS = [
-  { value: "Semua Status" },
-  { value: "Aktif" },
-  { value: "Menunggu" },
-  { value: "Nonaktif" },
-]
-
-const PAGINATE_OPTIONS = [10, 20, 50]
-
-const STATUS_STYLES = {
-  Aktif: "bg-green-light text-green border border-[#BDECCB] shadow-sm small",
-  Menunggu: "bg-yellow-light text-yellow border border-[#F4E0A3] shadow-sm small",
-  Nonaktif: "bg-gray-light text-navy-hover border border-[#D7DBE4] shadow-sm small",
-}
-
-const USERS = [
-  {
-    id: "USR-001",
-    fullName: "Nadia Putri",
-    username: "nadia.putri",
-    email: "nadia.putri@example.com",
-    role: "Admin",
-    status: "Aktif",
-  },
-  {
-    id: "USR-002",
-    fullName: "Arif Rahman",
-    username: "arif.rahman",
-    email: "arif.rahman@example.com",
-    role: "Reviewer",
-    status: "Aktif",
-  },
-  {
-    id: "USR-003",
-    fullName: "Dewi Larasati",
-    username: "dewilarasati",
-    email: "dewi.larasati@example.com",
-    role: "Approver",
-    status: "Menunggu",
-  },
-  {
-    id: "USR-004",
-    fullName: "Robert Johnson",
-    username: "r.johnson",
-    email: "robert.johnson@example.com",
-    role: "Direktur",
-    status: "Aktif",
-  },
-  {
-    id: "USR-005",
-    fullName: "Linda Pratama",
-    username: "linda.pratama",
-    email: "linda.pratama@example.com",
-    role: "Manager",
-    status: "Nonaktif",
-  },
-  {
-    id: "USR-006",
-    fullName: "Jane Smith",
-    username: "jane.smith",
-    email: "jane.smith@example.com",
-    role: "Admin",
-    status: "Aktif",
-  },
-  {
-    id: "USR-007",
-    fullName: "Yuda Saputra",
-    username: "yuda.saputra",
-    email: "yuda.saputra@example.com",
-    role: "Reviewer",
-    status: "Menunggu",
-  },
-]
-
-const USER_COLUMNS = [
-  {
-    key: "fullName",
-    header: "Nama Lengkap",
-    headerClassName: "text-left text-navy min-w-[120px] whitespace-nowrap",
-    cellClassName: "text-left text-navy",
-    render: (row) => (
-      <div>
-        <p className="">{row.fullName}</p>
-      </div>
-    ),
-  },
-  {
-    key: "username",
-    header: "Username",
-    headerClassName: "text-left min-w-[220px]",
-    cellClassName: "text-left max-w-[240px] text-gray-dark",
-    accessor: "username",
-  },
-  {
-    key: "email",
-    header: "Email",
-    headerClassName: "text-left min-w-[220px]",
-    cellClassName: "text-left truncate",
-    accessor: "email",
-  },
-  {
-    key: "role",
-    header: "Roles",
-    headerClassName: "text-center min-w-[120px]",
-    cellClassName: "text-center",
-    accessor: "role",
-  },
-  {
-    key: "status",
-    header: "Status",
-    headerClassName: "text-center min-w-[120px]",
-    cellClassName: "text-center",
-    render: (row) => (
-      <span
-        className={`inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-xs font-medium ${
-          STATUS_STYLES[row.status] ??
-          "bg-gray-100 text-gray-600 border border-gray-200"
-        }`}
-      >
-        {row.status}
-      </span>
-    ),
-  },
-  {
-    key: "actions",
-    header: "Aksi",
-    headerClassName: "text-center min-w-[180px]",
-    cellClassName: "flex justify-center gap-4 whitespace-nowrap",
-    render: () => (
-      <>
-        <button type="button" title="Lihat">
-          <Eye className="text-[#121A2E] w-5 h-5 cursor-pointer" />
-        </button>
-        <button type="button" title="Edit">
-          <FilePen className="text-[#2B7FFF] w-5 h-5 cursor-pointer" />
-        </button>
-        <button type="button" title="Reset Password">
-          <FileText className="text-[#00C950] w-5 h-5 cursor-pointer" />
-        </button>
-        <button type="button" title="Unduh">
-          <Download className="text-[#F1C441] w-5 h-5 cursor-pointer" />
-        </button>
-        <button type="button" title="Hapus">
-          <Trash2 className="text-[#FB2C36] w-5 h-5 cursor-pointer" />
-        </button>
-      </>
-    ),
-  },
-]
+// Enhance USER_COLUMNS with Status render function
+const USER_COLUMNS = BASE_USER_COLUMNS.map(col => {
+  if (col.key === "status") {
+    return {
+      ...col,
+      render: (row) => (
+        <span
+          className={`inline-flex items-center justify-center rounded-lg px-3 py-1 text-xs font-medium ${
+            STATUS_STYLES[row.status] ??
+            "bg-gray-100 text-gray-600 border border-gray-200"
+          }`}
+        >
+          {row.status}
+        </span>
+      ),
+    };
+  }
+  return col;
+});
 
 export default function ManajemenPengguna() {
   const { setHeader } = useAdminLayout()
+  const navigate = useNavigate()
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState(FILTER_OPTIONS[0].value)
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false)
   const [perPage, setPerPage] = useState(10)
   const [activePage, setActivePage] = useState(1)
+
+  // Modal states
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   useEffect(() => {
     setHeader({
@@ -174,7 +63,7 @@ export default function ManajemenPengguna() {
       user: {
         name: "Admin User",
         role: "Administrator",
-        urlDetail: "/admin/profile",
+        urlDetail: "/admin/profil",
       },
     })
   }, [setHeader])
@@ -184,8 +73,9 @@ export default function ManajemenPengguna() {
     return USERS.filter((user) => {
       const matchesStatus =
         statusFilter === "Semua Status" || user.status === statusFilter
+      const fullName = user.lastName ? `${user.fullName} ${user.lastName}` : user.fullName;
       const matchesSearch =
-        user.fullName.toLowerCase().includes(searchValue) ||
+        fullName.toLowerCase().includes(searchValue) ||
         user.username.toLowerCase().includes(searchValue) ||
         user.email.toLowerCase().includes(searchValue)
       return matchesStatus && matchesSearch
@@ -198,40 +88,122 @@ export default function ManajemenPengguna() {
     return filteredUsers.slice(startIndex, startIndex + perPage)
   }, [filteredUsers, activePage, perPage])
 
+  // Action handlers
+  const handleView = (user) => {
+    // Navigate to user profile page
+    navigate(`/admin/profil/${user.id}`, { state: { user } })
+  }
+
+  const handleEdit = (user) => {
+    setSelectedUser(user)
+    setIsEditModalOpen(true)
+  }
+
+  const handleResetPassword = (user) => {
+    setSelectedUser(user)
+    setIsResetPasswordModalOpen(true)
+  }
+
+  const handleDelete = (user) => {
+    setSelectedUser(user)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleDownload = (user) => {
+    // TODO: Implement download functionality
+    console.log("Download user data:", user)
+    alert(`Download data untuk ${user.fullName}`)
+  }
+
+  const handleAddUser = (userData) => {
+    // TODO: Implement API call to add user
+    console.log("Add user:", userData)
+    setIsAddModalOpen(false)
+    alert("Pengguna berhasil ditambahkan!")
+  }
+
+  const handleSaveEdit = (userData) => {
+    // TODO: Implement API call to update user
+    console.log("Update user:", userData)
+    setIsEditModalOpen(false)
+    alert("Pengguna berhasil diperbarui!")
+  }
+
+  const handleSaveResetPassword = (data) => {
+    // TODO: Implement API call to reset password
+    console.log("Reset password:", data)
+    setIsResetPasswordModalOpen(false)
+    alert("Password berhasil direset!")
+  }
+
+  const handleConfirmDelete = (userId) => {
+    // TODO: Implement API call to delete user
+    console.log("Delete user:", userId)
+    setIsDeleteModalOpen(false)
+    alert("Pengguna berhasil dihapus!")
+  }
+
+  // Update columns with action handlers
+  const columnsWithActions = useMemo(() => {
+    return USER_COLUMNS.map((col) => {
+      if (col.key === "actions") {
+        return {
+          ...col,
+          render: (row) => (
+            <>
+              <button type="button" title="Lihat" onClick={() => handleView(row)}>
+                <Eye className="text-navy w-5 h-5 cursor-pointer hover:opacity-70" />
+              </button>
+              <button type="button" title="Edit" onClick={() => handleEdit(row)}>
+                <FilePen className="text-blue-600 w-5 h-5 cursor-pointer hover:opacity-70" />
+              </button>
+            </>
+          ),
+        }
+      }
+      return col
+    })
+  }, [])
+
   return (
-    <div className="flex flex-wrap items-center gap-4">
-      <SearchBar
-        placeholder="Cari pengguna..."
-        value={search}
-        onChange={(event) => {
-          setSearch(event.target.value)
-          setActivePage(1)
-        }}
-        inputGroupClassName="h-14 max-w-[1123px]"
-      />
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <SearchBar
+          placeholder="Cari pengguna berdasarkan nama lengkap"
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value)
+            setActivePage(1)
+          }}
+          inputGroupClassName="h-12 flex-1"
+        />
 
-      <StatusDropdown
-        isMenuOpen={isStatusDropdownOpen}
-        setIsMenuOpen={setIsStatusDropdownOpen}
-        value={statusFilter}
-        onChange={(value) => {
-          setStatusFilter(value)
-          setActivePage(1)
-        }}
-        options={FILTER_OPTIONS}
-        classNameButton="w-[204px]! h-14!"
-        classNameDropdown="w-[204px]!"
-      />
+        <StatusDropdown
+          isMenuOpen={isStatusDropdownOpen}
+          setIsMenuOpen={setIsStatusDropdownOpen}
+          value={statusFilter}
+          onChange={(value) => {
+            setStatusFilter(value)
+            setActivePage(1)
+          }}
+          options={FILTER_OPTIONS}
+          classNameButton="w-[180px] h-12"
+          classNameDropdown="w-[180px]"
+        />
 
-      <Button className="flex h-14 items-center gap-2 rounded-[4px] bg-navy px-4 text-white hover:bg-navy/90 w-[193px]">
-        <Plus className="h-4 w-4" />
-        Tambah Pengguna
-      </Button>
+        <Button 
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex h-12 items-center gap-2 rounded-lg bg-navy px-6 text-white hover:bg-navy/90 whitespace-nowrap"
+        >
+          <Plus className="h-4 w-4" />
+          Tambah Pengguna
+        </Button>
+      </div>
 
       <AdminTable
         className="bg-white"
         tableClassName="min-w-[960px]"
-        columns={USER_COLUMNS}
+        columns={columnsWithActions}
         data={pagedUsers}
         getRowKey={(row) => row.id}
       />
@@ -247,6 +219,40 @@ export default function ManajemenPengguna() {
         onPageChange={setActivePage}
         totalPages={totalPages}
         totalData={filteredUsers.length}
+      />
+
+      {/* Modals */}
+      <ViewUserModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        user={selectedUser}
+      />
+
+      <AddUserModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSave={handleAddUser}
+      />
+
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        user={selectedUser}
+        onSave={handleSaveEdit}
+      />
+
+      <ResetPasswordModal
+        isOpen={isResetPasswordModalOpen}
+        onClose={() => setIsResetPasswordModalOpen(false)}
+        user={selectedUser}
+        onSave={handleSaveResetPassword}
+      />
+
+      <DeleteUserModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        user={selectedUser}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   )

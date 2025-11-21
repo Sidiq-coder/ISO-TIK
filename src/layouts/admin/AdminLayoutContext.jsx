@@ -9,7 +9,7 @@ export function AdminLayoutProvider({ children }) {
     user: {
       name: "Admin User",
       role: "Administrator",
-      urlDetail: '#'
+      urlDetail: '/admin/profil'
     },
   });
 

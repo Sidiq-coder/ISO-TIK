@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Eye, Plus, Check, X, ChevronDown, ChevronRight } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Eye, Plus, Check, X, ChevronRight } from "lucide-react"
 import { useReviewSoA } from "./hooks/useReviewSoA"
 import {
   getReviewMetaByTitle,
-  reviewControlQuestion,
   reviewControlMatrix,
   reviewRelatedDocuments,
   reviewNavigatorConfig,
@@ -58,40 +58,42 @@ export default function ReviewJawabanSoA() {
   })
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto flex flex-col gap-6">
-        <PageHeader
-          documentMeta={documentMeta}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          categoryOptions={CATEGORY_OPTIONS}
-        />
-
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <main className="space-y-6">
-            <QuestionCard
-              question={currentQuestion}
-              categoryCode={selectedCategory}
-              controls={controls}
-              controlState={controlState}
-              setControlState={setControlState}
-            />
-            <RelatedDocs docs={reviewRelatedDocuments} />
-            <CommentCard comment={comment} setComment={setComment} />
-            <ActionBar />
-          </main>
-
-          <aside className="space-y-5">
-            <LegendCard documentMeta={documentMeta} />
-            <Navigator
-              sections={reviewNavigatorConfig}
+    <div className="sm:px-6 lg:px-10">
+      <div className="mx-auto flex h-[calc(100vh-120px)] w-full  flex-col gap-6 overflow-hidden lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-8">
+        <div className="flex h-full flex-col overflow-hidden">
+          <div className="shrink-0 pb-2 lg:pb-4 lg:pr-4">
+            <PageHeader
+              documentMeta={documentMeta}
               selectedCategory={selectedCategory}
               onCategoryChange={setSelectedCategory}
-              selectedQuestion={selectedQuestion}
-              onQuestionChange={setSelectedQuestion}
+              categoryOptions={CATEGORY_OPTIONS}
             />
-          </aside>
+          </div>
+          <ScrollArea className="flex-1 min-h-0 pr-1 lg:pr-4">
+            <div className="space-y-6 pb-4">
+              <QuestionCard
+                question={currentQuestion}
+                controls={controls}
+                controlState={controlState}
+                setControlState={setControlState}
+              />
+              <RelatedDocs docs={reviewRelatedDocuments} />
+              <CommentCard comment={comment} setComment={setComment} />
+              <ActionBar />
+            </div>
+          </ScrollArea>
         </div>
+
+        <aside className="space-y-4 lg:sticky lg:top-[88px] lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2">
+          <LegendCard documentMeta={documentMeta} />
+          <Navigator
+            sections={reviewNavigatorConfig}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            selectedQuestion={selectedQuestion}
+            onQuestionChange={setSelectedQuestion}
+          />
+        </aside>
       </div>
     </div>
   )
@@ -102,7 +104,7 @@ function PageHeader({ documentMeta, selectedCategory, onCategoryChange, category
 
   return (
     <section>
-      <div className="space-y-5 py-6">
+      <div className="space-y-5 py-4">
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link
             to={`/admin/soa/dokumen`}
@@ -125,7 +127,7 @@ function PageHeader({ documentMeta, selectedCategory, onCategoryChange, category
               <div>
                 <p className="small text-gray-dark mb-3">Kategori SoA</p>
                 <p className="heading-4 text-blue-dark">
-                  <span className="text-gray-light bg-blue-dark px-[8px] py-[4px] rounded-[4px] body-medium mr-4">
+                  <span className="text-gray-light bg-blue-dark px-2 py-1 rounded body-medium mr-4">
                     {selectedCategory}
                   </span>
                   {categoryLabel}
@@ -139,11 +141,24 @@ function PageHeader({ documentMeta, selectedCategory, onCategoryChange, category
   )
 }
 
-function QuestionCard({ question, categoryCode, controls, controlState, setControlState }) {
+function QuestionCard({ question, controls, controlState, setControlState }) {
   const [formData, setFormData] = useState({
     justification: "",
     summary: "",
   })
+
+  const CONTROL_COLUMNS = [
+    { label: "Ya", value: "yes", width: 43 },
+    { label: "Tidak", value: "no", width: 67 },
+    { label: "Sebagian", value: "partial", width: 96 },
+  ]
+
+  const CONTROL_TABLE_DIMENSIONS = {
+    width: 566,
+    headerHeight: 43,
+    rowHeight: 34,
+    firstColumnWidth: 360,
+  }
 
   if (!question) {
     return (
@@ -154,11 +169,11 @@ function QuestionCard({ question, categoryCode, controls, controlState, setContr
   }
 
   return (
-    <section className="rounded-2xl p-6 space-y-8">
+    <section className="rounded-2xl shadow-sm space-y-8">
       {/* Question Header */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="rounded-[4px] bg-blue-dark px-[8px] py-[4px] small-medium text-gray-light">
+          <span className="rounded bg-blue-dark px-2 py-1 small-medium text-gray-light">
             {question.id}
           </span>
           <p className="body-bold text-navy">{question.label}</p>
@@ -166,92 +181,98 @@ function QuestionCard({ question, categoryCode, controls, controlState, setContr
         <p className="text-navy-hover leading-relaxed body">{question.description}</p>
       </div>
 
-     <div className="w-[811px] grid grid-cols-[117px_566px]">
-       {/* Radio Options */}
-      <div className="space-y-3">
-        <p className="body-medium text-navy">Kendali Saat Ini</p>
-        <div className="flex flex-col gap-4 body">
-          {[
-            { label: "Ya", value: "yes" },
-            { label: "Tidak", value: "no" },
-            { label: "Sebagian", value: "partial" },
-          ].map((option) => (
-            <label
-              key={option.value}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <input
-                type="radio"
-                className="accent-navy"
-                name="control-state"
-                value={option.value}
-                checked={controlState === option.value}
-                onChange={(event) => setControlState(event.target.value)}
-              />
-              <span className={controlState === option.value ? "text-navy font-medium" : "text-gray-dark"}>
-                {option.label}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Aspek Kendali Table */}
-      <div className="space-y-3">
-        <h3 className="body-medium text-navy">Aspek Kendali / Alasan Pemilihan</h3>
-        <div className="rounded-lg bg-white shadow-sm border border-[#DDE3F5] overflow-hidden">
-          <div className="grid grid-cols-[1fr_60px_60px_80px] bg-blue-light text-blue-dark border-b border-[#DDE3F5]">
-            <div className="body-medium border-r border-[#DDE3F5] p-3 text-left">
-              Aspek Kendali
-            </div>
-            <div className="body-medium border-r border-[#DDE3F5] p-3 text-center text-sm">
-              Dip &amp; Alasan
-            </div>
-            <div className="body-medium border-r border-[#DDE3F5] p-3 text-center text-sm">
-              Ya
-            </div>
-            <div className="body-medium p-3 text-center text-sm">Tidak</div>
+      <div className="grid gap-6 lg:grid-cols-[150px_minmax(0,1fr)]">
+        {/* Radio Options */}
+        <div className="space-y-3">
+          <p className="body-medium text-navy">Kendali Saat Ini</p>
+          <div className="flex flex-col gap-4 body">
+            {[
+              { label: "Ya", value: "yes" },
+              { label: "Tidak", value: "no" },
+              { label: "Sebagian", value: "partial" },
+            ].map((option) => (
+              <label
+                key={option.value}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  className="accent-navy"
+                  name="control-state"
+                  value={option.value}
+                  checked={controlState === option.value}
+                  onChange={(event) => setControlState(event.target.value)}
+                />
+                <span className={controlState === option.value ? "text-navy font-medium" : "text-gray-dark"}>
+                  {option.label}
+                </span>
+              </label>
+            ))}
           </div>
-          {controls.map((control, index) => (
-            <div
-              key={control.code}
-              className={`grid grid-cols-[1fr_60px_60px_80px] border-b border-[#DDE3F5] last:border-b-0 ${
-                index % 2 === 0 ? "bg-white" : "bg-[#F9FAFC]"
-              }`}
-            >
-              <div className="border-r border-[#DDE3F5] p-3 text-left">
-                <p className="body-bold text-navy text-xs">{control.code}</p>
-                <p className="text-xs text-gray-dark">{control.label}</p>
-              </div>
-              <div className="border-r border-[#DDE3F5] p-3 flex justify-center">
-                <input
-                  type="radio"
-                  name={`control-${control.code}`}
-                  className="accent-navy"
-                  defaultChecked={control.value.yes}
-                />
-              </div>
-              <div className="border-r border-[#DDE3F5] p-3 flex justify-center">
-                <input
-                  type="radio"
-                  name={`control-${control.code}`}
-                  className="accent-navy"
-                  defaultChecked={control.value.no}
-                />
-              </div>
-              <div className="p-3 flex justify-center">
-                <input
-                  type="radio"
-                  name={`control-${control.code}`}
-                  className="accent-navy"
-                  defaultChecked={control.value.partial}
-                />
-              </div>
-            </div>
-          ))}
+        </div>
+
+        {/* Aspek Kendali Table */}
+        <div className="space-y-2">
+          <div
+            className="shadow-sm"
+            style={{ width: CONTROL_TABLE_DIMENSIONS.width }}
+          >
+            <table className="w-full table-fixed border-collapse border-spacing-0">
+              <colgroup>
+                <col style={{ width: CONTROL_TABLE_DIMENSIONS.firstColumnWidth }} />
+                {CONTROL_COLUMNS.map((column) => (
+                  <col key={column.value} style={{ width: column.width }} />
+                ))}
+              </colgroup>
+              <thead>
+                <tr
+                  style={{ height: CONTROL_TABLE_DIMENSIONS.headerHeight }}
+                  className="bg-blue-light text-blue-dark"
+                >
+                  <th className="border border-blue-dark px-3 text-left body rounded-tl-[200px]">
+                    Kendali yang Dipilih &amp; Alasan Pemilihan
+                  </th>
+                  {CONTROL_COLUMNS.map((column) => (
+                    <th
+                      key={column.value}
+                      className="border border-blue-dark text-center body"
+                    >
+                      {column.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {controls.map((control, index) => (
+                  <tr
+                    key={control.code}
+                    style={{ height: CONTROL_TABLE_DIMENSIONS.rowHeight }}
+                    className={`${index % 2 === 0 ? "bg-white" : "bg-[#F9FBFF]"}`}
+                  >
+                    <td className="px-3 font-semibold text-navy">
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="truncate body text-[#1F2D56]">{control.label}</span>
+                      </div>
+                    </td>
+                    {CONTROL_COLUMNS.map((column) => (
+                      <td key={`${control.code}-${column.value}`} className="border-l border-[#E1E7FB] px-2">
+                        <div className="flex items-center justify-center">
+                          <input
+                            type="radio"
+                            name={`control-${control.code}`}
+                            className="h-2.5 w-2.5 accent-navy"
+                            defaultChecked={control.value[column.value]}
+                          />
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-     </div>
 
       {/* Form Fields */}
       <FormField
@@ -422,7 +443,8 @@ function Navigator({ sections, selectedCategory, onCategoryChange, selectedQuest
   return (
     <section className="space-y-4 rounded-2xl border border-[#D8E2FF] bg-white p-5 text-sm shadow-sm">
       <p className="text-sm font-semibold text-navy">Navigator Pertanyaan</p>
-      <div className="space-y-2">
+      <ScrollArea className="max-h-[60vh] pr-1">
+        <div className="space-y-2">
         {sections.map((section) => {
           const isExpanded = expandedCategory === section.code
 
@@ -492,7 +514,8 @@ function Navigator({ sections, selectedCategory, onCategoryChange, selectedQuest
             </div>
           )
         })}
-      </div>
+        </div>
+      </ScrollArea>
     </section>
   )
 }
