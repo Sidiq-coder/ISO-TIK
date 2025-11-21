@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 // Mock data untuk review
 const mockReviewData = {
@@ -74,6 +76,9 @@ function ReviewAspekPertanyaan() {
   const [selectedQuestion, setSelectedQuestion] = useState(
     mockReviewData.aspekList[0].categories[0].questions[0]
   );
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [komentarReviewer, setKomentarReviewer] = useState("");
 
   const toggleAspek = (aspekId) => {
     setAspekList(
@@ -93,14 +98,21 @@ function ReviewAspekPertanyaan() {
     }
   };
 
-  const handleIsiReview = () => {
-    // Handle review input
-    console.log("Isi Review clicked for question:", selectedQuestion.id);
+  const handleIsiReview = (question) => {
+    setCurrentQuestion(question);
+    setKomentarReviewer(question.reviewer?.comment || "");
+    setDialogOpen(true);
   };
 
   const handleTandaiDireview = () => {
     // Mark as reviewed
     console.log("Tandai Direview clicked for question:", selectedQuestion.id);
+  };
+
+  const handleSimpanKomentar = () => {
+    console.log("Simpan Komentar:", komentarReviewer);
+    setDialogOpen(false);
+    setKomentarReviewer("");
   };
 
   return (
@@ -271,7 +283,7 @@ function ReviewAspekPertanyaan() {
                   {/* Action Buttons */}
                   <div className="flex gap-3 pt-2">
                     <Button
-                      onClick={() => handleIsiReview()}
+                      onClick={() => handleIsiReview(question)}
                       className="rounded-lg bg-[#2B7FFF] hover:bg-[#1a5fcf] text-white"
                     >
                       Isi Review
@@ -349,6 +361,93 @@ function ReviewAspekPertanyaan() {
           </div>
         </div>
       </div>
+
+      {/* Dialog Komentar Reviewer */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="heading-3 text-navy">
+              Komentar Reviewer
+            </DialogTitle>
+            <p className="small text-gray-dark mt-1">
+              {currentQuestion?.text}
+            </p>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            {/* Question Details */}
+            <div className="space-y-3">
+              <div>
+                <p className="small text-gray-dark mb-1">Jawaban:</p>
+                <p className="body text-navy">{currentQuestion?.jawaban}</p>
+              </div>
+              <div>
+                <p className="small text-gray-dark mb-1">Observasi:</p>
+                <p className="body text-navy">{currentQuestion?.observasi}</p>
+              </div>
+              <div>
+                <p className="small text-gray-dark mb-1">Verifikasi:</p>
+                <p className="body text-navy">{currentQuestion?.verifikasi}</p>
+              </div>
+              <div>
+                <p className="small text-gray-dark mb-1">Rekaman Dokumen:</p>
+                <p className="body text-navy">{currentQuestion?.rencanaLokumen}</p>
+              </div>
+            </div>
+
+            {/* Existing Review Section (if exists) */}
+            {currentQuestion?.reviewer && (
+              <div className="bg-[#E8F5E9] p-4 rounded-lg space-y-2 border border-[#28A745]">
+                <p className="small text-gray-dark">Admin Reviewer</p>
+                <p className="body text-navy font-medium">
+                  {currentQuestion.reviewer.name}
+                </p>
+                <div>
+                  <p className="small text-gray-dark">Tanggal:</p>
+                  <p className="body text-navy">{currentQuestion.reviewer.date}</p>
+                </div>
+                <div>
+                  <p className="small text-gray-dark">Komentar Reviewer:</p>
+                  <p className="body text-navy">{currentQuestion.reviewer.comment}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Comment Form */}
+            <div>
+              <label className="body-medium text-navy mb-2 block">
+                {currentQuestion?.reviewer ? "Edit Komentar" : "Berikan Komentar"}
+              </label>
+              <Textarea
+                value={komentarReviewer}
+                onChange={(e) => setKomentarReviewer(e.target.value)}
+                placeholder="Masukkan komentar..."
+                className="min-h-[100px] resize-none"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                onClick={() => {
+                  setDialogOpen(false);
+                  setKomentarReviewer("");
+                }}
+                variant="outline"
+                className="rounded-lg"
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={handleSimpanKomentar}
+                className="rounded-lg bg-navy hover:bg-navy/90 text-white"
+              >
+                Simpan Komentar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

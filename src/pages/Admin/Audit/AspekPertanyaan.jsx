@@ -3,6 +3,15 @@ import { useParams, useLocation, Link } from "react-router-dom";
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 import { ChevronRight, ChevronDown, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 export default function AspekPertanyaan() {
   const { id } = useParams();
@@ -22,6 +31,14 @@ export default function AspekPertanyaan() {
   const [activeTab, setActiveTab] = useState("aspek");
   const [selectedKategori, setSelectedKategori] = useState("kategori-1");
   const [expandedAspek, setExpandedAspek] = useState("aspek-1");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [formData, setFormData] = useState({
+    jawaban: "",
+    observasi: "",
+    verifikasi: "",
+    rekomenDokumen: "",
+  });
 
   // Mock data for navigator
   const navigatorData = useMemo(
@@ -120,9 +137,23 @@ export default function AspekPertanyaan() {
       return null;
     }
 
+    const handleClick = () => {
+      setSelectedQuestion(question);
+      setFormData({
+        jawaban: question.jawaban || "",
+        observasi: question.observasi || "",
+        verifikasi: question.verifikasi || "",
+        rekomenDokumen: question.rekomenDokumen || "",
+      });
+      setDialogOpen(true);
+    };
+
     if (question.status === "answered") {
       return (
-        <Button className="flex items-center gap-2 h-[42px] px-4 bg-[#2B7FFF] hover:bg-[#2563EB] text-white rounded-lg">
+        <Button 
+          onClick={handleClick}
+          className="flex items-center gap-2 h-[42px] px-4 bg-[#2B7FFF] hover:bg-[#2563EB] text-white rounded-lg"
+        >
           <Pencil className="h-4 w-4" />
           <span className="body-medium">Edit Jawaban</span>
         </Button>
@@ -130,11 +161,20 @@ export default function AspekPertanyaan() {
     }
 
     return (
-      <Button className="flex items-center gap-2 h-[42px] px-4 bg-[#F1C441] hover:bg-[#E0B031] text-white rounded-lg">
+      <Button 
+        onClick={handleClick}
+        className="flex items-center gap-2 h-[42px] px-4 bg-[#F1C441] hover:bg-[#E0B031] text-white rounded-lg"
+      >
         <Pencil className="h-4 w-4" />
         <span className="body-medium">Isi Jawaban</span>
       </Button>
     );
+  };
+
+  const handleSimpanJawaban = () => {
+    console.log("Simpan jawaban:", formData, "untuk question:", selectedQuestion.id);
+    // Update question with new answer
+    setDialogOpen(false);
   };
 
   const toggleAspek = (aspekId) => {
@@ -316,6 +356,80 @@ export default function AspekPertanyaan() {
           ))}
         </div>
       </div>
+
+      {/* Dialog Isi Jawaban */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="heading-3 text-navy">
+              {selectedQuestion?.status === "answered" ? "Edit Jawaban" : "Isi Jawaban"}
+            </DialogTitle>
+            <p className="text-gray-dark small mt-1">
+              {selectedQuestion?.question}
+            </p>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            {/* Jawaban */}
+            <div className="space-y-2">
+              <label className="body text-navy font-medium">Jawaban</label>
+              <Textarea
+                placeholder="Masukkan Jawaban"
+                value={formData.jawaban}
+                onChange={(e) => setFormData({ ...formData, jawaban: e.target.value })}
+                className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
+              />
+            </div>
+
+            {/* Observasi */}
+            <div className="space-y-2">
+              <label className="body text-navy font-medium">Observasi</label>
+              <Textarea
+                placeholder="Masukkan Observasi"
+                value={formData.observasi}
+                onChange={(e) => setFormData({ ...formData, observasi: e.target.value })}
+                className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
+              />
+            </div>
+
+            {/* Verifikasi */}
+            <div className="space-y-2">
+              <label className="body text-navy font-medium">Verifikasi</label>
+              <Textarea
+                placeholder="Masukkan Verifikasi"
+                value={formData.verifikasi}
+                onChange={(e) => setFormData({ ...formData, verifikasi: e.target.value })}
+                className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
+              />
+            </div>
+
+            {/* Rekaman Dokumen */}
+            <div className="space-y-2">
+              <label className="body text-navy font-medium">Rekaman Dokumen</label>
+              <Textarea
+                placeholder="Masukkan Rekaman Dokumen:"
+                value={formData.rekomenDokumen}
+                onChange={(e) => setFormData({ ...formData, rekomenDokumen: e.target.value })}
+                className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <DialogClose asChild>
+              <Button type="button" variant="outline" className="rounded-lg">
+                Batal
+              </Button>
+            </DialogClose>
+            <Button
+              onClick={handleSimpanJawaban}
+              className="rounded-lg bg-navy hover:bg-navy-hover text-white"
+            >
+              Simpan Jawaban
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

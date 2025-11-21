@@ -105,11 +105,6 @@ function ReviewPertanyaanExcel() {
     setDialogOpen(false);
   };
 
-  const handleEditKomentar = () => {
-    // Enable edit mode
-    console.log("Edit komentar");
-  };
-
   // Get active checklist items
   const activeItems = checklistExcel.find((c) => c.active)?.items || [];
 
@@ -236,19 +231,35 @@ function ReviewPertanyaanExcel() {
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => handleOpenDialog(item)}
-                          className="p-2 hover:bg-blue-50 rounded transition-colors"
-                          title="Komentar"
-                        >
-                          <MessageSquare className="w-5 h-5 text-[#2B7FFF]" />
-                        </button>
-                        <button
-                          className="p-2 hover:bg-green-50 rounded transition-colors"
-                          title="Tandai Direview"
-                        >
-                          <Check className="w-5 h-5 text-[#28A745]" />
-                        </button>
+                        {/* Show Komentar button only if NOT reviewed yet */}
+                        {item.statusReview !== "sudah" && (
+                          <button
+                            onClick={() => handleOpenDialog(item)}
+                            className="p-2 hover:bg-blue-50 rounded transition-colors"
+                            title="Komentar"
+                          >
+                            <MessageSquare className="w-5 h-5 text-[#2B7FFF]" />
+                          </button>
+                        )}
+                        {/* Show Check button only if NOT reviewed yet */}
+                        {item.statusReview !== "sudah" && (
+                          <button
+                            className="p-2 hover:bg-green-50 rounded transition-colors"
+                            title="Tandai Direview"
+                          >
+                            <Check className="w-5 h-5 text-[#28A745]" />
+                          </button>
+                        )}
+                        {/* Show edit button if already reviewed */}
+                        {item.statusReview === "sudah" && (
+                          <button
+                            onClick={() => handleOpenDialog(item)}
+                            className="p-2 hover:bg-blue-50 rounded transition-colors"
+                            title="Edit Komentar"
+                          >
+                            <MessageSquare className="w-5 h-5 text-[#2B7FFF]" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -298,7 +309,7 @@ function ReviewPertanyaanExcel() {
 
       {/* Dialog Komentar Reviewer */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="heading-3 text-navy">
               Komentar Reviewer
@@ -312,24 +323,24 @@ function ReviewPertanyaanExcel() {
             {/* Item Info */}
             <div className="space-y-3">
               <div>
-                <p className="small text-gray-dark mb-1">Item Audit</p>
+                <p className="small text-gray-dark">Item Audit</p>
                 <p className="body text-navy">{selectedItem?.itemAudit}</p>
               </div>
               <div>
-                <p className="small text-gray-dark mb-1">Bukti Objektif</p>
+                <p className="small text-gray-dark">Bukti Objektif</p>
                 <p className="body text-navy">{selectedItem?.buktiObjektif}</p>
               </div>
               <div>
-                <p className="small text-gray-dark mb-1">Kesesuaian</p>
+                <p className="small text-gray-dark">Kesesuaian</p>
                 <p className="body text-navy">{selectedItem?.kesesuaian}</p>
               </div>
               <div>
-                <p className="small text-gray-dark mb-1">Catatan Editor</p>
+                <p className="small text-gray-dark">Catatan Editor</p>
                 <p className="body text-navy">{selectedItem?.catatanEditor}</p>
               </div>
             </div>
 
-            {/* Existing Review */}
+            {/* Existing Review - Only show if already reviewed */}
             {selectedItem?.reviewer && (
               <div className="bg-[#E8F5E9] p-4 rounded-lg space-y-2">
                 <p className="small text-gray-dark">Direview oleh</p>
@@ -349,7 +360,7 @@ function ReviewPertanyaanExcel() {
 
             {/* Comment Form */}
             <div className="space-y-2">
-              <label className="body text-navy">
+              <label className="body text-navy font-medium">
                 {selectedItem?.reviewer ? "Edit Komentar" : "Berikan Komentar"}
               </label>
               <Textarea
