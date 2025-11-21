@@ -35,7 +35,7 @@ export function AdminLayout({ children }) {
 
           {/* Main Content - Scrollable dengan responsive padding */}
           <main>
-            <div className="md:px-8">
+            <div className="md:px-8 p-4">
               <Outlet />
             </div>
           </main>

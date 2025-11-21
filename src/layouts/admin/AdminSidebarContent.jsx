@@ -170,7 +170,7 @@ export function AdminSidebarContent() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full justify-between py-4">
+    <div className="flex flex-col h-full justify-between py-4 px-4">
       <nav className="flex flex-col gap-1">
         <div className="px-3 py-2 mb-1">
           <p className="text-[13px] text-gray-dark px-4">Menu Utama</p>

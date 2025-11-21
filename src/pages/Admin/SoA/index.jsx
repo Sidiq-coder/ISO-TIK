@@ -44,7 +44,7 @@ export default function SoA(){
                 </div>
             )}
         
-        <div className="mt-6">
+        <div className="">
             <Outlet />
         </div>
 

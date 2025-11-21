@@ -120,12 +120,20 @@ export function AlertIconDialog({ type, row, className = "", trigger }) {
                 variant="outline"
                 onClick={() => {
                   setOpen(false)
-                  navigate("/admin/soa/review")
+                  navigate("/admin/soa/review?mode=view")
                 }}
               >
                 Lihat Jawaban
               </Button>
-              <Button type="button">Isi Jawaban</Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  setOpen(false)
+                  navigate("/admin/soa/review")
+                }}
+              >
+                Isi Jawaban
+              </Button>
             </div>
           </>
         ) : isDelete ? (
