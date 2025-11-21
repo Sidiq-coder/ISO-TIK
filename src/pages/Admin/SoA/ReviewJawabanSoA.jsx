@@ -1,10 +1,17 @@
 import { useMemo, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
-import { List, Rows3 } from "lucide-react"
-import { Eye, ChevronDown, ChevronRight } from "lucide-react"
+import { List, Rows3, Eye, ChevronDown, ChevronRight } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { SearchBar } from "@/components/table/SearchBar"
+import { CategoryDropdown } from "@/components/table/CategoryDropdown"
 import { useReviewSoA } from "./hooks/useReviewSoA"
 import {
   getReviewMetaByTitle,
@@ -23,6 +30,10 @@ const CATEGORY_OPTIONS = reviewNavigatorConfig.map((section) => ({
 const VIEW_MODE_OPTIONS = [
   { value: "detail", label: "Pengisian Jawaban", icon: List, url: "/admin/soa/pengisian" },
   { value: "table", label: "Tampilan Table", icon: Rows3, url: "/admin/soa/pengisian/table" },
+]
+const TABLE_CATEGORY_OPTIONS = [
+  { value: "Semua Kategori" },
+  ...reviewNavigatorConfig.map((section) => ({ value: section.code })),
 ]
 
 export default function ReviewJawabanSoA() {
@@ -53,6 +64,9 @@ export default function ReviewJawabanSoA() {
   const isTableMode = viewMode === "table"
   const [searchParams] = useSearchParams()
   const isViewOnlyMode = searchParams.get("mode") === "view"
+  const [tableSearch, setTableSearch] = useState("")
+  const [tableCategory, setTableCategory] = useState(TABLE_CATEGORY_OPTIONS[0].value)
+  const [isTableStatusOpen, setIsTableStatusOpen] = useState(false)
   const viewModeControl = <ViewModeDropdown viewMode={viewMode} onViewModeChange={setViewMode} />
   const viewModeCard = <div className="w-full max-w-[365px]">{viewModeControl}</div>
 
@@ -73,8 +87,25 @@ export default function ReviewJawabanSoA() {
             />
           </div>
           {viewMode === "table" ? (
-            <div className="flex-1 min-h-0 pb-4">
-              <ScaleTable data={scaleTableData} />
+            <div className="flex-1 min-h-0 pb-4 space-y-4 px-2">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <SearchBar
+                  placeholder="Cari pertanyaan atau kendali"
+                  value={tableSearch}
+                  onChange={(event) => setTableSearch(event.target.value)}
+                  inputGroupClassName="h-[56px] w-full rounded-[4px]"
+                  inputClassName="text-navy placeholder:text-gray-400"
+                />
+                <CategoryDropdown
+                  isMenuOpen={isTableStatusOpen}
+                  setIsMenuOpen={setIsTableStatusOpen}
+                  value={tableCategory}
+                  onChange={setTableCategory}
+                  options={TABLE_CATEGORY_OPTIONS}
+                />
+              </div>
+              <LegendBar />
+              <ScaleTable data={scaleTableData} search={tableSearch} categoryFilter={tableCategory} />
             </div>
           ) : (
             <ScrollArea className="flex-1 min-h-0 pr-1 lg:pr-4">
@@ -434,6 +465,29 @@ function LegendCard({ documentMeta }) {
   )
 }
 
+function LegendBar() {
+  const entries = [
+    "Y = Ya",
+    "T = Tidak",
+    "S = Sebagian",
+    "PL = Persyaratan Legal",
+    "KK = Kewajiban Kontrak",
+    "PK/PB = Persyaratan Kerja / Praktek yang Baik",
+    "HPR = Hasil Penilaian Risiko (Keamanan Informasi)",
+  ]
+
+  return (
+    <div className="rounded-lg border border-blue-500 bg-[#EAF2FF] px-5 py-3 text-xs text-blue-700">
+      <p className="font-semibold mb-2">Keterangan:</p>
+      <div className="flex flex-wrap gap-x-6 gap-y-1 text-[11px]">
+        {entries.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Navigator({
   sections,
   selectedCategory,
@@ -546,10 +600,8 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="start" className="w-[364px] bg-white p-2">
-        <DropdownMenuLabel className="text-xs uppercase tracking-wide text-gray-400">
-          Tampilan
-        </DropdownMenuLabel>
-        <div className="space-y-1 border border-navy">
+       
+        <div className="space-y-1">
           {VIEW_MODE_OPTIONS.map((option) => {
             const OptionIcon = option.icon
             const isSelected = option.value === viewMode

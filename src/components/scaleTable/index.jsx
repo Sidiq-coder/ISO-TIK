@@ -2,8 +2,24 @@ import { Fragment } from "react"
 import { Eye, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export function ScaleTable({ data }) {
+export function ScaleTable({ data, search = "", categoryFilter = "Semua Kategori" }) {
   if (!data) return null
+
+  const query = search.trim().toLowerCase()
+  const filteredSections = data.sections
+    .filter((section) => categoryFilter === "Semua Kategori" || section.code === categoryFilter)
+    .map((section) => ({
+      ...section,
+      questions: section.questions.filter((question) => {
+        if (!query) return true
+        return (
+          question.id.toLowerCase().includes(query) ||
+          question.title.toLowerCase().includes(query) ||
+          question.description.toLowerCase().includes(query)
+        )
+      }),
+    }))
+    .filter((section) => section.questions.length > 0)
 
   return (
     <section className="rounded-2xl border border-[#D8E2FF] bg-white shadow-sm h-full">
@@ -54,7 +70,7 @@ export function ScaleTable({ data }) {
               </tr>
             </thead>
             <tbody>
-              {data.sections.map((section) => (
+              {filteredSections.map((section) => (
                 <Fragment key={section.code}>
                   <tr className="bg-[#E7F4ED] text-navy">
                     <td colSpan={14} className="border border-[#C7E0D4] px-4 py-2 font-semibold">
