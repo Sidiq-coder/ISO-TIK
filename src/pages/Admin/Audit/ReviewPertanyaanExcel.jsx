@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronRight, ChevronDown, ChevronUp, MessageSquare, Check } from "lucide-react";
+import {
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  MessageSquare,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -65,10 +71,13 @@ function ReviewPertanyaanExcel() {
   const { id, checklistId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const { dokumenTitle, lokasi, tanggalAudit, revisi, mode } = location.state || {};
+
+  const { dokumenTitle, lokasi, tanggalAudit, revisi, mode } =
+    location.state || {};
   const [activeTab, setActiveTab] = useState("excel");
-  const [checklistExcel, setChecklistExcel] = useState(mockExcelData.checklistExcel);
+  const [checklistExcel, setChecklistExcel] = useState(
+    mockExcelData.checklistExcel
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [komentarReviewer, setKomentarReviewer] = useState("");
@@ -100,7 +109,12 @@ function ReviewPertanyaanExcel() {
   };
 
   const handleSimpanKomentar = () => {
-    console.log("Simpan komentar:", komentarReviewer, "untuk item:", selectedItem.id);
+    console.log(
+      "Simpan komentar:",
+      komentarReviewer,
+      "untuk item:",
+      selectedItem.id
+    );
     // Update item with new review
     setDialogOpen(false);
   };
@@ -185,18 +199,35 @@ function ReviewPertanyaanExcel() {
                 <tr className="bg-[#2B7FFF] text-white">
                   <th className="p-3 text-left small font-medium">No</th>
                   <th className="p-3 text-left small font-medium">Aspek</th>
-                  <th className="p-3 text-left small font-medium">Item Audit</th>
-                  <th className="p-3 text-left small font-medium">Bukti Objektif</th>
-                  <th className="p-3 text-center small font-medium">Kesesuaian</th>
-                  <th className="p-3 text-left small font-medium">Catatan Editor</th>
-                  <th className="p-3 text-center small font-medium">Status Review</th>
-                  <th className="p-3 text-left small font-medium">Komentar Reviewer</th>
-                  <th className="p-3 text-center small font-medium">Aksi Reviewer</th>
+                  <th className="p-3 text-left small font-medium">
+                    Item Audit
+                  </th>
+                  <th className="p-3 text-left small font-medium">
+                    Bukti Objektif
+                  </th>
+                  <th className="p-3 text-center small font-medium">
+                    Kesesuaian
+                  </th>
+                  <th className="p-3 text-left small font-medium">
+                    Catatan Editor
+                  </th>
+                  <th className="p-3 text-center small font-medium">
+                    Status Review
+                  </th>
+                  <th className="p-3 text-left small font-medium">
+                    Komentar Reviewer
+                  </th>
+                  <th className="p-3 text-center small font-medium">
+                    Aksi Reviewer
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {activeItems.map((item, index) => (
-                  <tr key={item.id} className="border-t hover:bg-state transition-colors">
+                  <tr
+                    key={item.id}
+                    className="border-t hover:bg-state transition-colors"
+                  >
                     <td className="p-3 body text-navy">{index + 1}</td>
                     <td className="p-3 body text-navy">{item.aspek}</td>
                     <td className="p-3 body text-navy">{item.itemAudit}</td>
@@ -291,7 +322,11 @@ function ReviewPertanyaanExcel() {
                     {checklist.active && (
                       <div className="w-2 h-2 rounded-full bg-[#28A745] shrink-0" />
                     )}
-                    <span className={`body ${checklist.active ? "font-medium" : ""}`}>
+                    <span
+                      className={`body ${
+                        checklist.active ? "font-medium" : ""
+                      }`}
+                    >
                       {checklist.name}
                     </span>
                   </div>
@@ -314,9 +349,7 @@ function ReviewPertanyaanExcel() {
             <DialogTitle className="heading-3 text-navy">
               Komentar Reviewer
             </DialogTitle>
-            <p className="text-gray-dark small mt-1">
-              {selectedItem?.aspek}
-            </p>
+            <p className="text-gray-dark small mt-1">{selectedItem?.aspek}</p>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
@@ -353,7 +386,9 @@ function ReviewPertanyaanExcel() {
                 </div>
                 <div>
                   <p className="small text-gray-dark">Komentar Reviewer</p>
-                  <p className="body text-navy">{selectedItem.reviewer.comment}</p>
+                  <p className="body text-navy">
+                    {selectedItem.reviewer.comment}
+                  </p>
                 </div>
               </div>
             )}

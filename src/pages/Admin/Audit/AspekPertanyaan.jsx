@@ -150,7 +150,7 @@ export default function AspekPertanyaan() {
 
     if (question.status === "answered") {
       return (
-        <Button 
+        <Button
           onClick={handleClick}
           className="flex items-center gap-2 h-[42px] px-4 bg-[#2B7FFF] hover:bg-[#2563EB] text-white rounded-lg"
         >
@@ -161,7 +161,7 @@ export default function AspekPertanyaan() {
     }
 
     return (
-      <Button 
+      <Button
         onClick={handleClick}
         className="flex items-center gap-2 h-[42px] px-4 bg-[#F1C441] hover:bg-[#E0B031] text-white rounded-lg"
       >
@@ -172,7 +172,12 @@ export default function AspekPertanyaan() {
   };
 
   const handleSimpanJawaban = () => {
-    console.log("Simpan jawaban:", formData, "untuk question:", selectedQuestion.id);
+    console.log(
+      "Simpan jawaban:",
+      formData,
+      "untuk question:",
+      selectedQuestion.id
+    );
     // Update question with new answer
     setDialogOpen(false);
   };
@@ -362,7 +367,9 @@ export default function AspekPertanyaan() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="heading-3 text-navy">
-              {selectedQuestion?.status === "answered" ? "Edit Jawaban" : "Isi Jawaban"}
+              {selectedQuestion?.status === "answered"
+                ? "Edit Jawaban"
+                : "Isi Jawaban"}
             </DialogTitle>
             <p className="text-gray-dark small mt-1">
               {selectedQuestion?.question}
@@ -376,7 +383,9 @@ export default function AspekPertanyaan() {
               <Textarea
                 placeholder="Masukkan Jawaban"
                 value={formData.jawaban}
-                onChange={(e) => setFormData({ ...formData, jawaban: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, jawaban: e.target.value })
+                }
                 className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
               />
             </div>
@@ -387,7 +396,9 @@ export default function AspekPertanyaan() {
               <Textarea
                 placeholder="Masukkan Observasi"
                 value={formData.observasi}
-                onChange={(e) => setFormData({ ...formData, observasi: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, observasi: e.target.value })
+                }
                 className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
               />
             </div>
@@ -398,18 +409,24 @@ export default function AspekPertanyaan() {
               <Textarea
                 placeholder="Masukkan Verifikasi"
                 value={formData.verifikasi}
-                onChange={(e) => setFormData({ ...formData, verifikasi: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, verifikasi: e.target.value })
+                }
                 className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
               />
             </div>
 
             {/* Rekaman Dokumen */}
             <div className="space-y-2">
-              <label className="body text-navy font-medium">Rekaman Dokumen</label>
+              <label className="body text-navy font-medium">
+                Rekaman Dokumen
+              </label>
               <Textarea
                 placeholder="Masukkan Rekaman Dokumen:"
                 value={formData.rekomenDokumen}
-                onChange={(e) => setFormData({ ...formData, rekomenDokumen: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, rekomenDokumen: e.target.value })
+                }
                 className="min-h-[80px] rounded-lg bg-state placeholder:text-gray-dark focus:bg-white focus:border-2 focus:border-navy"
               />
             </div>

@@ -2,7 +2,12 @@ import { useState } from "react";
 import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
 // Mock data untuk review
@@ -369,9 +374,7 @@ function ReviewAspekPertanyaan() {
             <DialogTitle className="heading-3 text-navy">
               Komentar Reviewer
             </DialogTitle>
-            <p className="small text-gray-dark mt-1">
-              {currentQuestion?.text}
-            </p>
+            <p className="small text-gray-dark mt-1">{currentQuestion?.text}</p>
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
@@ -391,7 +394,9 @@ function ReviewAspekPertanyaan() {
               </div>
               <div>
                 <p className="small text-gray-dark mb-1">Rekaman Dokumen:</p>
-                <p className="body text-navy">{currentQuestion?.rencanaLokumen}</p>
+                <p className="body text-navy">
+                  {currentQuestion?.rencanaLokumen}
+                </p>
               </div>
             </div>
 
@@ -404,11 +409,15 @@ function ReviewAspekPertanyaan() {
                 </p>
                 <div>
                   <p className="small text-gray-dark">Tanggal:</p>
-                  <p className="body text-navy">{currentQuestion.reviewer.date}</p>
+                  <p className="body text-navy">
+                    {currentQuestion.reviewer.date}
+                  </p>
                 </div>
                 <div>
                   <p className="small text-gray-dark">Komentar Reviewer:</p>
-                  <p className="body text-navy">{currentQuestion.reviewer.comment}</p>
+                  <p className="body text-navy">
+                    {currentQuestion.reviewer.comment}
+                  </p>
                 </div>
               </div>
             )}
@@ -416,7 +425,9 @@ function ReviewAspekPertanyaan() {
             {/* Comment Form */}
             <div>
               <label className="body-medium text-navy mb-2 block">
-                {currentQuestion?.reviewer ? "Edit Komentar" : "Berikan Komentar"}
+                {currentQuestion?.reviewer
+                  ? "Edit Komentar"
+                  : "Berikan Komentar"}
               </label>
               <Textarea
                 value={komentarReviewer}
