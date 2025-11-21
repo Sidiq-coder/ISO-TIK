@@ -2,36 +2,69 @@ import { useState } from "react";
 import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ReviewExcelAuditTable } from "@/components/admin/audit/ReviewExcelAuditTable";
-import { reviewExcelData } from "@/mocks/excelAuditData";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ExcelAuditTable } from "@/components/admin/audit/ExcelAuditTable";
+import { pertanyaanExcelData } from "@/mocks/excelAuditData";
 
-// Navigator data
-const navigatorData = [
-  {
-    id: 1,
-    name: "Fully Redundant Critical Systems",
-    expanded: true,
-  },
-  {
-    id: 2,
-    name: "Jenis Checklist excel 1",
-    expanded: false,
-  },
-  {
-    id: 3,
-    name: "Jenis Checklist excel 2",
-    expanded: false,
-  },
-];
+// Mock data untuk pertanyaan excel
+const mockExcelData = {
+  checklistTitle: "Fully Redundant Critical Systems",
+  checklistExcel: [
+    {
+      id: 1,
+      name: "Jenis Checklist excel 1",
+      expanded: true,
+      items: [
+        {
+          id: 1,
+          itemAudit: "Apakah SLA menetapkan uptime 99,995%?",
+          aspek: "Kebijakan & SLA",
+          buktiObjektif: "Dokumen SLA",
+          kesesuaian: "Ya",
+          catatanEditor: "Perlu Ada Perubahan terkait dokumen terkait",
+        },
+        {
+          id: 2,
+          itemAudit: "Apakah SLA menetapkan uptime 99,995%?",
+          aspek: "Kebijakan & SLA",
+          buktiObjektif: "Dokumen SLA",
+          kesesuaian: "Tidak",
+          catatanEditor: "Perlu Ada Perubahan terkait dokumen terkait",
+        },
+        {
+          id: 3,
+          itemAudit: "Apakah SLA menetapkan uptime 99,995%?",
+          aspek: "Kebijakan & SLA",
+          buktiObjektif: "Belum Diisi",
+          kesesuaian: "Belum Diisi",
+          catatanEditor: "Belum Diisi",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Jenis Checklist excel 2",
+      expanded: false,
+      items: [],
+    },
+  ],
+};
 
-function ReviewPertanyaanExcel() {
+function PertanyaanExcel() {
   const { id, checklistId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,10 +72,16 @@ function ReviewPertanyaanExcel() {
   const { dokumenTitle, lokasi, tanggalAudit, revisi, mode } =
     location.state || {};
   const [activeTab, setActiveTab] = useState("excel");
-  const [checklistExcel, setChecklistExcel] = useState(navigatorData);
+  const [checklistExcel, setChecklistExcel] = useState(
+    mockExcelData.checklistExcel
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [komentarReviewer, setKomentarReviewer] = useState("");
+  const [formData, setFormData] = useState({
+    buktiObjektif: "",
+    kesesuaian: "",
+    catatanEditor: "",
+  });
 
   const toggleChecklist = (checklistId) => {
     setChecklistExcel(
@@ -57,8 +96,8 @@ function ReviewPertanyaanExcel() {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === "aspek") {
-      // Navigate to ReviewAspekPertanyaan
-      navigate(`/admin/audit/dokumen/${id}/review/${checklistId}`, {
+      // Navigate to AspekPertanyaan
+      navigate(`/admin/audit/dokumen/${id}/aspek/${checklistId}`, {
         state: { dokumenTitle, lokasi, tanggalAudit, revisi, mode },
       });
     }
@@ -66,18 +105,18 @@ function ReviewPertanyaanExcel() {
 
   const handleOpenDialog = (item) => {
     setSelectedItem(item);
-    setKomentarReviewer(item.reviewer?.comment || "");
+    setFormData({
+      buktiObjektif:
+        item.buktiObjektif !== "Belum Diisi" ? item.buktiObjektif : "",
+      kesesuaian: item.kesesuaian !== "Belum Diisi" ? item.kesesuaian : "",
+      catatanEditor:
+        item.catatanEditor !== "Belum Diisi" ? item.catatanEditor : "",
+    });
     setDialogOpen(true);
   };
 
-  const handleSimpanKomentar = () => {
-    console.log(
-      "Simpan komentar:",
-      komentarReviewer,
-      "untuk item:",
-      selectedItem.id
-    );
-    // Update item with new review
+  const handleSimpanPerubahan = () => {
+    console.log("Simpan Perubahan:", formData);
     setDialogOpen(false);
   };
 
@@ -126,14 +165,12 @@ function ReviewPertanyaanExcel() {
           Daftar Checklist
         </Link>
         <ChevronRight className="w-4 h-4 text-gray-dark" />
-        <span className="text-[#2B7FFF] font-medium">
-          Review Pertanyaan Excel
-        </span>
+        <span className="text-[#2B7FFF] font-medium">Pertanyaan Excel</span>
       </nav>
 
       {/* Page Title */}
       <div>
-        <h2 className="heading-2 text-navy">Review Pertanyaan Excel</h2>
+        <h2 className="heading-2 text-navy">Pertanyaan Excel</h2>
       </div>
 
       {/* Main Content */}
@@ -145,24 +182,21 @@ function ReviewPertanyaanExcel() {
             <div>
               <p className="small text-gray-dark mb-1">Jenis Checklist</p>
               <p className="body-medium text-[#2B7FFF]">
-                Fully Redundant Critical Systems
+                {mockExcelData.checklistTitle}
               </p>
             </div>
             <div>
               <p className="small text-gray-dark mb-1">Jenis Checklist Excel</p>
               <p className="body-medium text-[#2B7FFF]">
-                Fully Redundant Critical Systems
+                {mockExcelData.checklistExcel[0].name}
               </p>
             </div>
           </div>
 
-          {/* Review Excel Table */}
-          <ReviewExcelAuditTable
-            data={reviewExcelData}
-            onKomentarClick={handleOpenDialog}
-            onTandaiDireview={(item) =>
-              console.log("Tandai Direview:", item.id)
-            }
+          {/* Table Section */}
+          <ExcelAuditTable
+            data={pertanyaanExcelData}
+            onEditClick={handleOpenDialog}
           />
         </div>
 
@@ -207,12 +241,12 @@ function ReviewPertanyaanExcel() {
         </div>
       </div>
 
-      {/* Dialog Komentar Reviewer */}
+      {/* Dialog Isi Jawaban */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="heading-3 text-navy">
-              Komentar Reviewer
+              Isi Jawaban
             </DialogTitle>
             <p className="small text-gray-dark mt-1">
               {selectedItem?.itemAudit}
@@ -220,53 +254,80 @@ function ReviewPertanyaanExcel() {
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
-            {/* Question Details */}
-            <div className="space-y-3">
-              <div>
-                <p className="small text-gray-dark mb-1">Bukti Objektif</p>
-                <p className="body text-navy">{selectedItem?.buktiObjektif}</p>
-              </div>
-              <div>
-                <p className="small text-gray-dark mb-1">Kesesuaian</p>
-                <p className="body text-navy">{selectedItem?.kesesuaian}</p>
-              </div>
-              <div>
-                <p className="small text-gray-dark mb-1">Catatan Editor</p>
-                <p className="body text-navy">{selectedItem?.catatanEditor}</p>
-              </div>
-            </div>
-
-            {/* Existing Review Section (if exists) */}
-            {selectedItem?.reviewer && (
-              <div className="bg-[#E8F5E9] p-4 rounded-lg space-y-2 border border-[#28A745]">
-                <p className="small text-gray-dark">Admin Reviewer</p>
-                <p className="body text-navy font-medium">
-                  {selectedItem.reviewer.name}
-                </p>
+            {/* Show existing data if available */}
+            {selectedItem?.buktiObjektif !== "Belum Diisi" && (
+              <div className="space-y-3 pb-4 border-b">
                 <div>
-                  <p className="small text-gray-dark">Tanggal:</p>
-                  <p className="body text-navy">{selectedItem.reviewer.date}</p>
+                  <p className="small text-gray-dark mb-1">Bukti Objektif</p>
+                  <p className="body text-navy">
+                    {selectedItem?.buktiObjektif}
+                  </p>
                 </div>
                 <div>
-                  <p className="small text-gray-dark">Komentar Reviewer:</p>
+                  <p className="small text-gray-dark mb-1">Kesesuaian</p>
+                  <p className="body text-navy">{selectedItem?.kesesuaian}</p>
+                </div>
+                <div>
+                  <p className="small text-gray-dark mb-1">Catatan Editor</p>
                   <p className="body text-navy">
-                    {selectedItem.reviewer.comment}
+                    {selectedItem?.catatanEditor}
                   </p>
                 </div>
               </div>
             )}
 
-            {/* Comment Form */}
-            <div className="space-y-2">
-              <label className="body-medium text-navy mb-2 block">
-                {selectedItem?.reviewer ? "Edit Komentar" : "Berikan Komentar"}
-              </label>
-              <Textarea
-                placeholder="Masukkan komentar..."
-                value={komentarReviewer}
-                onChange={(e) => setKomentarReviewer(e.target.value)}
-                className="min-h-[100px] resize-none"
-              />
+            {/* Form Fields */}
+            <div className="space-y-4">
+              <div>
+                <Label className="body-medium text-navy mb-2 block">
+                  {selectedItem?.buktiObjektif !== "Belum Diisi"
+                    ? "Bukti Objektif"
+                    : "Bukti Objektif"}
+                </Label>
+                <Input
+                  value={formData.buktiObjektif}
+                  onChange={(e) =>
+                    setFormData({ ...formData, buktiObjektif: e.target.value })
+                  }
+                  placeholder="Masukkan Bukti Objektif"
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <Label className="body-medium text-navy mb-2 block">
+                  Kesesuaian
+                </Label>
+                <Select
+                  value={formData.kesesuaian}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, kesesuaian: value })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Kesesuaian" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Ya">Ya</SelectItem>
+                    <SelectItem value="Tidak">Tidak</SelectItem>
+                    <SelectItem value="Sebagian">Sebagian</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="body-medium text-navy mb-2 block">
+                  Catatan Editor
+                </Label>
+                <Input
+                  value={formData.catatanEditor}
+                  onChange={(e) =>
+                    setFormData({ ...formData, catatanEditor: e.target.value })
+                  }
+                  placeholder="Masukkan Catatan Editor"
+                  className="w-full"
+                />
+              </div>
             </div>
 
             {/* Action Buttons */}
@@ -274,7 +335,11 @@ function ReviewPertanyaanExcel() {
               <Button
                 onClick={() => {
                   setDialogOpen(false);
-                  setKomentarReviewer("");
+                  setFormData({
+                    buktiObjektif: "",
+                    kesesuaian: "",
+                    catatanEditor: "",
+                  });
                 }}
                 variant="outline"
                 className="rounded-lg"
@@ -282,10 +347,12 @@ function ReviewPertanyaanExcel() {
                 Batal
               </Button>
               <Button
-                onClick={handleSimpanKomentar}
+                onClick={handleSimpanPerubahan}
                 className="rounded-lg bg-navy hover:bg-navy/90 text-white"
               >
-                Simpan Komentar
+                {selectedItem?.buktiObjektif !== "Belum Diisi"
+                  ? "Simpan Perubahan"
+                  : "Simpan Jawaban"}
               </Button>
             </div>
           </div>
@@ -295,4 +362,4 @@ function ReviewPertanyaanExcel() {
   );
 }
 
-export default ReviewPertanyaanExcel;
+export default PertanyaanExcel;

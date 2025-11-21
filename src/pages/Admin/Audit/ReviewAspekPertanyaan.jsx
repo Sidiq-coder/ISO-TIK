@@ -170,6 +170,11 @@ function ReviewAspekPertanyaan() {
         </span>
       </nav>
 
+      {/* Page Title */}
+      <div>
+        <h2 className="heading-2 text-navy">Review Aspek Pertanyaan</h2>
+      </div>
+
       {/* Main Content */}
       <div className="flex gap-6">
         {/* Left Content */}
@@ -198,47 +203,49 @@ function ReviewAspekPertanyaan() {
               (question) => (
                 <div
                   key={question.id}
-                  className="border rounded-lg p-6 bg-white space-y-4"
+                  className="border-2 border-[#D8E2FF] rounded-xl p-6 bg-white space-y-4"
                 >
                   {/* Question Header */}
-                  <div className="flex items-start justify-between gap-4 pb-4">
-                    <div className="flex-1">
-                      <div className="flex items-start gap-3 mb-3">
-                        <span className="text-navy body shrink-0">
-                          {question.id}.
-                        </span>
-                        <p className="text-navy body flex-1">{question.text}</p>
-                      </div>
-                      <div className="flex items-center gap-4 ml-6">
-                        <div className="flex items-center gap-2">
-                          <span className="small text-gray-dark">Aspek:</span>
-                          <span className="small text-navy">Jenis Aspek 1</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="small text-gray-dark">
-                            Kategori:
-                          </span>
-                          <span className="small text-navy">
-                            Jenis Kategori 1
-                          </span>
-                        </div>
-                        <span
-                          className={`px-3 py-1 rounded small font-medium ${
-                            question.status === "sudah"
-                              ? "bg-[#2B7FFF] text-white"
-                              : "bg-[#FFF4E5] text-[#FF9800]"
-                          }`}
-                        >
-                          {question.status === "sudah"
-                            ? "Sudah Direview"
-                            : "Belum Direview"}
-                        </span>
-                      </div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3 flex-1">
+                      <span className="text-navy body font-medium shrink-0">
+                        {question.id}.
+                      </span>
+                      <p className="text-navy body font-medium flex-1">
+                        {question.text}
+                      </p>
                     </div>
                   </div>
 
+                  {/* Meta Info */}
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <span className="small text-gray-dark">Aspek:</span>
+                      <span className="small text-navy font-medium">
+                        Jenis Aspek 1
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="small text-gray-dark">Kategori:</span>
+                      <span className="small text-navy font-medium">
+                        Jenis Kategori 1
+                      </span>
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded small font-medium ${
+                        question.status === "sudah"
+                          ? "bg-[#2B7FFF] text-white"
+                          : "bg-[#FFF4E5] text-[#FF9800]"
+                      }`}
+                    >
+                      {question.status === "sudah"
+                        ? "Sudah Direview"
+                        : "Belum Direview"}
+                    </span>
+                  </div>
+
                   {/* Answer Details */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 pt-2">
                     <div>
                       <p className="small text-gray-dark mb-1">Jawaban:</p>
                       <p className="body text-navy">{question.jawaban}</p>
@@ -263,7 +270,7 @@ function ReviewAspekPertanyaan() {
 
                   {/* Review Section */}
                   {question.reviewer && (
-                    <div className="bg-[#E8F5E9] p-4 rounded-lg space-y-2 border-t pt-4">
+                    <div className="bg-[#E8F5E9] p-4 rounded-lg space-y-2">
                       <p className="small text-gray-dark">Admin Reviewer</p>
                       <p className="body text-navy font-medium">
                         {question.reviewer.name}
@@ -286,7 +293,7 @@ function ReviewAspekPertanyaan() {
                   )}
 
                   {/* Action Buttons */}
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex gap-3">
                     <Button
                       onClick={() => handleIsiReview(question)}
                       className="rounded-lg bg-[#2B7FFF] hover:bg-[#1a5fcf] text-white"

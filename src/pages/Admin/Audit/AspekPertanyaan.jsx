@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 import { ChevronRight, ChevronDown, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
 export default function AspekPertanyaan() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const { setHeader } = useAdminLayout();
 
   // Get data from location state
@@ -186,6 +187,15 @@ export default function AspekPertanyaan() {
     setExpandedAspek(expandedAspek === aspekId ? null : aspekId);
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === "excel") {
+      navigate(`/admin/audit/dokumen/${id}/excel/${id}`, {
+        state: { dokumenTitle, lokasi, tanggalAudit, revisi, mode },
+      });
+    }
+  };
+
   return (
     <div className="flex gap-6">
       {/* Main Content */}
@@ -193,7 +203,7 @@ export default function AspekPertanyaan() {
         {/* Tabs - Above breadcrumb */}
         <div className="flex gap-4 border-b border-gray-300">
           <button
-            onClick={() => setActiveTab("aspek")}
+            onClick={() => handleTabChange("aspek")}
             className={`px-6 py-3 font-medium transition-colors body-medium relative ${
               activeTab === "aspek"
                 ? "text-navy"
@@ -206,7 +216,7 @@ export default function AspekPertanyaan() {
             )}
           </button>
           <button
-            onClick={() => setActiveTab("excel")}
+            onClick={() => handleTabChange("excel")}
             className={`px-6 py-3 font-medium transition-colors body-medium relative ${
               activeTab === "excel"
                 ? "text-navy"

@@ -23,6 +23,7 @@ import PertanyaanAudit from "@/pages/Admin/Audit/PertanyaanAudit";
 import ItemAudit from "@/pages/Admin/Audit/ItemAudit";
 import DaftarChecklist from "@/pages/Admin/Audit/DaftarChecklist";
 import AspekPertanyaan from "@/pages/Admin/Audit/AspekPertanyaan";
+import PertanyaanExcel from "@/pages/Admin/Audit/PertanyaanExcel";
 import ReviewAspekPertanyaan from "@/pages/Admin/Audit/ReviewAspekPertanyaan";
 import ReviewPertanyaanExcel from "@/pages/Admin/Audit/ReviewPertanyaanExcel";
 
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
       {
         path: "audit/dokumen/:id/aspek/:aspekId",
         element: <AspekPertanyaan />,
+      },
+      {
+        path: "audit/dokumen/:id/excel/:checklistId",
+        element: <PertanyaanExcel />,
       },
       {
         path: "audit/dokumen/:id/review/:checklistId",
