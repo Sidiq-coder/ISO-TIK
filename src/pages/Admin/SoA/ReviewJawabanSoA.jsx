@@ -105,7 +105,6 @@ export default function ReviewJawabanSoA() {
                 onCategoryChange={setSelectedCategory}
                 selectedQuestion={selectedQuestion}
                 onQuestionChange={setSelectedQuestion}
-                readOnly={isViewOnlyMode}
               />
             </div>
           </aside>
@@ -120,7 +119,10 @@ function PageHeader({ documentMeta, selectedCategory, categoryOptions, viewModeC
 
   return (
     <section>
-      <div className="space-y-5 py-4">
+      <div className="relative space-y-5 py-4">
+        {viewModeControl && (
+          <div className="w-full max-w-[365px] sm:w-auto lg:absolute lg:right-0 lg:top-0">{viewModeControl}</div>
+        )}
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link to={`/admin/soa/dokumen`} className="small text-gray-dark hover:text-blue-dark">
             Dokumen SOA
@@ -131,10 +133,7 @@ function PageHeader({ documentMeta, selectedCategory, categoryOptions, viewModeC
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="space-y-2 lg:col-span-2">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h1 className="heading-2 text-navy">Pengisian Jawaban SOA</h1>
-              {viewModeControl && <div className="w-full max-w-[365px] sm:w-auto">{viewModeControl}</div>}
-            </div>
+            <h1 className="heading-2 text-navy">Pengisian Jawaban SOA</h1>
             <div className="space-y-1 grid grid-cols-2">
               <div>
                 <p className="small text-gray-dark mb-3">Judul Dokumen</p>
@@ -441,7 +440,6 @@ function Navigator({
   onCategoryChange,
   selectedQuestion,
   onQuestionChange,
-  readOnly,
 }) {
   const [expandedCategory, setExpandedCategory] = useState(selectedCategory)
 
@@ -468,14 +466,13 @@ function Navigator({
               <div key={section.code} className="rounded-lg overflow-hidden">
                 <button
                   type="button"
-                  disabled={readOnly}
                   onClick={() => {
                     setExpandedCategory(isExpanded ? "" : section.code)
                     onCategoryChange(section.code)
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 font-medium transition-colors ${
                     selectedCategory === section.code ? "" : "bg-[#F9FBFF] text-navy hover:bg-blue-50"
-                  } ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                  }`}
                 >
                   <span className="text-xs">
                     <span className="bg-navy text-gray-light mr-2 px-2 py-1 rounded-[4px]">{section.code}</span>
@@ -490,11 +487,10 @@ function Navigator({
                       <button
                         key={question.id}
                         type="button"
-                        disabled={readOnly}
                         onClick={() => onQuestionChange(question.id)}
                         className={`w-full px-4 py-2 text-left transition-colors ${
                           selectedQuestion === question.id ? "" : "text-gray-dark hover:bg-gray-50"
-                        } ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                        }`}
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex flex-col">
@@ -537,7 +533,7 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex items-center justify-between gap-2 rounded-[4px] border border-[#E3E9FF] w-[364px] h-12 bg-state px-4 py-2 text-sm font-medium text-navy shadow-sm hover:border-black"
+          className="flex items-center justify-between gap-2 rounded-[4px] border border-navy w-[364px] h-12 bg-state px-4 py-2 text-sm body text-navy shadow-sm"
         >
           <div className="flex items-center gap-2">
             <ActiveIcon className="text-gray-500" />
@@ -553,7 +549,7 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
         <DropdownMenuLabel className="text-xs uppercase tracking-wide text-gray-400">
           Tampilan
         </DropdownMenuLabel>
-        <div className="space-y-1">
+        <div className="space-y-1 border border-navy">
           {VIEW_MODE_OPTIONS.map((option) => {
             const OptionIcon = option.icon
             const isSelected = option.value === viewMode
@@ -566,7 +562,7 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
                 }}
                 className={`flex h-12 w-full items-center gap-3 px-3 text-sm transition ${
                   isSelected
-                    ? "bg-blue-50 font-semibold text-blue-dark"
+                    ? "text-navy bg-state"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
