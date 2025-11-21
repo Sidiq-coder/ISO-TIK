@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useParams, Link } from "react-router-dom";
+import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -63,8 +63,9 @@ const mockReviewData = {
 };
 
 function ReviewAspekPertanyaan() {
-  const { id } = useParams();
+  const { id, checklistId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { dokumenTitle, lokasi, tanggalAudit, revisi, mode } =
     location.state || {};
@@ -82,6 +83,16 @@ function ReviewAspekPertanyaan() {
     );
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === "excel") {
+      // Navigate to ReviewPertanyaanExcel
+      navigate(`/admin/audit/dokumen/${id}/review-excel/${checklistId}`, {
+        state: { dokumenTitle, lokasi, tanggalAudit, revisi, mode },
+      });
+    }
+  };
+
   const handleIsiReview = () => {
     // Handle review input
     console.log("Isi Review clicked for question:", selectedQuestion.id);
@@ -97,7 +108,7 @@ function ReviewAspekPertanyaan() {
       {/* Tabs */}
       <div className="flex gap-8 border-b">
         <button
-          onClick={() => setActiveTab("aspek")}
+          onClick={() => handleTabChange("aspek")}
           className={`pb-3 body font-medium transition-colors relative ${
             activeTab === "aspek" ? "text-navy" : "text-gray-dark"
           }`}
@@ -108,7 +119,7 @@ function ReviewAspekPertanyaan() {
           )}
         </button>
         <button
-          onClick={() => setActiveTab("excel")}
+          onClick={() => handleTabChange("excel")}
           className={`pb-3 body font-medium transition-colors relative ${
             activeTab === "excel" ? "text-navy" : "text-gray-dark"
           }`}
