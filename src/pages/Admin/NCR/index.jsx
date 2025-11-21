@@ -56,7 +56,7 @@ export default function NCR() {
       user: {
         name: "Admin User",
         role: "Administrator",
-        urlDetail: "/admin/profile",
+        urlDetail: "/admin/profil",
       },
     })
   }, [setHeader])
