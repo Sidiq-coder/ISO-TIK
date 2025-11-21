@@ -1,10 +1,17 @@
 import { useMemo, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
-import { List, Rows3 } from "lucide-react"
-import { Eye, ChevronDown, ChevronRight } from "lucide-react"
+import { List, Rows3, Eye, ChevronDown, ChevronRight } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { SearchBar } from "@/components/table/SearchBar"
+import { CategoryDropdown } from "@/components/table/CategoryDropdown"
 import { useReviewSoA } from "./hooks/useReviewSoA"
 import {
   getReviewMetaByTitle,
@@ -23,6 +30,10 @@ const CATEGORY_OPTIONS = reviewNavigatorConfig.map((section) => ({
 const VIEW_MODE_OPTIONS = [
   { value: "detail", label: "Pengisian Jawaban", icon: List, url: "/admin/soa/pengisian" },
   { value: "table", label: "Tampilan Table", icon: Rows3, url: "/admin/soa/pengisian/table" },
+]
+const TABLE_CATEGORY_OPTIONS = [
+  { value: "Semua Kategori" },
+  ...reviewNavigatorConfig.map((section) => ({ value: section.code })),
 ]
 
 export default function ReviewJawabanSoA() {
@@ -53,6 +64,9 @@ export default function ReviewJawabanSoA() {
   const isTableMode = viewMode === "table"
   const [searchParams] = useSearchParams()
   const isViewOnlyMode = searchParams.get("mode") === "view"
+  const [tableSearch, setTableSearch] = useState("")
+  const [tableCategory, setTableCategory] = useState(TABLE_CATEGORY_OPTIONS[0].value)
+  const [isTableStatusOpen, setIsTableStatusOpen] = useState(false)
   const viewModeControl = <ViewModeDropdown viewMode={viewMode} onViewModeChange={setViewMode} />
   const viewModeCard = <div className="w-full max-w-[365px]">{viewModeControl}</div>
 
@@ -73,8 +87,25 @@ export default function ReviewJawabanSoA() {
             />
           </div>
           {viewMode === "table" ? (
-            <div className="flex-1 min-h-0 pb-4">
-              <ScaleTable data={scaleTableData} />
+            <div className="flex-1 min-h-0 pb-4 space-y-4 px-2">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <SearchBar
+                  placeholder="Cari pertanyaan atau kendali"
+                  value={tableSearch}
+                  onChange={(event) => setTableSearch(event.target.value)}
+                  inputGroupClassName="h-[56px] w-full rounded-[4px]"
+                  inputClassName="text-navy placeholder:text-gray-400"
+                />
+                <CategoryDropdown
+                  isMenuOpen={isTableStatusOpen}
+                  setIsMenuOpen={setIsTableStatusOpen}
+                  value={tableCategory}
+                  onChange={setTableCategory}
+                  options={TABLE_CATEGORY_OPTIONS}
+                />
+              </div>
+              <LegendBar />
+              <ScaleTable data={scaleTableData} search={tableSearch} categoryFilter={tableCategory} />
             </div>
           ) : (
             <ScrollArea className="flex-1 min-h-0 pr-1 lg:pr-4">
@@ -105,7 +136,6 @@ export default function ReviewJawabanSoA() {
                 onCategoryChange={setSelectedCategory}
                 selectedQuestion={selectedQuestion}
                 onQuestionChange={setSelectedQuestion}
-                readOnly={isViewOnlyMode}
               />
             </div>
           </aside>
@@ -120,7 +150,10 @@ function PageHeader({ documentMeta, selectedCategory, categoryOptions, viewModeC
 
   return (
     <section>
-      <div className="space-y-5 py-4">
+      <div className="relative space-y-5 py-4">
+        {viewModeControl && (
+          <div className="w-full max-w-[365px] sm:w-auto lg:absolute lg:right-0 lg:top-0">{viewModeControl}</div>
+        )}
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link to={`/admin/soa/dokumen`} className="small text-gray-dark hover:text-blue-dark">
             Dokumen SOA
@@ -131,10 +164,7 @@ function PageHeader({ documentMeta, selectedCategory, categoryOptions, viewModeC
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="space-y-2 lg:col-span-2">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h1 className="heading-2 text-navy">Pengisian Jawaban SOA</h1>
-              {viewModeControl && <div className="w-full max-w-[365px] sm:w-auto">{viewModeControl}</div>}
-            </div>
+            <h1 className="heading-2 text-navy">Pengisian Jawaban SOA</h1>
             <div className="space-y-1 grid grid-cols-2">
               <div>
                 <p className="small text-gray-dark mb-3">Judul Dokumen</p>
@@ -435,13 +465,35 @@ function LegendCard({ documentMeta }) {
   )
 }
 
+function LegendBar() {
+  const entries = [
+    "Y = Ya",
+    "T = Tidak",
+    "S = Sebagian",
+    "PL = Persyaratan Legal",
+    "KK = Kewajiban Kontrak",
+    "PK/PB = Persyaratan Kerja / Praktek yang Baik",
+    "HPR = Hasil Penilaian Risiko (Keamanan Informasi)",
+  ]
+
+  return (
+    <div className="rounded-lg border border-blue-500 bg-[#EAF2FF] px-5 py-3 text-xs text-blue-700">
+      <p className="font-semibold mb-2">Keterangan:</p>
+      <div className="flex flex-wrap gap-x-6 gap-y-1 text-[11px]">
+        {entries.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Navigator({
   sections,
   selectedCategory,
   onCategoryChange,
   selectedQuestion,
   onQuestionChange,
-  readOnly,
 }) {
   const [expandedCategory, setExpandedCategory] = useState(selectedCategory)
 
@@ -468,14 +520,13 @@ function Navigator({
               <div key={section.code} className="rounded-lg overflow-hidden">
                 <button
                   type="button"
-                  disabled={readOnly}
                   onClick={() => {
                     setExpandedCategory(isExpanded ? "" : section.code)
                     onCategoryChange(section.code)
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 font-medium transition-colors ${
                     selectedCategory === section.code ? "" : "bg-[#F9FBFF] text-navy hover:bg-blue-50"
-                  } ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                  }`}
                 >
                   <span className="text-xs">
                     <span className="bg-navy text-gray-light mr-2 px-2 py-1 rounded-[4px]">{section.code}</span>
@@ -490,11 +541,10 @@ function Navigator({
                       <button
                         key={question.id}
                         type="button"
-                        disabled={readOnly}
                         onClick={() => onQuestionChange(question.id)}
                         className={`w-full px-4 py-2 text-left transition-colors ${
                           selectedQuestion === question.id ? "" : "text-gray-dark hover:bg-gray-50"
-                        } ${readOnly ? "opacity-70 cursor-not-allowed" : ""}`}
+                        }`}
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex flex-col">
@@ -537,7 +587,7 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex items-center justify-between gap-2 rounded-[4px] border border-[#E3E9FF] w-[364px] h-12 bg-state px-4 py-2 text-sm font-medium text-navy shadow-sm hover:border-black"
+          className="flex items-center justify-between gap-2 rounded-[4px] border border-navy w-[364px] h-12 bg-state px-4 py-2 text-sm body text-navy shadow-sm"
         >
           <div className="flex items-center gap-2">
             <ActiveIcon className="text-gray-500" />
@@ -550,9 +600,7 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="start" className="w-[364px] bg-white p-2">
-        <DropdownMenuLabel className="text-xs uppercase tracking-wide text-gray-400">
-          Tampilan
-        </DropdownMenuLabel>
+       
         <div className="space-y-1">
           {VIEW_MODE_OPTIONS.map((option) => {
             const OptionIcon = option.icon
@@ -566,7 +614,7 @@ function ViewModeDropdown({ viewMode, onViewModeChange }) {
                 }}
                 className={`flex h-12 w-full items-center gap-3 px-3 text-sm transition ${
                   isSelected
-                    ? "bg-blue-50 font-semibold text-blue-dark"
+                    ? "text-navy bg-state"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
