@@ -112,7 +112,7 @@ export default function NCR() {
 
         <Button
           onClick={handleAddNCR}
-          className="body-medium p-[16px]  w-[160px] gap-2 bg-navy roundeed-[4px] h-14 text-white hover:bg-navy-hover"
+          className="body-medium p-4  w-40 gap-2 bg-navy roundeed-[4px] h-14 text-white hover:bg-navy-hover"
         >
           <Plus className="h-5 w-5" /> Tambah NCR
         </Button>
