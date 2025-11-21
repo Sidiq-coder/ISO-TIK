@@ -77,6 +77,7 @@ const router = createBrowserRouter([
       { path: "ncr/:id/kasus/:caseId/tanggapan", element: <ResponsePage /> },
       { path: "manajemen-pengguna", element: <ManajemenPengguna /> },
       { path: "profil", element: <Profil /> },
+      { path: "profil/:userId", element: <Profil /> },
       { path: "audit/aspek/kategori/:id", element: <KategoriPertanyaan /> },
       {
         path: "audit/aspek/kategori/:aspekId/pertanyaan/:id",

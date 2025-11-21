@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Camera, X } from "lucide-react";
 
 /**
  * Reusable Edit Profile Modal Component
@@ -27,15 +29,81 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }) {
     email: user?.email || "",
     username: user?.username || "",
   });
+  
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || null);
+  const [avatarFile, setAvatarFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const getInitials = (name) => {
+    if (!name) return "??";
+    const parts = name.split(" ");
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Ukuran file maksimal 5MB');
+        return;
+      }
+
+      setAvatarFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    setAvatarPreview(null);
+    setAvatarFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({ ...formData, avatar: avatarFile, avatarPreview });
   };
+
+  // Reset form when modal opens with new user data
+  useEffect(() => {
+    if (isOpen && user) {
+      setFormData({
+        nama: user.nama || "",
+        nip: user.nip || "",
+        jabatan: user.jabatan || "",
+        departemen: user.departemen || "",
+        telepon: user.telepon || "",
+        email: user.email || "",
+        username: user.username || "",
+      });
+      setAvatarPreview(user.avatar || null);
+      setAvatarFile(null);
+    }
+  }, [isOpen, user]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -48,6 +116,47 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }) {
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
+            {/* Avatar Upload Section */}
+            <div className="flex flex-col items-center gap-3 pb-4 border-b border-gray-200">
+              <div className="relative">
+                <Avatar className="h-24 w-24 bg-navy text-white">
+                  <AvatarImage src={avatarPreview} alt={formData.nama} />
+                  <AvatarFallback className="text-2xl bg-navy text-white">
+                    {getInitials(formData.nama)}
+                  </AvatarFallback>
+                </Avatar>
+                <button
+                  type="button"
+                  onClick={handleAvatarClick}
+                  className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shadow-lg transition-colors"
+                >
+                  <Camera className="h-4 w-4" />
+                </button>
+                {avatarPreview && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveAvatar}
+                    className="absolute top-0 right-0 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+              <div className="text-center">
+                <p className="text-sm text-gray-700 font-medium">Foto Profil</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Klik ikon kamera untuk mengubah foto. Max 5MB
+                </p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nama" className="text-sm text-gray-700">

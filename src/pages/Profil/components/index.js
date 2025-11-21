@@ -1,5 +1,5 @@
 // Profile Components Exports
-export { ProfileCard } from "./ProfileCard";
-export { ActivityLogTable } from "./ActivityLogTable";
-export { EditProfileModal } from "./EditProfileModal";
-export { EditPasswordModal } from "./EditPasswordModal";
+export { ProfileCard } from "./profile/ProfileCard";
+export { ActivityLogTable } from "./profile/ActivityLogTable";
+export { EditProfileModal } from "./profile/EditProfileModal";
+export { EditPasswordModal } from "./profile/EditPasswordModal";
