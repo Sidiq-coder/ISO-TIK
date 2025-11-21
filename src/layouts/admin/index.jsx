@@ -1,35 +1,46 @@
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { BaseSidebar } from "@/components/sidebar";
 import { AdminSidebarContent } from "./AdminSidebarContent";
+import { AdminSidebarIconOnly } from "./AdminSidebarIconOnly";
 import { AdminNavbar } from "./AdminNavbar";
 import { Outlet } from "react-router-dom";
 import { AdminLayoutProvider } from "./AdminLayoutContext";
+
 export function AdminLayout({ children }) {
   return (
     <AdminLayoutProvider>
-      <SidebarProvider>
-        {/* Sidebar - Fixed di kiri */}
-        <BaseSidebar title="Sistem TIK" subtitle="Admin Panel" className="z-10">
-          <AdminSidebarContent />
-        </BaseSidebar>
+      <div className="flex min-h-screen w-full">
+        {/* Sidebar Icon Only - Visible on small/medium screens */}
+        <div className="lg:hidden">
+          <AdminSidebarIconOnly />
+        </div>
+
+        {/* Full Sidebar - Visible on large screens */}
+        <div className="hidden lg:block">
+          <SidebarProvider>
+            <BaseSidebar title="Sistem TIK" subtitle="Admin Panel" className="z-30">
+              <AdminSidebarContent />
+            </BaseSidebar>
+          </SidebarProvider>
+        </div>
 
         {/* Main Content Area */}
-        <SidebarInset className="bg-gray-light flex flex-col min-h-screen">
-          {/* Navbar - Sticky di atas, allow overlap with content */}
-          <div className="sticky top-0 bg-white border-b border-navy-hover w-full">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+        <div className="flex-1 flex flex-col min-h-screen bg-gray-light ml-20 lg:ml-[294px] transition-all duration-300">
+          {/* Navbar - Sticky di atas */}
+          <div className="sticky top-0 bg-white border-b border-navy-hover w-full z-20">
+            <div className="max-w-screen-2xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12">
               <AdminNavbar />
             </div>
           </div>
 
-          {/* Main Content - Scrollable dengan responsive padding, tidak tertimpa navbar */}
+          {/* Main Content - Scrollable dengan responsive padding */}
           <main className="flex-1 overflow-y-auto">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6">
+            <div className="max-w-screen-2xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12 py-4 sm:py-5 md:py-6">
               <Outlet />
             </div>
           </main>
-        </SidebarInset>
-      </SidebarProvider>
+        </div>
+      </div>
     </AdminLayoutProvider>
   );
 }

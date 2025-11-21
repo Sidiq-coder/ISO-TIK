@@ -24,7 +24,7 @@ export default function SoA(){
             user: {
                 name: "Admin User",
                 role: "Administrator",
-                urlDetail: '/admin/profile'
+                urlDetail: '/admin/profil'
             }
         })
     }, [])

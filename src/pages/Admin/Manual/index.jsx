@@ -23,7 +23,7 @@ export default function Manual() {
       user: {
         name: "Admin User",
         role: "Administrator",
-        urlDetail: "/admin/profile",
+        urlDetail: "/admin/profil",
       },
     });
   }, [setHeader]);

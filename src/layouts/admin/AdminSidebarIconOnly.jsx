@@ -9,10 +9,15 @@ import {
   FolderOpen,
   House,
   HouseIcon,
-  LogOut,
   LogOutIcon,
   TriangleAlert,
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Constants
 const NAVIGATION_ITEMS = [
@@ -27,35 +32,27 @@ const NAVIGATION_ITEMS = [
     url: "/admin/manajemen-pengguna",
     icon: UserIcon,
     hoverIcon: UserIcon,
-    iconClassName: "!h-6 !w-6 text-gray-dark",
-    hoverIconClassName: "!h-6 !w-6 text-navy",
+    iconClassName: "!h-5 !w-5 text-gray-dark",
+    hoverIconClassName: "!h-5 !w-5 text-navy",
   },
 ];
 
-const SECTION_DIVIDERS = {
-  1: "Modul Audit",
-  5: "Administrasi",
-};
+const SECTION_DIVIDERS = [1, 5];
 
 const ICON_CLASSES = {
   base: "h-5 w-5 text-gray-dark transition-all duration-200",
   active: "h-5 w-5 text-gray-light transition-all duration-200",
-  hover: "h-5 w-5 text-navy transition-all duration-200",
+  hover: "h-5 w-5 text-navy scale-110 transition-all duration-200",
 };
 
 const BUTTON_CLASSES = {
-  base: "group/nav-item transition-all duration-200 rounded-lg",
+  base: "group/nav-item transition-all duration-200 rounded-lg w-12 h-12 flex items-center justify-center",
   active: "!bg-navy !text-gray-light hover:!bg-navy hover:!text-gray-light cursor-default",
-  inactive: "hover:bg-navy hover:text-gray-light",
-};
-
-const TEXT_CLASSES = {
-  active: "text-gray-light text-[15px] transition-all duration-200",
-  inactive: "text-gray-dark group-hover/nav-item:text-gray-light text-[15px] transition-all duration-200",
+  inactive: "hover:bg-gray-dark2 hover:text-gray-light",
 };
 
 // Custom Icon Component
-function UserIcon({ className = "h-4 w-4 text-gray-dark", ...props }) {
+function UserIcon({ className = "h-5 w-5 text-gray-dark", ...props }) {
   return (
     <span
       role="img"
@@ -93,49 +90,44 @@ const getButtonClasses = (isActive) => {
   return `${base} ${style}`;
 };
 
-const getTextClasses = (isActive) => {
-  return isActive ? TEXT_CLASSES.active : TEXT_CLASSES.inactive;
-};
-
 // Components
-function SidebarNavItem({ item, isActive, isHovered, onClick, onMouseEnter, onMouseLeave }) {
+function SidebarNavIconItem({ item, isActive, isHovered, onClick, onMouseEnter, onMouseLeave }) {
   const showHoverIcon = isActive || isHovered;
   const IconComponent = showHoverIcon ? item.hoverIcon : item.icon;
 
   return (
-    <div className="px-3">
-      <NavLink 
-        to={item.url} 
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        className={`flex items-center gap-3 px-4 py-3 ${getButtonClasses(isActive)}`}
-      >
-        <IconComponent
-          className={getIconClasses(
-            showHoverIcon,
-            isActive,
-            showHoverIcon ? item.hoverIconClassName : item.iconClassName
-          )}
-        />
-        <span className={getTextClasses(isActive)}>
-          {item.title}
-        </span>
-      </NavLink>
-    </div>
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <NavLink
+            to={item.url}
+            onClick={onClick}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            className={getButtonClasses(isActive)}
+          >
+            <IconComponent
+              className={getIconClasses(
+                showHoverIcon,
+                isActive,
+                showHoverIcon ? item.hoverIconClassName : item.iconClassName
+              )}
+            />
+          </NavLink>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="bg-navy text-white">
+          <p>{item.title}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
-function SectionDivider({ title }) {
-  return (
-    <div className="px-3 py-3">
-      <hr className="border-navy mb-2" />
-      <p className="text-[13px] text-gray-dark px-4">{title}</p>
-    </div>
-  );
+function SectionDivider() {
+  return <hr className="border-navy my-2 mx-2" />;
 }
 
-export function AdminSidebarContent() {
+export function AdminSidebarIconOnly() {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
 
@@ -144,7 +136,7 @@ export function AdminSidebarContent() {
     if (typeof window === "undefined") return null;
     const path = window.location.pathname;
     const matched = NAVIGATION_ITEMS.find((item) => path.startsWith(item.url));
-    return matched?.title ?? null;
+    return matched?.title ?? NAVIGATION_ITEMS[0]?.title ?? null;
   }, []);
 
   // Initialize active item and listen to path changes
@@ -170,45 +162,55 @@ export function AdminSidebarContent() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full justify-between py-4">
-      <nav className="flex flex-col gap-1">
-        <div className="px-3 py-2 mb-1">
-          <p className="text-[13px] text-gray-dark px-4">Menu Utama</p>
+    <aside className="fixed left-0 top-0 h-screen w-20 bg-gray-light border-r border-navy flex flex-col items-center py-6 z-30">
+      {/* Main Menu */}
+      <nav className="flex flex-col items-center gap-2 flex-1">
+        <div className="mb-2">
+          <p className="text-xs text-gray-dark text-center px-2">Menu</p>
         </div>
 
         {NAVIGATION_ITEMS.map((item, index) => (
-          <div key={item.title}>
-            <SidebarNavItem
-              item={item}
-              isActive={activeItem === item.title}
-              isHovered={hoveredItem === item.title && activeItem !== item.title}
-              onClick={() => setActiveItem(item.title)}
-              onMouseEnter={() => handleMouseEnter(item.title)}
-              onMouseLeave={handleMouseLeave}
-            />
-
-            {SECTION_DIVIDERS[index] && <SectionDivider title={SECTION_DIVIDERS[index]} />}
+          <div key={item.title} className="w-full flex flex-col items-center">
+            {SECTION_DIVIDERS.includes(index) && <SectionDivider />}
+            
+            <div className="px-2">
+              <SidebarNavIconItem
+                item={item}
+                isActive={activeItem === item.title}
+                isHovered={hoveredItem === item.title && activeItem !== item.title}
+                onClick={() => setActiveItem(item.title)}
+                onMouseEnter={() => handleMouseEnter(item.title)}
+                onMouseLeave={handleMouseLeave}
+              />
+            </div>
           </div>
         ))}
       </nav>
 
-      <div className="px-3 mt-4">
-        <NavLink 
-          to="/logout" 
-          onMouseEnter={() => setHoveredItem("logout")}
-          onMouseLeave={handleMouseLeave}
-          className="flex items-center gap-3 px-4 py-3 group transition-all duration-200 hover:bg-red-50 hover:text-red-700 rounded-lg"
-        >
-          <LogOutIcon
-            className={`h-5 w-5 transition-all duration-200 ${
-              hoveredItem === "logout" ? "text-red-700" : "text-red-600"
-            }`}
-          />
-          <span className="transition-all text-red-600 group-hover:text-red-700 text-[15px]">
-            Logout
-          </span>
-        </NavLink>
+      {/* Logout */}
+      <div className="mt-auto mb-4">
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavLink
+                to="/logout"
+                onMouseEnter={() => setHoveredItem("logout")}
+                onMouseLeave={handleMouseLeave}
+                className="group transition-all duration-200 hover:bg-red-50 hover:text-red-700 rounded-lg w-12 h-12 flex items-center justify-center"
+              >
+                <LogOutIcon
+                  className={`h-5 w-5 transition-all duration-200 ${
+                    hoveredItem === "logout" ? "text-red-700" : "text-red-600"
+                  }`}
+                />
+              </NavLink>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-red-600 text-white">
+              <p>Logout</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
-    </div>
+    </aside>
   );
 }

@@ -30,6 +30,7 @@ import Manual from "@/pages/Admin/Manual";
 import ManualDocuments from "@/pages/Admin/Manual/ManualDocuments";
 import ManualChecklist from "@/pages/Admin/Manual/ManualChecklist";
 import ManajemenPengguna from "@/pages/Admin/ManajemenPengguna";
+import Profil from "@/pages/Profil";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -75,6 +76,7 @@ const router = createBrowserRouter([
       { path: "ncr/:id/kasus/:caseId/temuan", element: <FindingsListPage /> },
       { path: "ncr/:id/kasus/:caseId/tanggapan", element: <ResponsePage /> },
       { path: "manajemen-pengguna", element: <ManajemenPengguna /> },
+      { path: "profil", element: <Profil /> },
       { path: "audit/aspek/kategori/:id", element: <KategoriPertanyaan /> },
       {
         path: "audit/aspek/kategori/:aspekId/pertanyaan/:id",

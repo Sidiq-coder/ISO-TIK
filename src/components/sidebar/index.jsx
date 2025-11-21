@@ -1,35 +1,21 @@
 import React from "react";
-import {
-  Sidebar as SidebarRoot,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupLabel,
-} from "@/components/ui/sidebar";
 
 function SidebarHeader({ title, subtitle, titleClassName, subtitleClassName }) {
   if (!title && !subtitle) return null;
 
   return (
-    <SidebarGroup className="px-8 pb-4 pt-6">
+    <div className="px-8 pb-4 pt-6">
       {title && (
-        <SidebarGroupLabel
-          disableDefaultTypography
-          className={titleClassName ?? "heading-3 text-navy"}
-        >
+        <h2 className={titleClassName ?? "heading-3 text-navy"}>
           {title}
-        </SidebarGroupLabel>
+        </h2>
       )}
       {subtitle && (
-        <SidebarGroupLabel
-          disableDefaultTypography
-          className={
-            subtitleClassName ?? "text-gray-dark text-[14px] font-normal"
-          }
-        >
+        <p className={subtitleClassName ?? "text-gray-dark text-[14px] font-normal"}>
           {subtitle}
-        </SidebarGroupLabel>
+        </p>
       )}
-    </SidebarGroup>
+    </div>
   );
 }
 
@@ -44,21 +30,19 @@ export function BaseSidebar({
   headerSpacing = true,
 }) {
   return (
-    <SidebarRoot
-      className={`bg-gray-light border-r-[1px]! border-navy w-[294px] ${className}`}
-    >
-      <SidebarContent>
-        <SidebarHeader
-          title={title}
-          subtitle={subtitle}
-          titleClassName={titleClassName}
-          subtitleClassName={subtitleClassName}
-        />
+    <aside className={`fixed left-0 top-0 h-screen w-[294px] bg-gray-light border-r border-navy flex flex-col ${className}`}>
+      <SidebarHeader
+        title={title}
+        subtitle={subtitle}
+        titleClassName={titleClassName}
+        subtitleClassName={subtitleClassName}
+      />
 
-        {headerSpacing && <hr className={dividerClassName} />}
+      {headerSpacing && <hr className={dividerClassName} />}
 
+      <div className="flex-1 flex flex-col">
         {children}
-      </SidebarContent>
-    </SidebarRoot>
+      </div>
+    </aside>
   );
 }
