@@ -18,9 +18,9 @@ import {
 const NAVIGATION_ITEMS = [
   { title: "Dashboard", url: "/admin/dashboard", icon: House, hoverIcon: HouseIcon },
   { title: "Dokumen", url: "/admin/dokumen", icon: Folder, hoverIcon: FolderOpen },
-  { title: "SoA", url: "/admin/SoA", icon: FileText, hoverIcon: FileText },
-  { title: "Audit", url: "/admin/Audit", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
-  { title: "NCR", url: "/admin/NCR", icon: TriangleAlert, hoverIcon: TriangleAlert },
+  { title: "SoA", url: "/admin/soa", icon: FileText, hoverIcon: FileText },
+  { title: "Audit", url: "/admin/audit", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
+  { title: "NCR", url: "/admin/ncr", icon: TriangleAlert, hoverIcon: TriangleAlert },
   { title: "Manual", url: "/admin/manual", icon: FileChartLine, hoverIcon: FileChartLine },
   {
     title: "Manajemen Pengguna",
