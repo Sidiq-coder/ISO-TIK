@@ -10,8 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { SearchBar } from "@/components/table/SearchBar"
-import { CategoryDropdown } from "@/components/table/CategoryDropdown"
+import { SearchBar, StatusDropdown } from "@/components/admin/table"
 import { useReviewSoA } from "./hooks/useReviewSoA"
 import {
   getReviewMetaByTitle,
@@ -33,7 +32,7 @@ const VIEW_MODE_OPTIONS = [
 ]
 const TABLE_CATEGORY_OPTIONS = [
   { value: "Semua Kategori" },
-  ...reviewNavigatorConfig.map((section) => ({ value: section.code })),
+  ...reviewNavigatorConfig.map((section) => ({ value: section.code  })),
 ]
 
 export default function ReviewJawabanSoA() {
@@ -88,20 +87,21 @@ export default function ReviewJawabanSoA() {
           </div>
           {viewMode === "table" ? (
             <div className="flex-1 min-h-0 pb-4 space-y-4 px-2">
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
                 <SearchBar
                   placeholder="Cari pertanyaan atau kendali"
                   value={tableSearch}
                   onChange={(event) => setTableSearch(event.target.value)}
-                  inputGroupClassName="h-[56px] w-full rounded-[4px]"
-                  inputClassName="text-navy placeholder:text-gray-400"
+                  className="w-full"
                 />
-                <CategoryDropdown
+                <StatusDropdown
                   isMenuOpen={isTableStatusOpen}
                   setIsMenuOpen={setIsTableStatusOpen}
                   value={tableCategory}
                   onChange={setTableCategory}
                   options={TABLE_CATEGORY_OPTIONS}
+                  classNameButton="h-[56px] w-[219px]"
+                  classNameDropdown="w-[219px]"
                 />
               </div>
               <LegendBar />
@@ -444,8 +444,8 @@ function LegendCard({ documentMeta }) {
     <section className="rounded-[4px] border border-blue-dark bg-blue-light text-sm text-[#1F2D56] shadow-sm">
       <div className="space-y-2 px-5 py-4">
         <p className="font-semibold text-navy">Keterangan:</p>
-        <div className="text-xs space-y-1 text-blue-dark">
-          <p>Y = Ya</p>
+        <div className="space-y-1 text-blue-dark">
+          <p >Y = Ya</p>
           <p>T = Tidak</p>
           <p>S = Sebagian</p>
         </div>
