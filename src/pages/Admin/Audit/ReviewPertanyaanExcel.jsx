@@ -39,6 +39,7 @@ function ReviewPertanyaanExcel() {
   const { dokumenTitle, lokasi, tanggalAudit, revisi, mode } =
     location.state || {};
   const [activeTab, setActiveTab] = useState("excel");
+  const [reviewData, setReviewData] = useState(reviewExcelData);
   const [checklistExcel, setChecklistExcel] = useState(navigatorData);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -64,21 +65,63 @@ function ReviewPertanyaanExcel() {
     }
   };
 
-  const handleOpenDialog = (item) => {
-    setSelectedItem(item);
-    setKomentarReviewer(item.reviewer?.comment || "");
+  const handleOpenDialog = (item, sectionCode) => {
+    setSelectedItem({ ...item, sectionCode });
+    setKomentarReviewer(
+      item.reviewer?.comment ||
+        (item.komentarReviewer === "Belum diisi"
+          ? ""
+          : item.komentarReviewer || "")
+    );
     setDialogOpen(true);
   };
 
   const handleSimpanKomentar = () => {
-    console.log(
-      "Simpan komentar:",
-      komentarReviewer,
-      "untuk item:",
-      selectedItem.id
-    );
-    // Update item with new review
+    if (!selectedItem) return;
+
+    const trimmedComment = komentarReviewer.trim();
+
+    setReviewData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section) => {
+        if (section.code !== selectedItem.sectionCode) return section;
+        return {
+          ...section,
+          items: section.items.map((item) => {
+            if (item.id !== selectedItem.id) return item;
+            const updatedComment =
+              trimmedComment !== "" ? trimmedComment : item.komentarReviewer;
+
+            return {
+              ...item,
+              komentarReviewer: updatedComment,
+              statusReview:
+                item.statusReview === "sudah" || trimmedComment === ""
+                  ? item.statusReview
+                  : "sudah",
+            };
+          }),
+        };
+      }),
+    }));
     setDialogOpen(false);
+    setSelectedItem(null);
+    setKomentarReviewer("");
+  };
+
+  const handleTandaiDireview = (item, sectionCode) => {
+    setReviewData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section) => {
+        if (section.code !== sectionCode) return section;
+        return {
+          ...section,
+          items: section.items.map((row) =>
+            row.id === item.id ? { ...row, statusReview: "sudah" } : row
+          ),
+        };
+      }),
+    }));
   };
 
   return (
@@ -158,11 +201,9 @@ function ReviewPertanyaanExcel() {
 
           {/* Review Excel Table */}
           <ReviewExcelAuditTable
-            data={reviewExcelData}
+            data={reviewData}
             onKomentarClick={handleOpenDialog}
-            onTandaiDireview={(item) =>
-              console.log("Tandai Direview:", item.id)
-            }
+            onTandaiDireview={handleTandaiDireview}
           />
         </div>
 
