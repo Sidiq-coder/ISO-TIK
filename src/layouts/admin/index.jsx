@@ -28,14 +28,14 @@ export function AdminLayout({ children }) {
         <div className="flex-1 flex flex-col min-h-screen bg-gray-light ml-20 lg:ml-[294px] transition-all duration-300">
           {/* Navbar - Sticky di atas */}
           <div className="sticky top-0 bg-white border-b border-navy-hover w-full z-20">
-            <div className="max-w-screen-2xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12">
+            <div className="md:px-8">
               <AdminNavbar />
             </div>
           </div>
 
           {/* Main Content - Scrollable dengan responsive padding */}
-          <main className="flex-1 overflow-y-auto">
-            <div className="max-w-screen-2xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12 py-4 sm:py-5 md:py-6">
+          <main>
+            <div className="md:px-8 p-4">
               <Outlet />
             </div>
           </main>
