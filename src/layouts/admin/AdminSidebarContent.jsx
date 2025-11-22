@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "@/auth/context/AuthContext";
 import usersIcon from "../../assets/users.png";
 import {
   ClipboardCheck,
@@ -18,9 +19,9 @@ import {
 const NAVIGATION_ITEMS = [
   { title: "Dashboard", url: "/admin/dashboard", icon: House, hoverIcon: HouseIcon },
   { title: "Dokumen", url: "/admin/dokumen", icon: Folder, hoverIcon: FolderOpen },
-  { title: "SoA", url: "/admin/SoA", icon: FileText, hoverIcon: FileText },
-  { title: "Audit", url: "/admin/Audit", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
-  { title: "NCR", url: "/admin/NCR", icon: TriangleAlert, hoverIcon: TriangleAlert },
+  { title: "SoA", url: "/admin/soa", icon: FileText, hoverIcon: FileText },
+  { title: "Audit", url: "/admin/audit", icon: ClipboardCheck, hoverIcon: ClipboardCheck },
+  { title: "NCR", url: "/admin/ncr", icon: TriangleAlert, hoverIcon: TriangleAlert },
   { title: "Manual", url: "/admin/manual", icon: FileChartLine, hoverIcon: FileChartLine },
   {
     title: "Manajemen Pengguna",
@@ -136,8 +137,15 @@ function SectionDivider({ title }) {
 }
 
 export function AdminSidebarContent() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   // Get active item from URL
   const resolveActiveFromPath = useCallback(() => {
@@ -193,11 +201,11 @@ export function AdminSidebarContent() {
       </nav>
 
       <div className="px-3 mt-4">
-        <NavLink 
-          to="/logout" 
+        <button
+          onClick={handleLogout}
           onMouseEnter={() => setHoveredItem("logout")}
           onMouseLeave={handleMouseLeave}
-          className="flex items-center gap-3 px-4 py-3 group transition-all duration-200 hover:bg-red-50 hover:text-red-700 rounded-lg"
+          className="flex items-center gap-3 px-4 py-3 group transition-all duration-200 hover:bg-red-50 hover:text-red-700 rounded-lg w-full"
         >
           <LogOutIcon
             className={`h-5 w-5 transition-all duration-200 ${
@@ -207,7 +215,7 @@ export function AdminSidebarContent() {
           <span className="transition-all text-red-600 group-hover:text-red-700 text-[15px]">
             Logout
           </span>
-        </NavLink>
+        </button>
       </div>
     </div>
   );

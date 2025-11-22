@@ -1,11 +1,14 @@
 import { useAdminLayout } from "@/layouts/admin/AdminLayoutContext";
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Outlet } from "react-router-dom";
 
 export default function Audit() {
   const { setHeader } = useAdminLayout();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const normalizedPathname = location.pathname.replace(/\/+$/, "") || "/";
   const baseTab = "body-medium p-4 rounded-t-[4px] transition-all duration-200";
   const inactive = "text-navy hover:bg-state";
   const active = "bg-state text-navy shadow border-b-[3px] border-navy";
@@ -21,41 +24,46 @@ export default function Audit() {
       },
     });
   }, [setHeader]);
+
+  useEffect(() => {
+    if (normalizedPathname === "/admin/audit") {
+      navigate("/admin/audit/dokumen", { replace: true });
+    }
+  }, [normalizedPathname, navigate]);
+
+  const getTabClass = (targetPath) => ({ isActive }) => {
+    const isDefaultDokumen =
+      targetPath === "/admin/audit/dokumen" && normalizedPathname === "/admin/audit";
+    return clsx(baseTab, isActive || isDefaultDokumen ? active : inactive);
+  };
+
   return (
     <div>
       <div className="flex gap-4" id="audit-sub-navbar">
         <NavLink
           to="/admin/audit/dokumen"
-          className={({ isActive }) =>
-            clsx(baseTab, isActive ? active : inactive)
-          }
+          className={getTabClass("/admin/audit/dokumen")}
         >
           {" "}
           Dokumen Audit{" "}
         </NavLink>
         <NavLink
           to="/admin/audit/checklist"
-          className={({ isActive }) =>
-            clsx(baseTab, isActive ? active : inactive)
-          }
+          className={getTabClass("/admin/audit/checklist")}
         >
           {" "}
           Checklist Audit{" "}
         </NavLink>
         <NavLink
           to="/admin/audit/aspek"
-          className={({ isActive }) =>
-            clsx(baseTab, isActive ? active : inactive)
-          }
+          className={getTabClass("/admin/audit/aspek")}
         >
           {" "}
           Aspek Audit{" "}
         </NavLink>
         <NavLink
           to="/admin/audit/checklist-excel"
-          className={({ isActive }) =>
-            clsx(baseTab, isActive ? active : inactive)
-          }
+          className={getTabClass("/admin/audit/checklist-excel")}
         >
           {" "}
           Checklist Excel{" "}

@@ -47,7 +47,7 @@ export function CaseCard({ kasus, onViewDetail, onEdit, onDelete }) {
           </div>
           <div>
             <p className="text-xs text-gray-dark">Aksi</p>
-            <div className="flex gap-1 mt-1">
+            <div className="flex gap-1 mt-1 flex-wrap">
               <Button
                 variant="ghost"
                 size="icon-sm"

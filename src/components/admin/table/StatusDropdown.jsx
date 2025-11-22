@@ -19,18 +19,25 @@ export function StatusDropdown({
   classNameDropdown = "",
   showFunnelIcon = true,
 }) {
+  const selectedOption = options.find((option) => option.value === value)
   return (
     <div className={className}>
       <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
-            className={`flex cursor-pointer items-center gap-2 bg-state px-4 body! text-navy ${classNameButton} ${
+            className={`flex h-12 w-full cursor-pointer items-center justify-between gap-2 bg-state px-4 text-sm font-medium text-navy ${classNameButton} ${
               isMenuOpen ? "border-navy shadow" : "bg-state text-navy"
             }`}
           >
-            {showFunnelIcon && <Funnel className="size-4" />}
-            {value}
+            <span className="flex items-center gap-2 truncate">
+              {showFunnelIcon && <Funnel className="size-4" />}
+              <span className="truncate">
+                {selectedOption?.label && value !== "Semua Kategori"
+                  ? `${selectedOption.value} - ${selectedOption.label}`
+                  : value}
+              </span>
+            </span>
             <ChevronDown
               className={`size-4 ${
                 isMenuOpen ? "rotate-180" : ""
@@ -50,7 +57,9 @@ export function StatusDropdown({
                 value={option.value}
                 className="body text-navy bg-gray-light focus:bg-gray-dark2"
               >
-                {option.value}
+                {option.label && option.value !== "Semua Kategori"
+                  ? `${option.label}`
+                  : option.value}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
