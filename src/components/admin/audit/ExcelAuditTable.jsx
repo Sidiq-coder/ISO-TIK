@@ -38,11 +38,20 @@ export function ExcelAuditTable({ data, onEditClick }) {
             {data.sections.map((section) => (
               <Fragment key={section.code}>
                 {section.items.map((item, index) => {
-                  // Determine if item is filled based on buktiObjektif
-                  const isFilled =
-                    item.buktiObjektif &&
-                    item.buktiObjektif !== "Belum Diisi" &&
-                    item.buktiObjektif.trim() !== "";
+                  // Consider answered when any field has meaningful content
+                  const isAnswered = [
+                    item.buktiObjektif,
+                    item.kesesuaian,
+                    item.catatanEditor,
+                  ].some((value) => {
+                    if (!value || typeof value !== "string") return false;
+                    const normalized = value.trim();
+                    return (
+                      normalized !== "" &&
+                      normalized !== "Belum Diisi" &&
+                      normalized !== "-"
+                    );
+                  });
 
                   return (
                     <tr
@@ -82,11 +91,13 @@ export function ExcelAuditTable({ data, onEditClick }) {
                           <Button
                             size="icon"
                             className={`h-9 w-9 text-white ${
-                              isFilled
-                                ? "bg-[#FF9800] hover:bg-[#F57C00]"
+                              isAnswered
+                                ? "bg-[#F6C344] hover:bg-[#e0b02f]"
                                 : "bg-[#2B7FFF] hover:bg-[#1a5fcf]"
                             }`}
-                            onClick={() => onEditClick && onEditClick(item)}
+                            onClick={() =>
+                              onEditClick && onEditClick(item, section.code)
+                            }
                           >
                             <FilePen className="h-4 w-4" />
                           </Button>

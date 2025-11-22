@@ -103,7 +103,8 @@ export function ReviewExcelAuditTable({
                           size="icon"
                           className="h-9 w-9 border-blue-300 text-blue-600 hover:bg-blue-50"
                           onClick={() =>
-                            onKomentarClick && onKomentarClick(item)
+                            onKomentarClick &&
+                            onKomentarClick(item, section.code)
                           }
                         >
                           <MessageSquare className="h-4 w-4" />
@@ -114,7 +115,8 @@ export function ReviewExcelAuditTable({
                             size="icon"
                             className="h-9 w-9 border-green-300 text-green-600 hover:bg-green-50"
                             onClick={() =>
-                              onTandaiDireview && onTandaiDireview(item)
+                              onTandaiDireview &&
+                              onTandaiDireview(item, section.code)
                             }
                           >
                             <Check className="h-4 w-4" />
