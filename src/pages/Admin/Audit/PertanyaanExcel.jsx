@@ -72,6 +72,7 @@ function PertanyaanExcel() {
   const { dokumenTitle, lokasi, tanggalAudit, revisi, mode } =
     location.state || {};
   const [activeTab, setActiveTab] = useState("excel");
+  const [excelData, setExcelData] = useState(pertanyaanExcelData);
   const [checklistExcel, setChecklistExcel] = useState(
     mockExcelData.checklistExcel
   );
@@ -103,8 +104,8 @@ function PertanyaanExcel() {
     }
   };
 
-  const handleOpenDialog = (item) => {
-    setSelectedItem(item);
+  const handleOpenDialog = (item, sectionCode) => {
+    setSelectedItem({ ...item, sectionCode });
     setFormData({
       buktiObjektif:
         item.buktiObjektif !== "Belum Diisi" ? item.buktiObjektif : "",
@@ -116,8 +117,42 @@ function PertanyaanExcel() {
   };
 
   const handleSimpanPerubahan = () => {
-    console.log("Simpan Perubahan:", formData);
+    if (!selectedItem) return;
+
+    setExcelData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section) => {
+        if (section.code !== selectedItem.sectionCode) return section;
+        return {
+          ...section,
+          items: section.items.map((item) => {
+            if (item.id !== selectedItem.id) return item;
+            return {
+              ...item,
+              buktiObjektif:
+                formData.buktiObjektif.trim() !== ""
+                  ? formData.buktiObjektif
+                  : item.buktiObjektif,
+              kesesuaian:
+                formData.kesesuaian.trim() !== ""
+                  ? formData.kesesuaian
+                  : item.kesesuaian,
+              catatanEditor:
+                formData.catatanEditor.trim() !== ""
+                  ? formData.catatanEditor
+                  : item.catatanEditor,
+            };
+          }),
+        };
+      }),
+    }));
     setDialogOpen(false);
+    setSelectedItem(null);
+    setFormData({
+      buktiObjektif: "",
+      kesesuaian: "",
+      catatanEditor: "",
+    });
   };
 
   return (
@@ -195,7 +230,7 @@ function PertanyaanExcel() {
 
           {/* Table Section */}
           <ExcelAuditTable
-            data={pertanyaanExcelData}
+            data={excelData}
             onEditClick={handleOpenDialog}
           />
         </div>
