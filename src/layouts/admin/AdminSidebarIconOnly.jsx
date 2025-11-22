@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "@/auth/context/AuthContext";
 import usersIcon from "../../assets/users.png";
 import {
   ClipboardCheck,
@@ -128,7 +129,14 @@ function SectionDivider() {
 }
 
 export function AdminSidebarIconOnly() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState(null);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
   const [activeItem, setActiveItem] = useState(null);
 
   // Get active item from URL
@@ -192,8 +200,8 @@ export function AdminSidebarIconOnly() {
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <NavLink
-                to="/logout"
+              <button
+                onClick={handleLogout}
                 onMouseEnter={() => setHoveredItem("logout")}
                 onMouseLeave={handleMouseLeave}
                 className="group transition-all duration-200 hover:bg-red-50 hover:text-red-700 rounded-lg w-12 h-12 flex items-center justify-center"
@@ -203,7 +211,7 @@ export function AdminSidebarIconOnly() {
                     hoveredItem === "logout" ? "text-red-700" : "text-red-600"
                   }`}
                 />
-              </NavLink>
+              </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-red-600 text-white">
               <p>Logout</p>

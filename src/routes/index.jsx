@@ -1,6 +1,8 @@
 // src/routes/index.jsx
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { ProtectedRoute } from "@/auth/components/ProtectedRoute";
 import { AdminLayout } from "@/layouts/admin";
+import { LoginPage } from "@/pages/Auth";
 import DashboardPage from "@/pages/Admin/Dashboard";
 import DokumenPage from "@/pages/Admin/Dokumen";
 import NotFoundPage from "@/pages/NotFound";
@@ -31,10 +33,23 @@ import ManualDocuments from "@/pages/Admin/Manual/ManualDocuments";
 import ManualChecklist from "@/pages/Admin/Manual/ManualChecklist";
 import ManajemenPengguna from "@/pages/Admin/ManajemenPengguna";
 import Profil from "@/pages/Profil";
+
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Navigate to="/login" replace />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "dashboard", element: <DashboardPage /> },
