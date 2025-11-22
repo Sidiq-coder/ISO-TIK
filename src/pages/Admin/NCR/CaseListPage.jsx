@@ -268,6 +268,7 @@ export default function CaseListPage() {
           onConfirm={handleConfirmDelete}
         />
       )}
+
     </div>
   );
 }

@@ -8,7 +8,9 @@ import {
   StatusDropdown,
   Table as AdminTable,
 } from "@/components/admin/table"
-import { Download, Eye, FilePen, FileText, Plus, Trash2 } from "lucide-react"
+import { Download, Eye, FilePen, FileText, Plus, Trash2, FileDown } from "lucide-react"
+import { PDFExportButton } from "@/generatePDF/components"
+import { generateUserPDF, generateUsersListPDF } from "@/generatePDF"
 import {
   ViewUserModal,
   AddUserModal,
@@ -109,10 +111,24 @@ export default function ManajemenPengguna() {
     setIsDeleteModalOpen(true)
   }
 
-  const handleDownload = (user) => {
-    // TODO: Implement download functionality
-    console.log("Download user data:", user)
-    alert(`Download data untuk ${user.fullName}`)
+  const handleDownload = async (user) => {
+    // Generate PDF untuk single user
+    await generateUserPDF(user, {
+      includeRoles: true,
+      includeDetails: true,
+      filename: `user-${user.username}.pdf`,
+    })
+  }
+
+  const handleExportAllUsers = async () => {
+    // Generate PDF untuk semua users (filtered)
+    await generateUsersListPDF(filteredUsers, {
+      filename: 'daftar-pengguna.pdf',
+      filters: {
+        status: statusFilter !== 'all' ? statusFilter : 'Semua',
+        search: search || undefined,
+      },
+    })
   }
 
   const handleAddUser = (userData) => {
@@ -189,6 +205,13 @@ export default function ManajemenPengguna() {
           options={FILTER_OPTIONS}
           classNameButton="w-[180px] h-12"
           classNameDropdown="w-[180px]"
+        />
+
+        <PDFExportButton
+          onExport={handleExportAllUsers}
+          label="Export PDF"
+          variant="outline"
+          className="h-12 whitespace-nowrap"
         />
 
         <Button 
